@@ -1,13 +1,14 @@
 //
-//  EssentialFeedApiEndToEndTests.swift
-//  CITests
+//  EssentialFeedMacTestsTests.swift
+//  EssentialFeedMacTestsTests
 //
 //  Created by Santi Bernaldo on 26/12/23.
 //
 
 import XCTest
+@testable import EssentialFeedMacTests
 
-final class EssentialFeedApiEndToEndTests: XCTestCase {
+final class EssentialFeedMacTestsTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
