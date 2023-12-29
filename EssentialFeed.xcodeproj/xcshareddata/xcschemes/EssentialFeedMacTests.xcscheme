@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E4EF1D3D2B3B0D0400FECAAF"
-               BuildableName = "EssentialFeedMacTests.framework"
-               BlueprintName = "EssentialFeedMacTests"
+               BuildableName = "EssentialFeedTests.framework"
+               BlueprintName = "EssentialFeedTests"
                ReferencedContainer = "container:EssentialFeed.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4EF1D3D2B3B0D0400FECAAF"
-            BuildableName = "EssentialFeedMacTests.framework"
-            BlueprintName = "EssentialFeedMacTests"
+            BuildableName = "EssentialFeedTests.framework"
+            BlueprintName = "EssentialFeedTests"
             ReferencedContainer = "container:EssentialFeed.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
