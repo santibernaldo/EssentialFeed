@@ -9,6 +9,8 @@ import Foundation
 
 public final class RemoteFeedLoader {
     private let client: HTTPClient
+    
+    // The URL is a detail of the implementation of the RemoteFeedLoader
     private let url: URL
     
     public init(client: HTTPClient, url: URL) {
