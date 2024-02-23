@@ -1,8 +1,8 @@
 //
-//  RemoteFeedLoaderTests.swift
-//  EssentialFeedMacTestsTests
+//  EssentialFeedTests.swift
+//  EssentialFeedTests
 //
-//  Created by Santi Bernaldo on 28/12/23.
+//  Created by Santi Bernaldo on 23/2/24.
 //
 
 import XCTest
@@ -56,4 +56,5 @@ final class RemoteFeedLoaderTests: XCTestCase {
             requestedURLS.append(url)
         }
     }
+
 }
