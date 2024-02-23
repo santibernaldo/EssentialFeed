@@ -40,6 +40,17 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLS, [url, url])
     }
     
+    func test_load_deliversErrorOnClientError() {
+        let (sut, client) = makeSUT()
+        client.error = NSError(domain: "Test", code: 0)
+        
+        var capturedErrors = [RemoteFeedLoader.Error]()
+        
+        sut.load { capturedErrors.append($0) }
+        
+        XCTAssertEqual(capturedErrors, [.connectivity])
+    }
+    
     private func makeSUT(url: URL = URL(string: "http://agivenurl.com")!) -> (RemoteFeedLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         
@@ -51,8 +62,27 @@ final class RemoteFeedLoaderTests: XCTestCase {
                       
     private class HTTPClientSpy: HTTPClient {
         var requestedURLS = [URL]()
+        var error: Error?
+        
+        func load(url: URL, completion: @escaping (Error) -> Void) {
             
-        func load(url: URL) {
+            // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
+            /*
+             
+             Avoiding:
+             
+             if let error = error {
+                completion(error)
+             }
+             
+             We only keep an array of completions with the Error.
+             
+             */
+            
+            if let error = error {
+                completion(error)
+            }
+            
             requestedURLS.append(url)
         }
     }
