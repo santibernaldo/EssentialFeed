@@ -21,7 +21,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
                 
         let (sut, client) = makeSUT(url: url)
         
-        sut.load()
+        sut.load { _ in }
         
         // When asserting objects collaborating, is not enough to test the values passed, but we need to ask how many times was the method invoked
         XCTAssertEqual(client.requestedURLS, [url])
@@ -33,8 +33,8 @@ final class RemoteFeedLoaderTests: XCTestCase {
                 
         let (sut, client) = makeSUT(url: url)
         
-        sut.load()
-        sut.load()
+        sut.load { _ in }
+        sut.load { _ in }
         
         // When asserting objects collaborating, is not enough to test the values passed, but we need to ask how many times was the method invoked
         XCTAssertEqual(client.requestedURLS, [url, url])
@@ -55,6 +55,21 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(capturedErrors, [.connectivity])
     }
     
+    func test_load_deliversErrorOnNon200HTTPResponse() {
+        let (sut, client) = makeSUT()
+        
+        let samples = [199, 201, 300, 400, 500]
+        
+        samples.enumerated().forEach { index, code in
+            var capturedErrors = [RemoteFeedLoader.Error]()
+            sut.load { capturedErrors.append($0) }
+            
+            client.complete(withStatusCode: code, at: index)
+            
+            XCTAssertEqual(capturedErrors, [.invalidData])
+        }
+    }
+    
     private func makeSUT(url: URL = URL(string: "http://agivenurl.com")!) -> (RemoteFeedLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         
@@ -65,12 +80,16 @@ final class RemoteFeedLoaderTests: XCTestCase {
                       
     // The SPY is only CAPTURING values, as we like
     private class HTTPClientSpy: HTTPClient {
+        
+        private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
+        
         var requestedURLS: [URL] {
             return messages.map { $0.url }
         }
-
-        private var messages = [(url: URL, completion: (Error) -> Void)]()
-        func load(url: URL, completion: @escaping (Error) -> Void) {
+ 
+        // We just want to complete, one time per request, that's why we use arrays to assert that on the test
+        
+        func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
             /*
@@ -93,7 +112,17 @@ final class RemoteFeedLoaderTests: XCTestCase {
         }
         
         func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(error)
+            messages[index].completion(.failure(error))
+        }
+        
+        func complete(withStatusCode code: Int, at index: Int = 0) {
+            let response = HTTPURLResponse(
+                url: requestedURLs[index],
+                statusCode: code,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            messages[index].completion(.success(response))
         }
     }
     
