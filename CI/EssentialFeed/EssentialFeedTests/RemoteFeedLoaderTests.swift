@@ -70,14 +70,17 @@ final class RemoteFeedLoaderTests: XCTestCase {
         }
     }
     
-    private func makeSUT(url: URL = URL(string: "http://agivenurl.com")!) -> (RemoteFeedLoader, HTTPClientSpy) {
-        let client = HTTPClientSpy()
+    func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         
-        let remoteFeedLoader = RemoteFeedLoader(client: client, url: url)
+        let (sut, client) = makeSUT()
         
-        return (remoteFeedLoader, client)
+        expect(sut,
+               toCompleteWithError: .invalidData) {
+            let invalidJSON = Data()
+            client.complete(withStatusCode: 200, data: invalidJSON)
+        }
     }
-                      
+    
     // The SPY is only CAPTURING values, as we like
     private class HTTPClientSpy: HTTPClient {
         
@@ -88,6 +91,19 @@ final class RemoteFeedLoaderTests: XCTestCase {
         }
  
         // We just want to complete, one time per request, that's why we use arrays to assert that on the test
+        func complete(with error: Error, at index: Int = 0) {
+            messages[index].completion(.failure(error))
+        }
+        
+        func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
+            let response = HTTPURLResponse(
+                url: requestedURLS[index],
+                statusCode: code,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            messages[index].completion(.success(data, response))
+        }
         
         func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             
@@ -110,22 +126,26 @@ final class RemoteFeedLoaderTests: XCTestCase {
             // We just accumulate all the properties we recieve
             messages.append((url, completion))
         }
-        
-        func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(.failure(error))
-        }
-        
-        func complete(withStatusCode code: Int, at index: Int = 0) {
-            let response = HTTPURLResponse(
-                url: requestedURLs[index],
-                statusCode: code,
-                httpVersion: nil,
-                headerFields: nil
-            )!
-            messages[index].completion(.success(response))
-        }
     }
     
+    // MARK: - Helpers
     
+    private func makeSUT(url: URL = URL(string: "http://agivenurl.com")!) -> (RemoteFeedLoader, HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        
+        let remoteFeedLoader = RemoteFeedLoader(client: client, url: url)
+        
+        return (remoteFeedLoader, client)
+    }
+    
+    private func expect(_ sut: RemoteFeedLoader,
+                        toCompleteWithError error: RemoteFeedLoader.Error, when action: () -> Void) {
+        var capturedErrors = [RemoteFeedLoader.Error]()
+        sut.load { capturedErrors.append($0) }
+                
+        action()
+        
+        XCTAssertEqual(capturedErrors, [error])
+    }
 
 }
