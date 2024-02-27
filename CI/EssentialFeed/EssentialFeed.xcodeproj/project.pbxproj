@@ -13,6 +13,7 @@
 		E41924342B88923500EEC789 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41924302B88923500EEC789 /* RemoteFeedLoader.swift */; };
 		E41924352B88923500EEC789 /* FeedItemLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41924322B88923500EEC789 /* FeedItemLoader.swift */; };
 		E41924362B88923500EEC789 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41924332B88923500EEC789 /* FeedItem.swift */; };
+		E4E6C19C2B8DEA8D003FD4BD /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E6C19B2B8DEA8D003FD4BD /* HTTPClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		E41924302B88923500EEC789 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		E41924322B88923500EEC789 /* FeedItemLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItemLoader.swift; sourceTree = "<group>"; };
 		E41924332B88923500EEC789 /* FeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
+		E4E6C19B2B8DEA8D003FD4BD /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				E41924302B88923500EEC789 /* RemoteFeedLoader.swift */,
+				E4E6C19B2B8DEA8D003FD4BD /* HTTPClient.swift */,
 			);
 			path = "Feed API";
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 			files = (
 				E41924342B88923500EEC789 /* RemoteFeedLoader.swift in Sources */,
 				E41924352B88923500EEC789 /* FeedItemLoader.swift in Sources */,
+				E4E6C19C2B8DEA8D003FD4BD /* HTTPClient.swift in Sources */,
 				E41924362B88923500EEC789 /* FeedItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
