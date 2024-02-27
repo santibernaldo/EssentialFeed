@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-
+// This one doesn't know about the API, it's like the Domain object
 public struct FeedItem: Equatable {
     public let id: UUID
     public var description: String?
@@ -20,14 +19,5 @@ public struct FeedItem: Equatable {
         self.description = description
         self.location = location
         self.imageURL = imageURL
-    }
-}
-
-extension FeedItem: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case description
-        case location
-        case imageURL = "image"
     }
 }
