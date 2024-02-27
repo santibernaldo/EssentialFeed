@@ -27,15 +27,17 @@ public final class RemoteFeedLoader {
     }
     
     public func load(completion: @escaping (Result) -> Void ) {
-        client.get(from: url) { result in
+        client.get(from: url) { [weak self] result in
+            
+            // With the static FeedMapper.map into the completion, we avoid a memory leak
+            // And unwrapping the self, we avoiding calling the completion in case RemoteFeedLoader
+            // have been deallocated. Sometimes UIViewControllers have been deallocated, but some
+            // labels or other properties are called through a completionBlock after 
+            guard self != nil else { return }
+            
             switch result {
             case .success(let data, let response):
-                do {
-                  let items = try FeedItemMapper.map(data, response)
-                    completion(.success(items))
-                } catch {
-                    completion(.failure(.invalidData))
-                }
+                completion(FeedItemMapper.map(data, response))
             case .failure:
                 completion(.failure(.connectivity))
             }
@@ -43,38 +45,7 @@ public final class RemoteFeedLoader {
     }
 }
 
-private struct FeedItemMapper {
-    private struct RootFeedItem: Decodable {
-        let items: [Item]
-    }
 
-    // Internal representation of the FeedItem for the API Module
-    private struct Item: Decodable {
-        let id: UUID
-        var description: String?
-        let location: String?
-        let image: URL
-        
-        var item: FeedItem {
-            return FeedItem(
-                id: id,
-                description: description,
-                location: location,
-                imageURL: image)
-        }
-    }
-    
-    static var OK_200: Int { 200 }
-    
-    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FeedItem] {
-        guard response.statusCode == OK_200 else {
-            throw RemoteFeedLoader.Error.invalidData
-        }
-        
-        let root = try JSONDecoder().decode(RootFeedItem.self, from: data)
-        return root.items.map { $0.item }
-    }
-}
 
 
 
