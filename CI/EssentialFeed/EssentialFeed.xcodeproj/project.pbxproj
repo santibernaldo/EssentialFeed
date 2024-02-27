@@ -54,6 +54,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E41827D22B8B9C5200CF4193 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Stubs;
+			sourceTree = "<group>";
+		};
 		E419240C2B888FF800EEC789 = {
 			isa = PBXGroup;
 			children = (
@@ -84,6 +91,7 @@
 		E41924222B888FF900EEC789 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				E41827D22B8B9C5200CF4193 /* Stubs */,
 				E41924232B888FF900EEC789 /* RemoteFeedLoaderTests.swift */,
 			);
 			path = EssentialFeedTests;
