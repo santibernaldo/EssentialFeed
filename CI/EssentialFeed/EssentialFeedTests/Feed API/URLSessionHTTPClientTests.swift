@@ -16,7 +16,7 @@ class URLSessionHTTPClient {
     }
     
     func load(url: URL) {
-        session.dataTask(with: url) { _, _, _ in }
+        session.dataTask(with: url) { _, _, _ in }.resume()
     }
     
 }
@@ -39,27 +39,47 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let url = URL(string: "http://any-url.com")!
         let session = URLSessionSpy()
         
+        let task = URLSessionDataTaskSpy()
+        session.stub(url: url, dataTask: task)
+        
         let sut = URLSessionHTTPClient(session: session)
         
         sut.load(url: url)
         
         // ReceivedURLS is a test detail
-        XCTAssertEqual(task.resumeCount, 1)
+        XCTAssertEqual(task.resumeCallCount, 1)
     }
     
     // MARK: - Helpers
     private class URLSessionSpy: URLSession {
         var receivedURLS = [URL]()
         
+        private var stubs = [URL: URLSessionDataTask]()
+        
+        func stub(url: URL, dataTask: URLSessionDataTask) {
+            stubs[url] = dataTask
+        }
+        
         override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
             receivedURLS.append(url)
-            return FakeURLSessionDataTask()
+            return stubs[url] ?? FakeURLSessionDataTask()
         }
     }
     
     // Mocking an URLSessionDataTask which carries lots of methods that we're not overriding, and these methods can be interoperating between them, so we're doing a big assumption here and risking
     
     // We don't own this classes, so this is a big risk
-    private class FakeURLSessionDataTask: URLSessionDataTask {}
-
+    private class FakeURLSessionDataTask: URLSessionDataTask {
+        override func resume() {
+            
+        }
+    }
+    
+    private class URLSessionDataTaskSpy: URLSessionDataTask {
+        var resumeCallCount = 0
+        
+        override func resume() {
+            resumeCallCount += 1
+        }
+    }
 }
