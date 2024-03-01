@@ -7,9 +7,9 @@
 
 import Foundation
 
-public final class RemoteFeedLoader {
+public final class RemoteFeedLoader: FeedLoader {
     
-    public typealias Result = Swift.Result<[FeedItem], Error>
+    public typealias Result = LoadFeedResult
     
     private let client: HTTPClient
     
@@ -26,7 +26,7 @@ public final class RemoteFeedLoader {
         self.url = url
     }
     
-    public func load(completion: @escaping (Result) -> Void ) {
+    public func load(completion: @escaping (LoadFeedResult) -> ()){
         client.get(from: url) { [weak self] result in
             
             // With the static FeedMapper.map into the completion, we avoid a memory leak
@@ -39,7 +39,7 @@ public final class RemoteFeedLoader {
             case .success(let data, let response):
                 completion(FeedItemMapper.map(data, response))
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }
