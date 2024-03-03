@@ -72,10 +72,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         // It means we can handle this request, and we can control over its fate
-        override class func canInit(with request: URLRequest) -> Bool {
-            guard let url = request.url else { return false }
-            
-            return URLProtocolStub.stubs[url] != nil
+        override class func canInit(with request: URLRequest) -> Bool {            
+            return true
         }
         
         override class func canonicalRequest(for request: URLRequest) -> URLRequest {
