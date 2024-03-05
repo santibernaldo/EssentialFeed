@@ -32,8 +32,20 @@ class URLSessionHTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
     
-    func test_getFromURL_performsGETRequestWithURL() {
+    override class func setUp() {
+        super.setUp()
+        
         URLProtocolStub.startInterceptingRequests()
+
+    }
+    
+    override class func tearDown() {
+        super.tearDown()
+        
+        URLProtocolStub.stopInterceptingRequests()
+    }
+    
+    func test_getFromURL_performsGETRequestWithURL() {
         
         let url = URL(string: "http://any-url.com")!
         
@@ -44,28 +56,21 @@ final class URLSessionHTTPClientTests: XCTestCase {
             XCTAssertEqual(request.httpMethod, "GET")
             exp.fulfill()
         }
-        
-        let sut = URLSessionHTTPClient()
-        
-        sut.get(url: url) { result in }
+                
+        makeSUT().get(url: url) { result in }
         
         wait(for: [exp], timeout: 1.0)
-        URLProtocolStub.stopInterceptingRequests()
     }
 
     func test_getFromURL_failsOnRequestError() {
-        URLProtocolStub.startInterceptingRequests()
-        
         let url = URL(string: "http://any-url.com")!
         let error = NSError(domain: "Any error", code: 0)
         
         URLProtocolStub.stub(data: nil, response: nil, error: error)
-        
-        let sut = URLSessionHTTPClient()
-        
+                
         let exp = expectation(description: "Wait for completion")
         
-        sut.get(url: url) { result in
+        makeSUT().get(url: url) { result in
             switch result {
             case let .failure(receivedError as NSError):
                 XCTAssertEqual(receivedError.domain, error.domain)
@@ -79,10 +84,13 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         // ReceivedURLS is a test detail
         wait(for: [exp], timeout: 1.0)
-        URLProtocolStub.stopInterceptingRequests()
     }
     
     // MARK: - Helpers
+    private func makeSUT() -> URLSessionHTTPClient {
+        return URLSessionHTTPClient()
+    }
+    
     private class URLProtocolStub: URLProtocol {
         
         private static var stub: Stub?
