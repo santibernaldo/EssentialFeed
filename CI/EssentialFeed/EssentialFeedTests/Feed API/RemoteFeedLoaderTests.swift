@@ -147,7 +147,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
             messages[index].completion(.success(data, response))
         }
         
-        func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+        func get(url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
             /*
