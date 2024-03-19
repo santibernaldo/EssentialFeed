@@ -19,7 +19,8 @@
       ]
     },
     "testExecutionOrdering" : "random",
-    "threadSanitizerEnabled" : true
+    "threadSanitizerEnabled" : true,
+    "undefinedBehaviorSanitizerEnabled" : true
   },
   "testTargets" : [
     {
