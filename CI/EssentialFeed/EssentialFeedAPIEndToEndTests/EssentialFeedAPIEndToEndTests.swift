@@ -11,23 +11,7 @@ import EssentialFeed
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        
-        let client = URLSessionHTTPClient()
-        let loader = RemoteFeedLoader(client: client, url: testServerURL)
-        
-        let exp = expectation(description: "wait for load description")
-        
-        var receivedResult: LoadFeedResult?
-        
-        loader.load { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 5.0)
-        
-        switch receivedResult {
+        switch getFeedResult() {
         case let .success(items)?:
             XCTAssertEqual(items.count, 8, "Expected 8 items in the test account feed")
             // We assert WHY and WHEN, cause we know the index of the specified item to be asserted
@@ -47,6 +31,30 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
             XCTFail("Expected successful feed result, got no result instead")
         }
         
+    }
+    
+    func getFeedResult(file: StaticString = #filePath,
+                       line: UInt = #line) -> LoadFeedResult? {
+        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        
+        let client = URLSessionHTTPClient()
+        let loader = RemoteFeedLoader(client: client, url: testServerURL)
+        
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(loader, file: file, line: line)
+        
+        let exp = expectation(description: "wait for load description")
+        
+        var receivedResult: LoadFeedResult?
+        
+        loader.load { result in
+            receivedResult = result
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 5.0)
+        
+        return receivedResult
     }
     
     // MARK: - Helpers
