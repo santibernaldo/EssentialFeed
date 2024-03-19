@@ -1,10 +1,10 @@
 {
   "configurations" : [
     {
-      "id" : "2F4CC70D-3368-4BD8-97F9-17809E49DDD8",
+      "id" : "3E60A0B9-24F7-4372-818E-0E2DE8443933",
       "name" : "Test Scheme Action",
       "options" : {
-        "testExecutionOrdering" : "random"
+
       }
     }
   ],
