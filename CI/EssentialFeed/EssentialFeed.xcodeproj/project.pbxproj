@@ -94,13 +94,6 @@
 			path = EssentialFeedAPIEndToEndTests;
 			sourceTree = "<group>";
 		};
-		E41827D22B8B9C5200CF4193 /* Stubs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Stubs;
-			sourceTree = "<group>";
-		};
 		E419240C2B888FF800EEC789 = {
 			isa = PBXGroup;
 			children = (
@@ -136,7 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				E4E6C19F2B8DF7E2003FD4BD /* Feed API */,
-				E41827D22B8B9C5200CF4193 /* Stubs */,
 			);
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
