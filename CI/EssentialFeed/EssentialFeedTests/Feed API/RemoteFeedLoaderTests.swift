@@ -123,7 +123,9 @@ final class RemoteFeedLoaderTests: XCTestCase {
         })
     }
     
-    // The SPY is only CAPTURING values, as we like
+    // The SPY is only CAPTURING values, as we like, and it's targetting the Test.
+    // It doesn't have any behaviour.
+    // We accumulate all the properties we recieve.
     private class HTTPClientSpy: HTTPClient {
         
         private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
@@ -147,6 +149,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
             messages[index].completion(.success(data, response))
         }
         
+        // The signature of the get method are the parameters we're using here
         func get(url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
@@ -187,8 +190,6 @@ final class RemoteFeedLoaderTests: XCTestCase {
     private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
         return .failure(error)
     }
-    
-    
     
     // Factory FeedItem
     private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
@@ -239,3 +240,4 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
 }
+
