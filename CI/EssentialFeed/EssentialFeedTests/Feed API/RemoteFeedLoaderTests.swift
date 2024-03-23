@@ -228,7 +228,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
                 
             // Cases don't match
             default:
-                XCTFail()
+                XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
             }
             
             // We make sure that only assert once
