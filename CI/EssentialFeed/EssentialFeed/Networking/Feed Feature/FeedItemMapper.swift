@@ -6,8 +6,12 @@
 //
 
 internal final class FeedItemMapper {
-    private struct RootFeedItem: Decodable {
+    private struct Root: Decodable {
         let items: [Item]
+        
+        var feed: [FeedItem] {
+            return items.map { $0.item }
+        }
     }
 
     // Internal representation of the FeedItem for the API Module
@@ -29,11 +33,10 @@ internal final class FeedItemMapper {
     private static var OK_200: Int { 200 }
     
     static func map(_ data: Data, _ response: HTTPURLResponse) -> RemoteFeedLoader.Result {
-        guard response.statusCode == OK_200, let root = try? JSONDecoder().decode(RootFeedItem.self, from: data) else {
+        guard response.statusCode == OK_200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
             return .failure(RemoteFeedLoader.Error.invalidData)
         }
         
-        let items = root.items.map { $0.item }
-        return .success(items)
+        return .success(root.feed)
     }
 }

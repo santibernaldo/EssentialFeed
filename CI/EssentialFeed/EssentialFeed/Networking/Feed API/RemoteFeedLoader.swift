@@ -35,6 +35,10 @@ public final class RemoteFeedLoader: FeedLoader {
             // labels or other properties are called through a completionBlock after 
             guard self != nil else { return }
             
+            //Without this self, we can create a retain cycle. We don't know the implementation of the client, maybe it's a Singleton
+            
+            // We can check without this self != nil the instance is deallocated but we call the completion: test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated
+            
             switch result {
             case .success(let data, let response):
                 completion(FeedItemMapper.map(data, response))
