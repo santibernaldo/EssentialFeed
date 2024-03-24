@@ -71,6 +71,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         let receivedValues = resultSuccessFor(data: nil, response: response, error: nil)
         
+        // An Empty Data representation is a valid representation, the 204 represents no content data.
         let emptyData = Data()
         XCTAssertEqual(receivedValues?.data, emptyData)
         XCTAssertEqual(receivedValues?.response.url, response.url)
