@@ -23,11 +23,9 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_getFromURL_performsGETRequestWithURL() {
-        
         let url = anyURL()
         
         let exp = expectation(description: "Wait for completion")
-        exp.expectedFulfillmentCount = 2
         
         var receivedRequests = [URLRequest]()
         URLProtocolStub.observeRequests { request in
