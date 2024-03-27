@@ -13,6 +13,8 @@ import EssentialFeed
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     func demo() {
+        // https://developer.apple.com/documentation/foundation/urlcache
+        //  https://developer.apple.com/documentation/foundation/nsurlsessiondatadelegate/1411612-urlsession
         let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
         
         let configuration = URLSessionConfiguration.default
