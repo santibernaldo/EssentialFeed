@@ -27,6 +27,10 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         /*
         URLCache.shared = cache
          */
+        
+        let url = URL(string: "http://any-url.com")!
+        // This cache policy only returns cached data, review other policies
+        let request = URLRequest(url: url, cachePolicy: .returnCacheDataDontLoad, timeoutInterval: 30.0)
     }
     
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
