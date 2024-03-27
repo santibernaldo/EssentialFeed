@@ -8,7 +8,8 @@
 import XCTest
 import EssentialFeed
 
-final class RemoteFeedLoaderTests: XCTestCase {
+// The test name is clarifying the intent of the test, it shouldn't match the use case name.
+final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 
     func test_init_DoesNotRequestDataFromURL() {
         let (_, client) = makeSUT()

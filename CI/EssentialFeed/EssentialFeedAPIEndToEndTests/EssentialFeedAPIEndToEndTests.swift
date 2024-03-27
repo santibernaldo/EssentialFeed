@@ -12,6 +12,28 @@ import EssentialFeed
 
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
+    func demo() {
+        // https://developer.apple.com/documentation/foundation/urlcache
+        //  https://developer.apple.com/documentation/foundation/nsurlsessiondatadelegate/1411612-urlsession
+        let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        configuration.urlCache = cache
+        
+        //Every request using this URLSession will use the cache we configured
+        let session = URLSession(configuration: configuration)
+        
+        // This would be the default URLCache. It's highly adviced to do it on the didApplicationFinishLaunching
+        /*
+        URLCache.shared = cache
+         */
+        
+        let url = URL(string: "http://any-url.com")!
+        // This cache policy only returns cached data, review other policies
+        let request = URLRequest(url: url, cachePolicy: .returnCacheDataDontLoad, timeoutInterval: 30.0)
+    }
+    
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
         switch getFeedResult() {
         case let .success(items)?:
@@ -39,7 +61,8 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
                        line: UInt = #line) -> LoadFeedResult? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         
-        let client = URLSessionHTTPClient()
+        // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteFeedLoader(client: client, url: testServerURL)
         
         trackForMemoryLeaks(client, file: file, line: line)
