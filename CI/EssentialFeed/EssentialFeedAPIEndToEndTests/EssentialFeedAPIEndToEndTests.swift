@@ -21,6 +21,10 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         //Every request using this URLSession will use the cache we configured
         let session = URLSession(configuration: configuration)
         
+        // This would be the default URLCache. It's highly adviced to do it on the didApplicationFinishLaunching
+        /*
+        URLCache.shared = cache
+         */
     }
     
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
