@@ -61,6 +61,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
                        line: UInt = #line) -> LoadFeedResult? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         
+        // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteFeedLoader(client: client, url: testServerURL)
         
