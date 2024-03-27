@@ -12,6 +12,17 @@ import EssentialFeed
 
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
+    func demo() {
+        let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = cache
+        
+        //Every request using this URLSession will use the cache we configured
+        let session = URLSession(configuration: configuration)
+        
+    }
+    
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
         switch getFeedResult() {
         case let .success(items)?:
