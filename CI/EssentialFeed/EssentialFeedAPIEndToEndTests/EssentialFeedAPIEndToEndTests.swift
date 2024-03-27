@@ -18,6 +18,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
         
         let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
         configuration.urlCache = cache
         
         //Every request using this URLSession will use the cache we configured
@@ -60,7 +61,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
                        line: UInt = #line) -> LoadFeedResult? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         
-        let client = URLSessionHTTPClient()
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteFeedLoader(client: client, url: testServerURL)
         
         trackForMemoryLeaks(client, file: file, line: line)
