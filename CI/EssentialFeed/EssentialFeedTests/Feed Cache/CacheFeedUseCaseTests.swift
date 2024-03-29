@@ -8,18 +8,6 @@
 import XCTest
 import EssentialFeed
 
-class FeedStore {
-    var deleteCachedFeedCallCount = 0
-    var insertCallCount = 0
-    
-    func deleteCacheFeed() {
-        deleteCachedFeedCallCount = 1
-    }
-    
-    func completeDeletion(with error: Error, at index: Int = 0) {
-        
-    }
-}
 
 class LocalFeedLoader {
     
@@ -30,10 +18,40 @@ class LocalFeedLoader {
     }
     
     func save(_ items: [FeedItem]) {
-        store.deleteCacheFeed()
+        store.deleteCacheFeed { [unowned self] error in
+            if error == nil {
+                self.store.insert(items)
+            }
+        }
+    }
+}
+
+class FeedStore {
+    typealias DeletionCompletion = (Error?) -> Void
+    
+    private var deletionCompletions = [DeletionCompletion]()
+    
+    var deleteCachedFeedCallCount = 0
+    var insertCallCount = 0
+    
+    func deleteCacheFeed(completion: @escaping DeletionCompletion) {
+        deleteCachedFeedCallCount += 1
+        deletionCompletions.append(completion)
     }
     
+    func completeDeletion(with error: Error, at index: Int = 0) {
+        deletionCompletions[index](error)
+    }
+    
+    func completeDeletionSuccesfully(at index: Int = 0) {
+        deletionCompletions[index](nil)
+    }
+    
+    func insert(_ items: [FeedItem]) {
+        insertCallCount += 1
+    }
 }
+
 
 class CacheFeedUseCaseTests: XCTestCase {
     
@@ -45,6 +63,12 @@ class CacheFeedUseCaseTests: XCTestCase {
      4. System timestamps the new cache.
      5. System saves new cache data.
      6. System delivers success message.
+     
+     #### Deleting error course (sad path):
+     1. System delivers error.
+
+     #### Saving error course (sad path):
+     1. System delivers error.
 
      */
     
@@ -54,6 +78,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.deleteCachedFeedCallCount, 0)
     }
     
+    // 1. Recipe step
     func test_save_doesDeleteCacheUponCreation() {
         let (store, sut) = makeSUT()
         
@@ -63,15 +88,28 @@ class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.deleteCachedFeedCallCount, 1)
     }
     
+    // 2. Recipe step
+    // We protect with this test avoid calling the error method on the wrong time
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
         let items = [uniqueItem(), uniqueItem()]
         let (store, sut) = makeSUT()
         let deletionError = anyError()
         
         sut.save(items)
+        
         store.completeDeletion(with: deletionError)
         
         XCTAssertEqual(store.insertCallCount, 0)
+    }
+    
+    func test_save_requestNewCacheInsertionOnSuccesfulDeletion() {
+        let items = [uniqueItem(), uniqueItem()]
+        let (store, sut) = makeSUT()
+        
+        sut.save(items)
+        store.completeDeletionSuccesfully()
+        
+        XCTAssertEqual(store.insertCallCount, 1)
     }
     
     //MARK: - Helpers
