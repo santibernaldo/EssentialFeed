@@ -5,14 +5,6 @@
 //  Created by Santi Bernaldo on 27/2/24.
 //
 
-// Internal representation of the FeedItem for the API Module
-internal struct RemoteFeedItem: Decodable {
-    internal let id: UUID
-    internal var description: String?
-    internal let location: String?
-    internal let image: URL
-}
-
 internal final class FeedItemMapper {
     private struct Root: Decodable {
         let items: [RemoteFeedItem]
