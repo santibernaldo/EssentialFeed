@@ -192,46 +192,4 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
         let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.imageURL) }
         return (feed, localFeed)
     }
-    
-    private class FeedStoreSpy: FeedStore {
-        typealias DeletionCompletion = (Error?) -> Void
-        typealias InsertionCompletion = (Error?) -> Void
-        
-        enum ReceivedMessage: Equatable {
-            case deleteCacheFeed
-            case insert([LocalFeedImage], Date)
-        }
-        
-        private(set) var receivedMessages = [ReceivedMessage]()
-        
-        private var deletionCompletions = [DeletionCompletion]()
-        private var insertionCompletions = [InsertionCompletion]()
-            
-        func deleteCacheFeed(completion: @escaping DeletionCompletion) {
-            deletionCompletions.append(completion)
-            receivedMessages.append(.deleteCacheFeed)
-        }
-        
-        func completeDeletion(with error: Error, at index: Int = 0) {
-            deletionCompletions[index](error)
-        }
-        
-        func completeDeletionSuccesfully(at index: Int = 0) {
-            deletionCompletions[index](nil)
-        }
-        
-        func insert(_ localFeed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-            insertionCompletions.append(completion)
-            receivedMessages.append(.insert(localFeed, timestamp))
-        }
-        
-        func completeInsertion(with error: Error, at index: Int = 0) {
-            insertionCompletions[index](error)
-        }
-        
-        func completeInsertionSuccesfully(at index: Int = 0) {
-            insertionCompletions[index](nil)
-        }
-    }
-    
 }
