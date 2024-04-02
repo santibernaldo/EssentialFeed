@@ -46,4 +46,8 @@ class FeedStoreSpy: FeedStore {
     func completeInsertionSuccesfully(at index: Int = 0) {
         insertionCompletions[index](nil)
     }
+    
+    func retrieve() {
+        receivedMessages.append(.retrieveCache)
+    }
 }
