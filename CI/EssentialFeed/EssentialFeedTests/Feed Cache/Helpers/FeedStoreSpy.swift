@@ -6,10 +6,7 @@
 //
 import EssentialFeed
 
-class FeedStoreSpy: FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
-    
+class FeedStoreSpy {
     enum ReceivedMessage: Equatable {
         case deleteCacheFeed
         case insert([LocalFeedImage], Date)
@@ -20,11 +17,9 @@ class FeedStoreSpy: FeedStore {
     
     private var deletionCompletions = [DeletionCompletion]()
     private var insertionCompletions = [InsertionCompletion]()
+    private var retrievalCompletions = [RetrievalCompletion]()
         
-    func deleteCacheFeed(completion: @escaping DeletionCompletion) {
-        deletionCompletions.append(completion)
-        receivedMessages.append(.deleteCacheFeed)
-    }
+    
     
     func completeDeletion(with error: Error, at index: Int = 0) {
         deletionCompletions[index](error)
@@ -34,10 +29,7 @@ class FeedStoreSpy: FeedStore {
         deletionCompletions[index](nil)
     }
     
-    func insert(_ localFeed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-        insertionCompletions.append(completion)
-        receivedMessages.append(.insert(localFeed, timestamp))
-    }
+    
     
     func completeInsertion(with error: Error, at index: Int = 0) {
         insertionCompletions[index](error)
@@ -47,7 +39,24 @@ class FeedStoreSpy: FeedStore {
         insertionCompletions[index](nil)
     }
     
-    func retrieve() {
+    func completeRetrieval(with error: Error, at index: Int = 0) {
+        retrievalCompletions[index](error)
+    }
+}
+
+extension FeedStoreSpy: FeedStore {
+    func retrieve(completion: @escaping RetrievalCompletion) {
         receivedMessages.append(.retrieveCache)
+        retrievalCompletions.append(completion)
+    }
+    
+    func deleteCacheFeed(completion: @escaping DeletionCompletion) {
+        deletionCompletions.append(completion)
+        receivedMessages.append(.deleteCacheFeed)
+    }
+    
+    func insert(_ localFeed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
+        insertionCompletions.append(completion)
+        receivedMessages.append(.insert(localFeed, timestamp))
     }
 }

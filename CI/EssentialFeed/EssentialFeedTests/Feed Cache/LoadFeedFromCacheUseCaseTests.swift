@@ -9,6 +9,29 @@ import XCTest
 import EssentialFeed
 
 final class LoadFeedFromCacheUseCaseTests: XCTestCase {
+    
+    /*
+     ### Load Feed From Cache Use Case
+
+     #### Primary course:
+     1. Execute "Load Image Feed" command with above data.
+     2. System fetches feed data from cache.
+     3. System validates cache is less than seven days old.
+     4. System creates image feed from cached data.
+     5. System delivers image feed.
+
+     #### Error course (sad path):
+     1. System delivers error.
+
+     #### Expired cache course (sad path):
+     1. System deletes cache.
+     2. System delivers no image feed.
+
+     #### Empty cache course (sad path):
+     1. System delivers no image feed.
+
+
+     */
 
     /*
      DRY is a good principle, but not every code that looks alike is duplicate. Before deleting duplication, investigate if it's just an accidental duplication: code that seems the same but conceptually represents something else
@@ -32,10 +55,29 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
     func test_load_requestsCacheRetrieval() {
         let (store, sut) = makeSUT()
         
-        sut.load()
+        sut.load() { _ in }
         
         XCTAssertEqual(store.receivedMessages, [.retrieveCache])
      }
+    
+    // First sad path
+    func test_load_failsOnRetrievalError() {
+        let (store, sut) = makeSUT()
+        let retrievalError = anyNSError()
+        
+        let exp = expectation(description: "Wait for load completion")
+        
+        var receivedError: Error?
+        sut.load { error in
+            receivedError = error
+            exp.fulfill()
+        }
+        
+        store.completeRetrieval(with: retrievalError)
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedError as NSError?, retrievalError)
+    }
 
     // MARK: - Helpers
     private func makeSUT(currentDate: @escaping () -> Date = Date.init ,file: StaticString = #filePath,
@@ -47,5 +89,9 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (store, sut)
+    }
+    
+    private func anyNSError() -> NSError {
+        return NSError(domain: "any error", code: 0)
     }
 }
