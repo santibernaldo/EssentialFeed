@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-class CacheFeedUseCaseTests: XCTestCase {
+class SaveCacheFeedUseCaseTests: XCTestCase {
     
     /*
      #### Primary course (happy path):
