@@ -158,8 +158,6 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
                         file: StaticString = #filePath,
                         line: UInt = #line) {
         
-        
-        
         let exp = expectation(description: "wait for save completion")
         
         var receivedError: LocalFeedLoader.SaveResult?
@@ -172,7 +170,7 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         
-        XCTAssertNotNil(receivedError)
+        XCTAssertEqual(receivedError as? NSError, expectedError as? NSError)
     }
     
     private func anyError() -> NSError {

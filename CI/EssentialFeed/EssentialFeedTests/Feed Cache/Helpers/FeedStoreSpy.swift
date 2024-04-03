@@ -19,8 +19,6 @@ class FeedStoreSpy {
     private var insertionCompletions = [InsertionCompletion]()
     private var retrievalCompletions = [RetrievalCompletion]()
         
-    
-    
     func completeDeletion(with error: Error, at index: Int = 0) {
         deletionCompletions[index](error)
     }
