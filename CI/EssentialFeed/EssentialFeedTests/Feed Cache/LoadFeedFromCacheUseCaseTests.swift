@@ -61,6 +61,10 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
      }
     
     // First sad path
+    /*
+     #### Error course (sad path):
+     1. System delivers error.
+     */
     func test_load_failsOnRetrievalError() {
         let (store, sut) = makeSUT()
         let retrievalError = anyNSError()
@@ -77,6 +81,22 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
             store.completeRetrievalWithEmptyCache()
         })
     }
+    
+    //3. System validates cache is less than seven days old.
+    func test_load_deliversCachedImagesOnLessThanSevenDaysOldCache() {
+        let feed = makeUniqueFeed()
+        let fixedCurrentDate = Date()
+        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        // 7 * 24 * 60 * 60 would be naive because it's not safe use days calculations because depending on daylight savings and calendar rules not every day has 24 hours
+        
+        // Every time the production code asks for a currentDate, it returns the same fixed date
+        let (store, sut) = makeSUT (currentDate: { fixedCurrentDate })
+        
+        expect(sut, toCompleteWithResults: .success(feed.models), when: {
+            store.completeRetrieval(with: feed.local, timestamp: lessThanSevenDaysOldTimestamp)
+        })
+    }
+
     
     private func expect(_ sut: LocalFeedLoader, toCompleteWithResults expectedResult: LocalFeedLoader.LoadResult?, when action: () -> Void,
                         file: StaticString = #filePath,
@@ -116,7 +136,32 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         return (store, sut)
     }
     
+    private func uniqueImage() -> FeedImage {
+        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+    }
+    
+    private func anyURL() -> URL {
+        return URL(string: "http://any-url.com")!
+    }
+
+    private func makeUniqueFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
+        let feed = [uniqueImage(), uniqueImage()]
+        let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.imageURL) }
+        return (feed, localFeed)
+    }
+    
     private func anyNSError() -> NSError {
         return NSError(domain: "any error", code: 0)
+    }
+}
+
+private extension Date {
+    func adding(days: Int) -> Date {
+        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    }
+    
+    // A Date represents a time interval
+    func adding(seconds: TimeInterval) -> Date {
+        return self + seconds
     }
 }
