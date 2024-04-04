@@ -8,6 +8,7 @@
 public final class LocalFeedLoader {
     private let currentDate: () -> Date
     private let store: FeedStore
+    private let calendar = Calendar(identifier: .gregorian)
     
     public typealias SaveResult = Error?
     public typealias LoadResult = LoadFeedResult
@@ -44,6 +45,16 @@ public final class LocalFeedLoader {
         }
     }
     
+    private func maxCacheAge() -> Int {
+        return 7
+    }
+    
+    private func validate(_ timestamp: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAge(), to: timestamp) else {
+            return false
+        }
+        return currentDate() < maxCacheAge
+    }
     func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult?) -> ()) {
         self.store.insert(feed.toLocal(), timestamp: self.currentDate()) { [weak self] error in
             guard self != nil else { return }
