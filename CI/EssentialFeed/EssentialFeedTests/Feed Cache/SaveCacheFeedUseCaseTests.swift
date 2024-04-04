@@ -178,7 +178,7 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
     }
     
     private func uniqueImage() -> FeedImage {
-        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+        return FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
     
     private func anyURL() -> URL {
@@ -187,7 +187,7 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
     
     private func makeUniqueFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
         let feed = [uniqueImage(), uniqueImage()]
-        let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.imageURL) }
+        let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
         return (feed, localFeed)
     }
 }

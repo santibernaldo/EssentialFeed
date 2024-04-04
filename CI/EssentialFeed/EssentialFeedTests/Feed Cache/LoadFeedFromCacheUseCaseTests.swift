@@ -96,6 +96,18 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
             store.completeRetrieval(with: feed.local, timestamp: lessThanSevenDaysOldTimestamp)
         })
     }
+    
+    func test_load_deliversNoImagesOnSevenDaysOldCache() {
+        let feed = makeUniqueFeed()
+        let fixedCurrentDate = Date()
+        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        
+        let (store, sut) = makeSUT (currentDate: { fixedCurrentDate })
+        
+        expect(sut, toCompleteWithResults: .success([]), when: {
+            store.completeRetrieval(with: feed.local, timestamp: lessThanSevenDaysOldTimestamp)
+        })
+    }
 
     
     private func expect(_ sut: LocalFeedLoader, toCompleteWithResults expectedResult: LocalFeedLoader.LoadResult?, when action: () -> Void,
@@ -137,7 +149,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
     }
     
     private func uniqueImage() -> FeedImage {
-        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+        return FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
     
     private func anyURL() -> URL {
@@ -146,7 +158,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
 
     private func makeUniqueFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
         let feed = [uniqueImage(), uniqueImage()]
-        let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.imageURL) }
+        let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
         return (feed, localFeed)
     }
     

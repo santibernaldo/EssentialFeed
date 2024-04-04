@@ -13,6 +13,10 @@ public final class LocalFeedLoader {
     public typealias SaveResult = Error?
     public typealias LoadResult = LoadFeedResult
     
+    public enum ErrorLocalFeedLoader: Swift.Error {
+        case invalidData
+    }
+    
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
@@ -36,10 +40,12 @@ public final class LocalFeedLoader {
                 switch result {
                 case let .failureCache(error):
                     completion(.failure(error))
-                case let .found(feed, _):
+                case let .found(feed, timestamp) where self.validate(timestamp):
                     completion(.success(feed.toModels()))
                 case .emptyCache:
                     completion(.success([]))
+                default:
+                    completion(.failure(ErrorLocalFeedLoader.invalidData))
                 }
             }
         }
@@ -55,6 +61,7 @@ public final class LocalFeedLoader {
         }
         return currentDate() < maxCacheAge
     }
+    
     func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult?) -> ()) {
         self.store.insert(feed.toLocal(), timestamp: self.currentDate()) { [weak self] error in
             guard self != nil else { return }
