@@ -130,6 +130,16 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieveCache, .deleteCacheFeed])
     }
     
+    func test_load_doesNotDeleteCacheOnEmptyCache() {
+        let (store, sut) = makeSUT()
+        
+        sut.load { _ in }
+        
+        store.completeRetrievalWithEmptyCache()
+        
+        XCTAssertEqual(store.receivedMessages, [.retrieveCache])
+    }
+    
     private func expect(_ sut: LocalFeedLoader, toCompleteWithResults expectedResult: LocalFeedLoader.LoadResult?, when action: () -> Void,
                         file: StaticString = #filePath,
                         line: UInt = #line) {
