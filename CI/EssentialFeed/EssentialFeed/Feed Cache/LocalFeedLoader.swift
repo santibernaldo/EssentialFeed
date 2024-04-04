@@ -35,28 +35,28 @@ public final class LocalFeedLoader {
     }
     
     public func load(completion: @escaping (LoadResult?) -> ()) {
-        store.retrieve { result in
+        store.retrieve { [weak self] result in
+            guard let self = self else { return }
+            
             if let result = result {
                 switch result {
                 case let .failureCache(error):
                     completion(.failure(error))
                 case let .found(feed, timestamp) where self.validate(timestamp):
                     completion(.success(feed.toModels()))
-                case .emptyCache:
+                case .found, .emptyCache:
                     completion(.success([]))
-                default:
-                    completion(.failure(ErrorLocalFeedLoader.invalidData))
                 }
             }
         }
     }
     
-    private func maxCacheAge() -> Int {
+    private var maxCacheAgeInDays: Int {
         return 7
     }
     
     private func validate(_ timestamp: Date) -> Bool {
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAge(), to: timestamp) else {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
         return currentDate() < maxCacheAge
