@@ -5,6 +5,7 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 31/3/24.
 //
 
+// Centralized component for dealing with the Cache.
 public final class LocalFeedLoader {
     private let currentDate: () -> Date
     private let store: FeedStore
@@ -41,7 +42,6 @@ public final class LocalFeedLoader {
             if let result = result {
                 switch result {
                 case let .failureCache(error):
-                    store.deleteCacheFeed(completion: { _ in })
                     completion(.failure(error))
                 case let .found(feed, timestamp) where self.validate(timestamp):
                     completion(.success(feed.toModels()))
@@ -53,6 +53,12 @@ public final class LocalFeedLoader {
                 }
             }
         }
+    }
+    
+    public func validateCache() {
+        store.retrieve { [unowned self] _ in }
+        
+        self.store.deleteCacheFeed { _ in }
     }
     
     private var maxCacheAgeInDays: Int {
