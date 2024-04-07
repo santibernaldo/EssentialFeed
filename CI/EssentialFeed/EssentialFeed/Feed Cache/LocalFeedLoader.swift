@@ -7,22 +7,17 @@
 
 // Policy/Rules business model separated from the UseCase ´LocalFeedLoader´which is acting as an Interactor/Controller (Separating App-specific, App-agnostic & Framework logic, Entities vs. Value Objects, Establishing Single Sources of Truth, and Designing Side-effect-free (Deterministic) Domain Models with Functional Core, Imperative Shell Principles from Modulo 2)
 private final class FeedCachePolicy {
-    private let currentDate: () -> Date
     private let calendar = Calendar(identifier: .gregorian)
     
     private var maxCacheAgeInDays: Int {
         return 7
     }
     
-    public init(currentDate: @escaping () -> Date) {
-        self.currentDate = currentDate
-    }
-    
-    func validate(_ timestamp: Date) -> Bool {
+    func validate(_ timestamp: Date, against date: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
-        return currentDate() < maxCacheAge
+        return date < maxCacheAge
     }
 }
 
@@ -30,7 +25,7 @@ private final class FeedCachePolicy {
 public final class LocalFeedLoader {
    
     private let store: FeedStore
-    private let cachePolicy: FeedCachePolicy
+    private let cachePolicy: FeedCachePolicy = FeedCachePolicy()
     private let currentDate: () -> Date
         
     public enum ErrorLocalFeedLoader: Swift.Error {
@@ -40,7 +35,6 @@ public final class LocalFeedLoader {
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
-        self.cachePolicy = FeedCachePolicy(currentDate: currentDate)
     }
 }
 
@@ -55,7 +49,7 @@ extension LocalFeedLoader: FeedLoader {
                 switch result {
                 case let .failureCache(error):
                     completion(.failure(error))
-                case let .found(feed, timestamp) where cachePolicy.validate(timestamp):
+                case let .found(feed, timestamp) where cachePolicy.validate(timestamp, against: currentDate()):
                     completion(.success(feed.toModels()))
                 case .found:
                     completion(.success([]))
@@ -97,7 +91,7 @@ extension LocalFeedLoader {
             guard let self = self else { return }
             if let result = result {
                 switch result {
-                case let .found(_, timestamp) where !cachePolicy.validate(timestamp):
+                case let .found(_, timestamp) where !cachePolicy.validate(timestamp, against: currentDate()):
                     store.deleteCacheFeed(completion: { _ in })
                     
                 case .failureCache:
