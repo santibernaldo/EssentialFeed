@@ -5,29 +5,20 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 31/3/24.
 //
 
-// Centralized component for dealing with the Cache.
-public final class LocalFeedLoader {
+// Policy/Rules business model separated from the UseCase ´LocalFeedLoader´which is acting as an Interactor/Controller (Separating App-specific, App-agnostic & Framework logic, Entities vs. Value Objects, Establishing Single Sources of Truth, and Designing Side-effect-free (Deterministic) Domain Models with Functional Core, Imperative Shell Principles from Modulo 2)
+private final class FeedCachePolicy {
     private let currentDate: () -> Date
-    private let store: FeedStore
     private let calendar = Calendar(identifier: .gregorian)
     
-    public typealias SaveResult = Error?
-    public typealias LoadResult = LoadFeedResult
-    
-    public enum ErrorLocalFeedLoader: Swift.Error {
-        case invalidData
-    }
-    
-    public init(store: FeedStore, currentDate: @escaping () -> Date) {
-        self.store = store
-        self.currentDate = currentDate
-    }
-
     private var maxCacheAgeInDays: Int {
         return 7
     }
     
-    private func validate(_ timestamp: Date) -> Bool {
+    public init(currentDate: @escaping () -> Date) {
+        self.currentDate = currentDate
+    }
+    
+    func validate(_ timestamp: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
@@ -35,7 +26,27 @@ public final class LocalFeedLoader {
     }
 }
 
+// Centralized component for dealing with the Cache.
+public final class LocalFeedLoader {
+   
+    private let store: FeedStore
+    private let cachePolicy: FeedCachePolicy
+    private let currentDate: () -> Date
+        
+    public enum ErrorLocalFeedLoader: Swift.Error {
+        case invalidData
+    }
+    
+    public init(store: FeedStore, currentDate: @escaping () -> Date) {
+        self.store = store
+        self.currentDate = currentDate
+        self.cachePolicy = FeedCachePolicy(currentDate: currentDate)
+    }
+}
+
 extension LocalFeedLoader: FeedLoader {
+    public typealias LoadResult = LoadFeedResult
+
     public func load(completion: @escaping (LoadResult) -> ()) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
@@ -44,7 +55,7 @@ extension LocalFeedLoader: FeedLoader {
                 switch result {
                 case let .failureCache(error):
                     completion(.failure(error))
-                case let .found(feed, timestamp) where self.validate(timestamp):
+                case let .found(feed, timestamp) where cachePolicy.validate(timestamp):
                     completion(.success(feed.toModels()))
                 case .found:
                     completion(.success([]))
@@ -57,6 +68,9 @@ extension LocalFeedLoader: FeedLoader {
 }
 
 extension LocalFeedLoader {
+
+    public typealias SaveResult = Error?
+
     public func save(_ feed: [FeedImage], completion: @escaping (SaveResult?) -> ()) {
         store.deleteCacheFeed { [weak self] error in
             guard let self = self else { return }
@@ -83,10 +97,12 @@ extension LocalFeedLoader {
             guard let self = self else { return }
             if let result = result {
                 switch result {
-                case let .found(_, timestamp) where !validate(timestamp):
+                case let .found(_, timestamp) where !cachePolicy.validate(timestamp):
                     store.deleteCacheFeed(completion: { _ in })
+                    
                 case .failureCache:
                     store.deleteCacheFeed(completion: { _ in })
+                    
                 case .found, .emptyCache:
                     break
                 }

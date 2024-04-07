@@ -27,6 +27,7 @@ import EssentialFeed
 
  */
 
+// A Command changes the state of a system (side-effects) but does not return a value.
 final class ValidateFeedCacheUseCaseTests: XCTestCase {
     
     func test_init_doesNotMessageStoreUponCreation() {
