@@ -156,25 +156,26 @@ final class CodableFeedStoreTests: XCTestCase {
         super.setUp()
         
         // If on the insert, we insert, before calling a completion, for example using a Breakpoint, and then we stop the execution before calling the completion, so the test doesn't ends, we will leave artifacts. The ´tearDown' method won`t be called
-        try? FileManager.default.removeItem(at: storeURL())
+        try? FileManager.default.removeItem(at: testsSpecificStoreURL())
     }
     
     override func tearDown() {
         super.tearDown()
         
-        try? FileManager.default.removeItem(at: storeURL())
+        try? FileManager.default.removeItem(at: testsSpecificStoreURL())
     }
     
     // - MARK: Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
-        let sut = CodableFeedStore(storeURL: storeURL())
+        let sut = CodableFeedStore(storeURL: testsSpecificStoreURL())
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
     }
     
-    private func storeURL() -> URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
+    private func testsSpecificStoreURL() -> URL {
+        // type(of: self) will return ´CodableFeedStoreTests
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
 }
