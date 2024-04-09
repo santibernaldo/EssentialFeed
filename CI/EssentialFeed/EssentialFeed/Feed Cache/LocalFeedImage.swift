@@ -6,7 +6,8 @@
 //
 
 // DTO - Data Transfer Object representation, to decouple Models from different modules and avoid breaking changes between them
-public struct LocalFeedImage: Equatable, Codable {
+// We don't implement Codable here, so this model is agnostic of the Framework for persistence we're using, Codable, CoreData..
+public struct LocalFeedImage: Equatable {
     public let id: UUID
     public var description: String?
     public let location: String?
