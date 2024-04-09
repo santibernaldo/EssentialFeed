@@ -155,14 +155,13 @@ final class CodableFeedStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        // If on the insert, we insert, before calling a completion, for example using a Breakpoint, and then we stop the execution before calling the completion, so the test doesn't ends, we will leave artifacts. The ´tearDown' method won`t be called
-        try? FileManager.default.removeItem(at: testsSpecificStoreURL())
+        setupEmptyStoreState()
     }
     
     override func tearDown() {
         super.tearDown()
         
-        try? FileManager.default.removeItem(at: testsSpecificStoreURL())
+        undoStoreSideEffects()
     }
     
     // - MARK: Helpers
@@ -177,5 +176,17 @@ final class CodableFeedStoreTests: XCTestCase {
     private func testsSpecificStoreURL() -> URL {
         // type(of: self) will return ´CodableFeedStoreTests
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
+    }
+    
+    private func setupEmptyStoreState() {
+        deleteStoreArtifacts()
+    }
+    
+    private func undoStoreSideEffects() {
+        deleteStoreArtifacts()
+    }
+    
+    private func deleteStoreArtifacts() {
+        try? FileManager.default.removeItem(at: testsSpecificStoreURL())
     }
 }
