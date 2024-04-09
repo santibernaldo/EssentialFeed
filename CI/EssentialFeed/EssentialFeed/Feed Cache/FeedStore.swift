@@ -11,6 +11,7 @@ public enum RetrieveCachedFeedResult {
     case failureCache(Error)
 }
 
+// Independent from Framework details. We can use Realm, CoreData or wharever persistence framework we want.
 public protocol FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
