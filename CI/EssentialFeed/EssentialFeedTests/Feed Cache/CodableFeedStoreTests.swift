@@ -175,6 +175,7 @@ final class CodableFeedStoreTests: XCTestCase {
     
     private func testsSpecificStoreURL() -> URL {
         // type(of: self) will return ´CodableFeedStoreTests
+        // .cachesDirectory for the tests, instead of .documents
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
     
