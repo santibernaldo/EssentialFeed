@@ -6,7 +6,7 @@
 //
 
 // DTO - Data Transfer Object representation, to decouple Models from different modules and avoid breaking changes between them
-public struct LocalFeedImage: Equatable {
+public struct LocalFeedImage: Equatable, Codable {
     public let id: UUID
     public var description: String?
     public let location: String?
