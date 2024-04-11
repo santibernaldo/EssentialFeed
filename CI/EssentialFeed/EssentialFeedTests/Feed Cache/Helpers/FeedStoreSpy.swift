@@ -63,8 +63,4 @@ extension FeedStoreSpy: FeedStore {
         insertionCompletions.append(completion)
         receivedMessages.append(.insert(localFeed, timestamp))
     }
-    
-    public func validateCache(completion: @escaping ValidateCompletion) {
-        receivedMessages.append(.retrieveCache)
-    }
 }
