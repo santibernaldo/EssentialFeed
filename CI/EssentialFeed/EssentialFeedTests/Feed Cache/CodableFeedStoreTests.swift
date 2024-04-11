@@ -91,7 +91,7 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .emptyCache)
     }
     
-    func test_retrieve_afterInsertingToEmptyCache_deliversInsertedValues() {
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         // Given
         let sut = makeSUT()
         
