@@ -65,9 +65,14 @@ class CodableFeedStore {
             return completion(.emptyCache)
         }
         
-        let decoder = JSONDecoder()
-        let cache = try! decoder.decode(Cache.self, from: data)
-        completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
+        do {
+            let decoder = JSONDecoder()
+            let cache = try decoder.decode(Cache.self, from: data)
+            completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
+        } catch {
+            completion(.failureCache(error))
+        }
+        
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
@@ -120,8 +125,16 @@ final class CodableFeedStoreTests: XCTestCase {
         let timestamp = Date()
         
         insert(sut, feed: feed, timestamp: timestamp)
-        
         expect(sut, toRetrieveTwice: .found(feed: feed, timestamp: timestamp))
+    }
+    
+    func test_retrieve_deliversFailureOnRetrievalError() {
+        let storeURL = testsSpecificStoreURL()
+        let sut = makeSUT(storeURL: storeURL)
+        
+        try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
+        
+        expect(sut, toRetrieve: .failureCache(anyNSError()))
     }
     
     override func setUp() {
@@ -137,16 +150,14 @@ final class CodableFeedStoreTests: XCTestCase {
     }
     
     // - MARK: Helpers
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
-        let sut = CodableFeedStore(storeURL: testsSpecificStoreURL())
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
+        let sut = CodableFeedStore(storeURL: storeURL ?? testsSpecificStoreURL())
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
     }
-    
 
-    
     private func testsSpecificStoreURL() -> URL {
         // type(of: self) will return ´CodableFeedStoreTests
         // .cachesDirectory for the tests, instead of .documents
@@ -187,7 +198,7 @@ final class CodableFeedStoreTests: XCTestCase {
         
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case let (.emptyCache, .emptyCache):
+            case let (.emptyCache, .emptyCache), let (.failureCache, .failureCache):
                 
                 break
                 
