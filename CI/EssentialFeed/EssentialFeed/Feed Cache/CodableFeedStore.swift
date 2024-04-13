@@ -35,7 +35,8 @@ public class CodableFeedStore: FeedStore {
     }
     
     // With this queue we make sure that operations run SERIALLY in order
-    private let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated)
+    // We add the .concurrent type to have some of the operations being running concurrently, like the 'retrieve' one, which is one which doesn't leave any side-effects on disk
+    private let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated, attributes: .concurrent)
     
     // Implicit dependency that we avoid
     //private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
@@ -64,7 +65,7 @@ public class CodableFeedStore: FeedStore {
     
     public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             do {
                 let encoder = JSONEncoder()
                 let cache = Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp)
@@ -79,7 +80,7 @@ public class CodableFeedStore: FeedStore {
         
     public func deleteCacheFeed(completion: @escaping FeedStore.DeletionCompletion) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
                 return completion(nil)
             }
