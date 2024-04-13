@@ -226,31 +226,7 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
         try? FileManager.default.removeItem(at: testsSpecificStoreURL())
     }
     
-   @discardableResult
-    private func insert(_ sut: FeedStore, feed: [LocalFeedImage], timestamp: Date) -> Error? {
-        let exp = expectation(description: "Wait for cache retrieval")
-
-        var insertionError: Error?
-        sut.insert(feed, timestamp: timestamp) { insertedError in
-            insertionError = insertedError
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-        return insertionError
-    }
-    
-    @discardableResult
-    private func deleteCache(from sut: FeedStore) -> Error? {
-        let exp = expectation(description: "Wait for cache deletion")
-        var deletionError: Error?
-        sut.deleteCacheFeed { receivedDeletionError in
-            deletionError = receivedDeletionError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-        return deletionError
-    }
+   
     
     private func expect(_ sut: FeedStore, toRetrieveTwice expectedResult: RetrieveCachedFeedResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult)
