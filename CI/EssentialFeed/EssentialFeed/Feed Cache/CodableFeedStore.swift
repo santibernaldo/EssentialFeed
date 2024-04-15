@@ -5,6 +5,8 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 11/4/24.
 //
 
+import CoreData
+
 public class CodableFeedStore: FeedStore {
     
     private struct Cache: Codable {
@@ -94,4 +96,18 @@ public class CodableFeedStore: FeedStore {
             }
         }
     }
+}
+
+
+private class ManagedCache: NSManagedObject {
+    @NSManaged var timestamp: Date
+    @NSManaged var feed: NSOrderedSet
+}
+
+private class ManagedFeedImage: NSManagedObject {
+    @NSManaged var id: UUID
+    @NSManaged var imageDescription: String?
+    @NSManaged var location: String?
+    @NSManaged var url: URL
+    @NSManaged var cache: ManagedCache
 }
