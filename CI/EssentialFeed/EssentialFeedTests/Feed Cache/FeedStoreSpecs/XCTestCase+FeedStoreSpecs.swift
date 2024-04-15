@@ -10,11 +10,11 @@ import EssentialFeed
 
 extension FeedStoreSpecs where Self: XCTestCase {
     func assertThatRetrieveDeliversEmptyOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: .emptyCache, file: file, line: line)
+        expect(sut, toRetrieve: .empty, file: file, line: line)
     }
     
     func assertThatRetrievehasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieveTwice: .emptyCache, file: file, line: line)
+        expect(sut, toRetrieveTwice: .empty, file: file, line: line)
     }
     
     func assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -68,7 +68,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         func assertThatDeleteHasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
             deleteCache(from: sut)
             
-            expect(sut, toRetrieve: .emptyCache, file: file, line: line)
+            expect(sut, toRetrieve: .empty, file: file, line: line)
         }
 
         func assertThatDeleteDeliversNoErrorOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -84,7 +84,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
             
             deleteCache(from: sut)
             
-            expect(sut, toRetrieve: .emptyCache, file: file, line: line)
+            expect(sut, toRetrieve: .empty, file: file, line: line)
         }
         
         func assertThatSideEffectsRunSerially(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -153,7 +153,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case let (.emptyCache, .emptyCache), let (.failureCache, .failureCache):
+            case let (.empty, .empty), let (.failure, .failure):
                 
                 break
                 

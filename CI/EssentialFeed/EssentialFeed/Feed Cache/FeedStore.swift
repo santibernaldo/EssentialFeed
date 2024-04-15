@@ -6,9 +6,9 @@
 //
 
 public enum RetrieveCachedFeedResult {
-    case emptyCache
+    case empty
     case found(feed: [LocalFeedImage], timestamp: Date)
-    case failureCache(Error)
+    case failure(Error)
 }
 
 // Independent from Framework details. We can use Realm, CoreData or wharever persistence framework we want.
