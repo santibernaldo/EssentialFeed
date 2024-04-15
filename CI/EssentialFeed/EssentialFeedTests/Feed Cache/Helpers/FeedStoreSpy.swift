@@ -54,7 +54,7 @@ extension FeedStoreSpy: FeedStore {
         retrievalCompletions.append(completion)
     }
     
-    func deleteCacheFeed(completion: @escaping DeletionCompletion) {
+    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         deletionCompletions.append(completion)
         receivedMessages.append(.deleteCacheFeed)
     }

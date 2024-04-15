@@ -78,7 +78,7 @@ public class CodableFeedStore: FeedStore {
         }
     }
         
-    public func deleteCacheFeed(completion: @escaping FeedStore.DeletionCompletion) {
+    public func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
         let storeURL = self.storeURL
         // With the .barrier we make sure we don't create any Race Conditions when inserting, deleting stuff
         queue.async(flags: .barrier) {
