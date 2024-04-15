@@ -1,0 +1,19 @@
+//
+//  XCTestCase+FailableRetrieveFeedStoreSpecs.swift
+//  EssentialFeedTests
+//
+//  Created by Santiago Ochoa Bernaldo de Quiros on 15/4/24.
+//
+
+import XCTest
+import EssentialFeed
+
+extension FailableRetrieveFeedStoreSpecs where Self: XCTestCase {
+    func assertThatRetrieveDeliversFailureOnRetrievalError(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toRetrieve: .failureCache(anyNSError()), file: file, line: line)
+    }
+    
+    func assertThatRetrieveHasNoSideEffectsOnFailure(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toRetrieveTwice: .failureCache(anyNSError()), file: file, line: line)
+    }
+}

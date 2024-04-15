@@ -6,6 +6,8 @@
 //
 
 // These are Specs that are meant to be implemented by other clients, we should break the assertions inside the tests into to tests
+
+//  Future implementations of the FeedStoreSpecs protocol that can’t fail, e.g., an in-memory store, would end up with empty implementations for these methods.
 protocol FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache()
     func test_retrieve_deliversFoundValuesOnNonEmptyCache()
