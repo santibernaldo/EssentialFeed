@@ -95,7 +95,6 @@
 		1CDCE52A2BCEE7A3005864CE /* ManagedFeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedFeedImage.swift; sourceTree = "<group>"; };
 		1CF565832BA994740074D1B8 /* EssentialFeedAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeedAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		1CF565852BA9977C0074D1B8 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
-		1CF565862BA9AB950074D1B8 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; name = CI.xctestplan; path = ../CI.xctestplan; sourceTree = "<group>"; };
 		E41924162B888FF800EEC789 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E41924192B888FF800EEC789 /* EssentialFeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeed.h; sourceTree = "<group>"; };
 		E419241E2B888FF800EEC789 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,14 +142,6 @@
 				1C7F09C12BC1ACA000257FB6 /* FeedCacheTestHelpers.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		1C6F9FBD2BB4502900B05F8E /* test-plans */ = {
-			isa = PBXGroup;
-			children = (
-				1CF565862BA9AB950074D1B8 /* CI.xctestplan */,
-			);
-			path = "test-plans";
 			sourceTree = "<group>";
 		};
 		1C6F9FBE2BB4569800B05F8E /* Feed Cache */ = {
@@ -266,7 +257,6 @@
 				E41924312B88923500EEC789 /* Feed Feature */,
 				E419242F2B88923500EEC789 /* Feed API */,
 				E41924192B888FF800EEC789 /* EssentialFeed.h */,
-				1C6F9FBD2BB4502900B05F8E /* test-plans */,
 			);
 			path = EssentialFeed;
 			sourceTree = "<group>";
