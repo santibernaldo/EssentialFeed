@@ -7,6 +7,7 @@
 
 import XCTest
 
+// We check here how the system behaves with real instances of the production code
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
 
     override func setUpWithError() throws {
