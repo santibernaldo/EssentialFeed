@@ -10,27 +10,23 @@ import XCTest
 // We check here how the system behaves with real instances of the production code
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // MARK: - Helpers
+//    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore {
+//        let storeBundle = Bundle(for: CoreDataFeedStore.self)
+//        // dev/null doesn't leave any artifacts
+//        let storeURL = URL(fileURLWithPath: "/dev/null")
+//        let sut = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+//        trackForMemoryLeaks(sut, file: file, line: line)
+//        return sut
+//    }
+    
+    private func testsSpecificStoreURL() -> URL {
+        // type(of: self) will return ´CodableFeedStoreTests
+        // .cachesDirectory for the tests, instead of .documents
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    private func cachesDirectory() -> URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

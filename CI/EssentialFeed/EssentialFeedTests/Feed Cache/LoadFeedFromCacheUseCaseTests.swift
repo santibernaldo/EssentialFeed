@@ -10,6 +10,7 @@ import EssentialFeed
 
 // Loading from the cache is a Query, and ideally should have no side-effects.
 // Deleting the cache alters the state of the system, which is a side-effect
+// The test name doesn't have to match the class name. This test class is testing the UseCase scenario, as is testing a bunch of classes colaborating between them.
 final class LoadFeedFromCacheUseCaseTests: XCTestCase {
     
     /*
