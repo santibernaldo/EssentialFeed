@@ -15,6 +15,7 @@ public final class LocalFeedLoader {
         case invalidData
     }
     
+    // To decouple the application from Framework details, we don't let frameworks dictate the Use Case interfaces (adding Codable requirements or CoreData managed context parameters) we only pass a FeedStore class
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
