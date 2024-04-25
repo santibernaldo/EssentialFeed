@@ -6,6 +6,10 @@
 //
 
 // Centralized component for dealing with the Cache.
+
+// It interacts with UseCases, like FeedStore, so it can be a Controller, Interactor, Model Controller... It holds application specific business logic
+
+//MARK: - Application Specific Business Logic, not Business Rules 
 public final class LocalFeedLoader {
    
     private let store: FeedStore

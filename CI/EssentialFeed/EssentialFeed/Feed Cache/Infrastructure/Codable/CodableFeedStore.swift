@@ -7,6 +7,8 @@
 
 import CoreData
 
+// INFRASTRUCTURES, Components with side effects, pushing the boundaries of the system.
+// Infrastructures components are messy deal with Network, Persistence... things that can fails, and has side-effects (insert or delete functions, not QUERY functions)
 public class CodableFeedStore: FeedStore {
     
     private struct Cache: Codable {
