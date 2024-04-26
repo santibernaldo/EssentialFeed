@@ -86,7 +86,7 @@ public class CodableFeedStore: FeedStore {
     public func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
         let storeURL = self.storeURL
         // With the .barrier we make sure we don't create any Race Conditions when inserting, deleting stuff
-        // These operations run Serially (THEY ARE RUN BLOCKING THE EXECUTION BEFORE GETTING FINISHED)
+        // These operations run Serially, we guarantee data consistency, so every insertion ends with it required to be finished, so other thread doesn't try to access a value that doesn't exist, or it's wrong (THEY ARE RUN BLOCKING THE EXECUTION BEFORE GETTING FINISHED)
         queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
                 return completion(nil)
