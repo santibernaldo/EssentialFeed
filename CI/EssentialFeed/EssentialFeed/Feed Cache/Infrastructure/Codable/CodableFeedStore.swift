@@ -40,6 +40,7 @@ public class CodableFeedStore: FeedStore {
     
     // With this queue we make sure that operations run SERIALLY in order
     // We add the .concurrent type to have some of the operations being running concurrently, like the 'retrieve' one, which is one which doesn't leave any side-effects on disk
+    
     private let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated, attributes: .concurrent)
     
     // Implicit dependency that we avoid
@@ -85,6 +86,7 @@ public class CodableFeedStore: FeedStore {
     public func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
         let storeURL = self.storeURL
         // With the .barrier we make sure we don't create any Race Conditions when inserting, deleting stuff
+        // These operations run Serially (THEY ARE RUN BLOCKING THE EXECUTION BEFORE GETTING FINISHED)
         queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
                 return completion(nil)

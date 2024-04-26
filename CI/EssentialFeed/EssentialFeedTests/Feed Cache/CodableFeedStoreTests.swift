@@ -137,7 +137,7 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
         assertThatDeleteHasNoSideEffectsOnDeletionError(on: sut)
     }
     
-    // Orders matters, so that's what we measure here. The order of being executed these operations
+    // Orders matters, so that's what we measure here. The order of being executed these operations, one after another
     func test_storeSideEffects_runSerially() {
         let sut = makeSUT()
         
