@@ -87,6 +87,8 @@ final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
         // dev/null doesn't leave any artifacts
+        // The 'null' device discards all data writen to it, but reports that the write operation succeeded.
+        // We create a CoreDAta stack with an in-memory persistent store configuration for the tests
         let storeURL = URL(fileURLWithPath: "/dev/null")
         let sut = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
         trackForMemoryLeaks(sut, file: file, line: line)

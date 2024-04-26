@@ -17,6 +17,8 @@ public protocol FeedStore {
     typealias InsertionCompletion = (Error?) -> Void
     typealias RetrievalCompletion = (RetrieveCachedFeedResult?) -> Void
 
+    /// The client is the responsible to use the right thread type, Main Queue to use this data on a main thread, or on a background thread
+    
     /// The completion handler can be invoked in any thread.
     /// Clients are responsible to dispatch to appropiate thread, if needed
     func deleteCachedFeed(completion: @escaping DeletionCompletion)
