@@ -31,6 +31,7 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
         setupEmptyStoreState()
     }
     
+    // Sometimes the tearDown method cannot be called, in case our system failed, or it didn't end the test because a breakpoint was stopped, without calling the completion and the test didn't end, so we need to to remove the artifacts on the setUp method
     override func tearDown() {
         super.tearDown()
         
