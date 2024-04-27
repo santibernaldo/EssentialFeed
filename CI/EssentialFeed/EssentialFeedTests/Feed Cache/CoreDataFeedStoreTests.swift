@@ -8,7 +8,6 @@
 import XCTest
 import EssentialFeed
 
-
 final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
@@ -90,7 +89,7 @@ final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
         // The 'null' device discards all data writen to it, but reports that the write operation succeeded.
         // We create a CoreDAta stack with an in-memory persistent store configuration for the tests
         let storeURL = URL(fileURLWithPath: "/dev/null")
-        let sut = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+        let sut = try! CoreDataFeedStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
