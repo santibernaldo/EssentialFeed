@@ -72,6 +72,8 @@ public final class CoreDataFeedStore: FeedStore {
                 try ManagedCache.find(in: context).map(context.delete).map(context.save)
                 completion(nil)
             } catch {
+                // We do a rollback on the context every time the deleteError throws
+                context.rollback()
                 completion(error)
             }
         }
