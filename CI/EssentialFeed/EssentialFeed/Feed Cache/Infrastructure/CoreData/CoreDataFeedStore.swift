@@ -45,6 +45,7 @@ public final class CoreDataFeedStore: FeedStore {
                 completion(.failure(error))
             }
         }
+
     }
     
     public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
@@ -57,6 +58,8 @@ public final class CoreDataFeedStore: FeedStore {
                 try context.save()
                 completion(nil)
             } catch {
+                // when there's a failure, we need to revert the changes
+                context.rollback()
                 completion(error)
             }
         }
