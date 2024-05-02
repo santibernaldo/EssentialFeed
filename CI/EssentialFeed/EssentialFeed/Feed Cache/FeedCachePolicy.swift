@@ -26,7 +26,8 @@
         return 7
     }
     
-    static func validate(_ timestamp: Date, against date: Date) -> Bool {
+    static func validate(_ timestamp: Date?, against date: Date) -> Bool {
+        guard let timestamp = timestamp else { return false }
         guard let maxCacheAge = FeedCachePolicy.calendar.date(byAdding: .day, value: FeedCachePolicy.maxCacheAgeInDays, to: timestamp) else {
             return false
         }

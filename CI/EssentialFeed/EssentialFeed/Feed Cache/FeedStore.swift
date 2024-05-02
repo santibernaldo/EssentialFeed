@@ -7,9 +7,14 @@
 
 // Independent from Framework details. We can use Realm, CoreData or wharever persistence framework we want.
 
-public enum CachedFeed {
-    case empty
-    case found(feed: [LocalFeedImage], timestamp: Date)
+public struct CachedFeed {
+    public let feed: [LocalFeedImage]
+    public let timestamp: Date
+    
+    public init(feed: [LocalFeedImage], timestamp: Date) {
+        self.feed = feed
+        self.timestamp = timestamp
+    }
 }
 
 public protocol FeedStore {
@@ -17,7 +22,7 @@ public protocol FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
     
-    typealias RetrievalResult = Swift.Result<CachedFeed, Error>
+    typealias RetrievalResult = Swift.Result<CachedFeed?, Error>
     typealias RetrievalCompletion = (RetrievalResult?) -> Void
 
     /// The client is the responsible to use the right thread type, Main Queue to use this data on a main thread, or on a background thread
