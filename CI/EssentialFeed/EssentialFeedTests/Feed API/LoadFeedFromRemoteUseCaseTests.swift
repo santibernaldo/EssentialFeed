@@ -129,7 +129,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     // We accumulate all the properties we recieve.
     private class HTTPClientSpy: HTTPClient {
         
-        private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
+        private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         var requestedURLS: [URL] {
             return messages.map { $0.url }
@@ -147,11 +147,11 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
                 httpVersion: nil,
                 headerFields: nil
             )!
-            messages[index].completion(.success(data, response))
+            messages[index].completion(.success((data, response)))
         }
         
         // The signature of the get method are the parameters we're using here
-        func get(url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+        func get(url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
             /*
