@@ -58,7 +58,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
     
     func getFeedResult(file: StaticString = #filePath,
-                       line: UInt = #line) -> LoadFeedResult? {
+                       line: UInt = #line) -> FeedLoader.Result? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         
         // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
@@ -70,7 +70,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         
         let exp = expectation(description: "wait for load description")
         
-        var receivedResult: LoadFeedResult?
+        var receivedResult: FeedLoader.Result?
         
         loader.load { result in
             receivedResult = result

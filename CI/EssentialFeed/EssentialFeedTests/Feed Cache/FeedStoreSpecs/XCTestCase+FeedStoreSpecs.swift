@@ -153,7 +153,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case let (.empty, .empty), let (.failure, .failure):
+            case (.empty, .empty), (.failure, .failure):
                 
                 break
                 
@@ -162,7 +162,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
                 XCTAssertEqual(retrieved.timestamp, expected.timestamp, file: file, line: line)
                 
             default:
-                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)
+                XCTFail("Expected to retrieve \(expectedResult), got \(String(describing: retrievedResult)) instead", file: file, line: line)
             }
             
             exp.fulfill()

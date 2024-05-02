@@ -9,7 +9,7 @@ import Foundation
 
 public final class RemoteFeedLoader: FeedLoader {
     
-    public typealias Result = LoadFeedResult
+    public typealias Result = FeedLoader.Result
     
     private let client: HTTPClient
     
@@ -26,7 +26,7 @@ public final class RemoteFeedLoader: FeedLoader {
         self.url = url
     }
     
-    public func load(completion: @escaping (LoadFeedResult) -> ()){
+    public func load(completion: @escaping (FeedLoader.Result) -> ()){
         client.get(url: url) { [weak self] result in
             
             // With the static FeedMapper.map into the completion, we avoid a memory leak
