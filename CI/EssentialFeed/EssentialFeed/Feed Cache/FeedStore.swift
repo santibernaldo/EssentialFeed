@@ -13,11 +13,12 @@ public enum CachedFeed {
 }
 
 public protocol FeedStore {
-    typealias Result = Swift.Result<CachedFeed, Error>
     
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
-    typealias RetrievalCompletion = (Result?) -> Void
+    
+    typealias RetrievalResult = Swift.Result<CachedFeed, Error>
+    typealias RetrievalCompletion = (RetrievalResult?) -> Void
 
     /// The client is the responsible to use the right thread type, Main Queue to use this data on a main thread, or on a background thread
     
