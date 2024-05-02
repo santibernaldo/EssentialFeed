@@ -14,7 +14,7 @@
 // only encapsulates the feed cache validation policy/rules)
 
 //MARK: - Value Object (Not an Entity with a property which identifies the model)
-internal final class FeedCachePolicy {
+ final class FeedCachePolicy {
     // It holds no state, it's a Value Object. So we can make their properties and methods statics
     private init() {}
     

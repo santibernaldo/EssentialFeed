@@ -5,7 +5,7 @@
 //  Created by Santi Bernaldo on 27/2/24.
 //
 
-internal final class FeedItemMapper {
+ final class FeedItemMapper {
     private struct Root: Decodable {
         let items: [RemoteFeedItem]
     }
