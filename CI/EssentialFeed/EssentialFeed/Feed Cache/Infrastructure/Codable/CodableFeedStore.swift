@@ -76,9 +76,9 @@ public class CodableFeedStore: FeedStore {
                 let cache = Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp)
                 let encodedData = try encoder.encode(cache)
                 try encodedData.write(to: storeURL)
-                completion(nil)
+                completion(.success(()))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -89,14 +89,14 @@ public class CodableFeedStore: FeedStore {
         // These operations run Serially, we guarantee data consistency, so every insertion ends with it required to be finished, so other thread doesn't try to access a value that doesn't exist, or it's wrong (THEY ARE RUN BLOCKING THE EXECUTION BEFORE GETTING FINISHED)
         queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
-                return completion(nil)
+                return completion(.success(()))
             }
             
             do {
                 try FileManager.default.removeItem(at: storeURL)
-                completion(nil)
+                return completion(.success(()))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

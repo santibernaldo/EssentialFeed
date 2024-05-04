@@ -56,11 +56,11 @@ public final class CoreDataFeedStore: FeedStore {
                 managedCache.feed = ManagedFeedImage.images(from: feed, in: context)
                 
                 try context.save()
-                completion(nil)
+                completion(.success(()))
             } catch {
                 // when there's a failure, we need to revert the changes
                 context.rollback()
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -70,11 +70,11 @@ public final class CoreDataFeedStore: FeedStore {
             do {
                 // We try to find the cache, if found we delete it, and then we save the operation
                 try ManagedCache.find(in: context).map(context.delete).map(context.save)
-                completion(nil)
+                completion(.success(()))
             } catch {
                 // We do a rollback on the context every time the deleteError throws
                 context.rollback()
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

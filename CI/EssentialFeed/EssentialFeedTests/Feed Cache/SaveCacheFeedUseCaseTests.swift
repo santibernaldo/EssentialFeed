@@ -87,7 +87,7 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
         let (store, sut) = makeSUT()
         let deletionError = anyNSError()
         
-        expect(sut, toCompleteWithError: deletionError) {
+        expect(sut, toCompleteWithError: .failure(deletionError)) {
             store.completeDeletion(with: deletionError)
         }
     }
@@ -100,7 +100,7 @@ class SaveCacheFeedUseCaseTests: XCTestCase {
         let (store, sut) = makeSUT()
         let insertionError = anyNSError()
         
-        expect(sut, toCompleteWithError: insertionError) {
+        expect(sut, toCompleteWithError: .failure(insertionError)) {
             store.completeDeletionSuccesfully()
             store.completeInsertion(with: insertionError)
         }
