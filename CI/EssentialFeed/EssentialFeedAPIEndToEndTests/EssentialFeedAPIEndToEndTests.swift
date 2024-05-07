@@ -39,14 +39,14 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         case let .success(items)?:
             XCTAssertEqual(items.count, 8, "Expected 8 items in the test account feed")
             // We assert WHY and WHEN, cause we know the index of the specified item to be asserted
-            XCTAssertEqual(items[0], expectedItem(at: 0))
-            XCTAssertEqual(items[1], expectedItem(at: 1))
-            XCTAssertEqual(items[2], expectedItem(at: 2))
-            XCTAssertEqual(items[3], expectedItem(at: 3))
-            XCTAssertEqual(items[4], expectedItem(at: 4))
-            XCTAssertEqual(items[5], expectedItem(at: 5))
-            XCTAssertEqual(items[6], expectedItem(at: 6))
-            XCTAssertEqual(items[7], expectedItem(at: 7))
+            XCTAssertEqual(items[0], expectedImage(at: 0))
+            XCTAssertEqual(items[1], expectedImage(at: 1))
+            XCTAssertEqual(items[2], expectedImage(at: 2))
+            XCTAssertEqual(items[3], expectedImage(at: 3))
+            XCTAssertEqual(items[4], expectedImage(at: 4))
+            XCTAssertEqual(items[5], expectedImage(at: 5))
+            XCTAssertEqual(items[6], expectedImage(at: 6))
+            XCTAssertEqual(items[7], expectedImage(at: 7))
             
         case let .failure(error)?:
             XCTFail("Exoected successful feed result, got \(error) instead")
@@ -58,7 +58,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
     
     func getFeedResult(file: StaticString = #filePath,
-                       line: UInt = #line) -> LoadFeedResult? {
+                       line: UInt = #line) -> FeedLoader.Result? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         
         // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
@@ -70,7 +70,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         
         let exp = expectation(description: "wait for load description")
         
-        var receivedResult: LoadFeedResult?
+        var receivedResult: FeedLoader.Result?
         
         loader.load { result in
             receivedResult = result
@@ -84,12 +84,12 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func expectedItem(at index: Int) -> FeedItem {
-        return FeedItem(
+    private func expectedImage(at index: Int) -> FeedImage {
+        return FeedImage(
             id: id(at: index),
             description: description(at: index),
             location: location(at: index),
-            imageURL: imageURL(at: index))
+            url: url(at: index))
     }
     
     private func id(at index: Int) -> UUID {
@@ -131,7 +131,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         ][index]
     }
     
-    private func imageURL(at index: Int) -> URL {
+    private func url(at index: Int) -> URL {
         return URL(string: "https://url-\(index+1).com")!
     }
     

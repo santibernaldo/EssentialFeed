@@ -105,13 +105,13 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         
         let item1 = makeItem(
             id: UUID(),
-            imageURL: URL(string: "http://a-url.com")!)
+            url: URL(string: "http://a-url.com")!)
         
         let item2 = makeItem(
             id: UUID(),
             description: "a description",
             location: "a location",
-            imageURL: URL(string: "http://another-url.com")!)
+            url: URL(string: "http://another-url.com")!)
         
         let items = [item1.model, item2.model]
         
@@ -129,7 +129,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     // We accumulate all the properties we recieve.
     private class HTTPClientSpy: HTTPClient {
         
-        private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
+        private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         var requestedURLS: [URL] {
             return messages.map { $0.url }
@@ -147,11 +147,11 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
                 httpVersion: nil,
                 headerFields: nil
             )!
-            messages[index].completion(.success(data, response))
+            messages[index].completion(.success((data, response)))
         }
         
         // The signature of the get method are the parameters we're using here
-        func get(url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+        func get(url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
             /*
@@ -194,14 +194,14 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     }
     
     // Factory FeedItem
-    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
-        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, url: URL) -> (model: FeedImage, json: [String: Any]) {
+        let item = FeedImage(id: id, description: description, location: location, url: url)
         
         let json = [
             "id": id.uuidString,
             "description": description,
             "location": location,
-            "image": imageURL.absoluteString
+            "image": url.absoluteString
         ].compactMapValues { $0 }
         
         return (item, json)
