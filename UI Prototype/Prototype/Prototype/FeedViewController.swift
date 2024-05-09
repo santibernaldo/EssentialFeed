@@ -27,7 +27,6 @@ final class FeedViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return feed.count
     }
-
 }
 
 extension FeedImageCell {
@@ -37,8 +36,8 @@ extension FeedImageCell {
         
         descriptionLabel.text = model.description
         descriptionLabel.isHidden = model.description == nil
-        
-        feedImageView.image = UIImage(named: model.imageName)
+                
+        fadeIn(UIImage(named: model.imageName))
     }
 }
 
