@@ -39,7 +39,7 @@ class FeedImageCell: UITableViewCell {
             animations: {
                 self.feedImageView.alpha = 1
             }, completion: { completed in
-                feedImageContainer.stopShimmering()
+                self.feedImageContainer.stopShimmering()
             })
     }
     
