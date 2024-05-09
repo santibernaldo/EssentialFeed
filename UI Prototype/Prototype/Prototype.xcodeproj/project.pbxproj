@@ -13,6 +13,7 @@
 		1C73741A2BE685FC00912A95 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1C7374192BE685FC00912A95 /* Base */; };
 		1C73741C2BE685FD00912A95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C73741B2BE685FD00912A95 /* Assets.xcassets */; };
 		1C73741F2BE685FD00912A95 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1C73741E2BE685FD00912A95 /* Base */; };
+		1C9249CE2BECCACB00713E20 /* FeedImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9249CD2BECCACB00713E20 /* FeedImageCell.swift */; };
 		1CE818A92BEA941500568052 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE818A82BEA941500568052 /* FeedViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,7 @@
 		1C73741B2BE685FD00912A95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C73741E2BE685FD00912A95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C7374202BE685FD00912A95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1C9249CD2BECCACB00713E20 /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 		1CE818A82BEA941500568052 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +64,7 @@
 				1C7374142BE685FC00912A95 /* SceneDelegate.swift */,
 				1CE818A82BEA941500568052 /* FeedViewController.swift */,
 				1C0DDAB52BEA95D100D1FE87 /* FeedImageViewModel+PrototypeData.swift */,
+				1C9249CD2BECCACB00713E20 /* FeedImageCell.swift */,
 				1C7374182BE685FC00912A95 /* Main.storyboard */,
 				1C73741B2BE685FD00912A95 /* Assets.xcassets */,
 				1C73741D2BE685FD00912A95 /* LaunchScreen.storyboard */,
@@ -145,6 +148,7 @@
 				1CE818A92BEA941500568052 /* FeedViewController.swift in Sources */,
 				1C7374152BE685FC00912A95 /* SceneDelegate.swift in Sources */,
 				1C0DDAB62BEA95D100D1FE87 /* FeedImageViewModel+PrototypeData.swift in Sources */,
+				1C9249CE2BECCACB00713E20 /* FeedImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

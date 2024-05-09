@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="580" id="S8a-Ig-dsV">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="580" id="S8a-Ig-dsV" customClass="FeedImageCell" customModule="Prototype" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="393" height="580"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S8a-Ig-dsV" id="HD1-os-SX9">
@@ -104,6 +104,12 @@ Location</string>
                                         <constraint firstAttribute="trailingMargin" secondItem="HpL-aG-nbd" secondAttribute="trailing" id="zUn-60-H71"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="4Jv-mU-oCC" id="V9S-rq-NFq"/>
+                                    <outlet property="feedImageView" destination="ee3-GH-vZI" id="F8Z-uB-9hR"/>
+                                    <outlet property="locationContainer" destination="fxP-jo-Xw0" id="QHw-X9-wTA"/>
+                                    <outlet property="locationLabel" destination="Oab-yw-Ni6" id="3jL-MY-Y5h"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
