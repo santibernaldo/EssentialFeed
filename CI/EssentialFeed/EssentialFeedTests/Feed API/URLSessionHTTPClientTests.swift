@@ -23,7 +23,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_getFromURL_performsGETRequestWithURL() {
-        
         let url = anyURL()
         
         let exp = expectation(description: "Wait for completion")
@@ -34,7 +33,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
                 
-        makeSUT().get(url: url) { result in }
+        // We guarantee the request finishes before the test ends
+        makeSUT().get(url: url) { _ in }
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -42,7 +42,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     func test_getFromURL_failsOnRequestError() {
         // ReceivedURLS is a test detail
 
-        let requestError = anyError()
+        let requestError = anyNSError()
                 
         let receivedError = resultErrorFor(data: nil, response: nil, error: requestError) as? NSError
                 
@@ -53,11 +53,11 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(resultErrorFor(data: nil, response: nil, error: nil))
         XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse(), error: nil))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: nil))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse(), error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHTTPURLResponse(), error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: anyNSError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: nil))
     }
     
@@ -66,6 +66,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         let receivedValues = resultSuccessFor(data: nil, response: response, error: nil)
         
+        // An Empty Data representation is a valid representation, the 204 represents no content data.
         let emptyData = Data()
         XCTAssertEqual(receivedValues?.data, emptyData)
         XCTAssertEqual(receivedValues?.response.url, response.url)
@@ -82,49 +83,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(receivedValues?.response.statusCode, response.statusCode)
     }
     
-    private func resultSuccessFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
-        URLProtocolStub.stub(data: data, response: response, error: error)
-        let sut = makeSUT(file: file, line: line)
-        let exp = expectation(description: "Wait for completion")
-        
-        var receivedValues: (data: Data, response: HTTPURLResponse)?
-        
-        sut.get(url: anyURL()) { result in
-            switch result {
-            case let .success(data, response):
-                receivedValues = (data, response)
-            default:
-                XCTFail("Expected failure, got \(result) instead", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-        return receivedValues
-    }
     
-    private func resultErrorFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> Error? {
-        URLProtocolStub.stub(data: data, response: response, error: error)
-        let sut = makeSUT(file: file, line: line)
-        let exp = expectation(description: "Wait for completion")
-        
-        var receivedError: Error?
-        sut.get(url: anyURL()) { result in
-            // TODO Legacy: Refactor Result
-            switch result {
-            case let .failure(error):
-                receivedError = error
-            default:
-                XCTFail("Expected failure, got \(result) instead", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-        return receivedError
-    }
     
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #filePath,
@@ -136,12 +95,49 @@ final class URLSessionHTTPClientTests: XCTestCase {
         return sut
     }
     
-    private func anyData() -> Data {
-        return Data(bytes: "any data".utf8)
+    private func resultSuccessFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
+        let result = resultFor(data: data, response: response, error: error)
+        
+        switch result {
+        case let .success(data, response):
+             return (data, response)
+        default:
+            XCTFail("Expected success, got \(result) instead", file: file, line: line)
+            return nil
+        }
     }
     
-    private func anyError() -> NSError {
-        return NSError(domain: "any error", code: 0)
+    private func resultErrorFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> Error? {
+        let result = resultFor(data: data, response: response, error: error)
+        
+        switch result {
+        case let .failure(error):
+            return error
+        default:
+            XCTFail("Expected failure, got \(result) instead", file: file, line: line)
+            return nil
+        }
+    }
+    
+    private func resultFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> HTTPClient.Result {
+        URLProtocolStub.stub(data: data, response: response, error: error)
+        
+        let sut = makeSUT(file: file, line: line)
+        let exp = expectation(description: "Wait for completion")
+        
+        var receivedResult: HTTPClient.Result!
+        sut.get(url: anyURL()) { result in
+            receivedResult = result
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        return receivedResult
+    }
+    
+    private func anyData() -> Data {
+        return Data(bytes: "any data".utf8)
     }
     
     private func nonHTTPURLResponse() -> URLResponse {
@@ -150,10 +146,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     private func anyHTTPURLResponse() -> HTTPURLResponse {
         return HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
-    }
-    
-    private func anyURL() -> URL {
-        return URL(string: "http://any-url.com")!
     }
     
     private class URLProtocolStub: URLProtocol {
@@ -177,7 +169,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         // It means we can handle this request, and we can control over its fate
         override class func canInit(with request: URLRequest) -> Bool {
-            requestObserver?(request)
             return true
         }
         
@@ -196,6 +187,11 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func startLoading() {
+            if let requestObserver = URLProtocolStub.requestObserver {
+                client?.urlProtocolDidFinishLoading(self)
+                return requestObserver(request)
+            }
+            
             if let error = URLProtocolStub.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }

@@ -8,7 +8,8 @@
 import XCTest
 import EssentialFeed
 
-final class RemoteFeedLoaderTests: XCTestCase {
+// The test name is clarifying the intent of the test, it shouldn't match the use case name.
+final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 
     func test_init_DoesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
@@ -104,13 +105,13 @@ final class RemoteFeedLoaderTests: XCTestCase {
         
         let item1 = makeItem(
             id: UUID(),
-            imageURL: URL(string: "http://a-url.com")!)
+            url: URL(string: "http://a-url.com")!)
         
         let item2 = makeItem(
             id: UUID(),
             description: "a description",
             location: "a location",
-            imageURL: URL(string: "http://another-url.com")!)
+            url: URL(string: "http://another-url.com")!)
         
         let items = [item1.model, item2.model]
         
@@ -123,10 +124,12 @@ final class RemoteFeedLoaderTests: XCTestCase {
         })
     }
     
-    // The SPY is only CAPTURING values, as we like
+    // The SPY is only CAPTURING values, as we like, and it's targetting the Test.
+    // It doesn't have any behaviour.
+    // We accumulate all the properties we recieve.
     private class HTTPClientSpy: HTTPClient {
         
-        private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
+        private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         var requestedURLS: [URL] {
             return messages.map { $0.url }
@@ -144,10 +147,11 @@ final class RemoteFeedLoaderTests: XCTestCase {
                 httpVersion: nil,
                 headerFields: nil
             )!
-            messages[index].completion(.success(data, response))
+            messages[index].completion(.success((data, response)))
         }
         
-        func get(url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+        // The signature of the get method are the parameters we're using here
+        func get(url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
             /*
@@ -178,6 +182,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(client: client, url: url)
         
+        // We be sure client and sut are deallocated after every test is finished
         trackForMemoryLeaks(client)
         trackForMemoryLeaks(sut)
         
@@ -188,17 +193,15 @@ final class RemoteFeedLoaderTests: XCTestCase {
         return .failure(error)
     }
     
-    
-    
     // Factory FeedItem
-    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
-        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, url: URL) -> (model: FeedImage, json: [String: Any]) {
+        let item = FeedImage(id: id, description: description, location: location, url: url)
         
         let json = [
             "id": id.uuidString,
             "description": description,
             "location": location,
-            "image": imageURL.absoluteString
+            "image": url.absoluteString
         ].compactMapValues { $0 }
         
         return (item, json)
@@ -226,7 +229,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
                 
             // Cases don't match
             default:
-                XCTFail()
+                XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
             }
             
             // We make sure that only assert once
@@ -239,3 +242,4 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
 }
+
