@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C4CB63C2BECF0BA0029F8DC /* EssentialFeediOS.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1C4CB63B2BECF0BA0029F8DC /* EssentialFeediOS.docc */; };
 		1C4CB6422BECF0BA0029F8DC /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4CB6382BECF0BA0029F8DC /* EssentialFeediOS.framework */; };
+		1C4CB6522BED1A200029F8DC /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4CB6512BED1A200029F8DC /* FeedViewControllerTests.swift */; };
 		1C4FE0912BC852DA00B230AB /* CodableFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FE0902BC852DA00B230AB /* CodableFeedStore.swift */; };
 		1C5361EF2BBC54EB00F49D3E /* RemoteFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5361EE2BBC54EB00F49D3E /* RemoteFeedItem.swift */; };
 		1C5361F12BBC551300F49D3E /* LocalFeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5361F02BBC551300F49D3E /* LocalFeedImage.swift */; };
@@ -91,6 +92,7 @@
 		1C4CB63B2BECF0BA0029F8DC /* EssentialFeediOS.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = EssentialFeediOS.docc; sourceTree = "<group>"; };
 		1C4CB6412BECF0BA0029F8DC /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C4CB64F2BECF15A0029F8DC /* EssentialFeediOSTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOSTestPlan.xctestplan; sourceTree = "<group>"; };
+		1C4CB6512BED1A200029F8DC /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
 		1C4FE0902BC852DA00B230AB /* CodableFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableFeedStore.swift; sourceTree = "<group>"; };
 		1C5361EE2BBC54EB00F49D3E /* RemoteFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItem.swift; sourceTree = "<group>"; };
 		1C5361F02BBC551300F49D3E /* LocalFeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedImage.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 		1C4CB6452BECF0BA0029F8DC /* EssentialFeediOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				1C4CB6512BED1A200029F8DC /* FeedViewControllerTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -539,6 +542,7 @@
 					};
 					1C4CB6402BECF0BA0029F8DC = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
 					};
 					1C592A962BCFF0BF0090AA7F = {
 						CreatedOnToolsVersion = 15.2;
@@ -635,6 +639,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C4CB6522BED1A200029F8DC /* FeedViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -816,6 +821,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J378NLHGG4;
@@ -830,6 +836,8 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "EssentialFeediOSTests/EssentialFeediOSTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -839,6 +847,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J378NLHGG4;
@@ -852,6 +861,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "EssentialFeediOSTests/EssentialFeediOSTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
