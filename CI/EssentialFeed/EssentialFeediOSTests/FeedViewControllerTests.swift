@@ -186,6 +186,8 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second view also becomes visible")
     }
     
+
+    
     private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
         
@@ -237,10 +239,6 @@ final class FeedViewControllerTests: XCTestCase {
             return completionsFeedRequests.count
         }
         
-        func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            completionsFeedRequests.append(completion)
-        }
-        
         func completeFeedLoading(at index: Int = 0, with feed: [FeedImage] = []) {
             completionsFeedRequests[index](.success(feed))
         }
@@ -248,6 +246,11 @@ final class FeedViewControllerTests: XCTestCase {
         func completeFeedLoadingWithError(at index: Int = 0) {
             let error = NSError(domain: "an error", code: 0)
             completionsFeedRequests[index](.failure(error))
+        }
+        
+        // MARK: - FeedLoader
+        func load(completion: @escaping (FeedLoader.Result) -> Void) {
+            completionsFeedRequests.append(completion)
         }
         
         // MARK: - FeedImageDataLoader
