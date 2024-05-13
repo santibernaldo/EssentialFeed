@@ -61,11 +61,32 @@ final class FeedViewController: UITableViewController {
 
 final class FeedViewControllerTests: XCTestCase {
     
-    func test_init_doesNotLoadFeed() {
-        let (_, loader) = makeSUT()
+    // We make all the assertions of the loadCallCount due to the TEMPORAL COUPLING on one place. The order of the methods called rely on the View Cycle, something that's out of our control. So better to centralize this on one test, where more of one assertion on the test is recommended
+    
+    // We are being explicit with the progress of the expectations and the order.
+    
+    // Working with frameworks, we don't have control over Temporal Coupling.
+    func test_loadFeedActions_requestFeedFromLoader() {
+        let (sut, loader) = makeSUT()
         let _ = FeedViewController(loader: loader)
         
-        XCTAssertEqual(loader.loadCallCount, 0)
+        XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading requests before view is loaded")
+        
+        // View Will Appear is called
+        sut.beginAppearanceTransition(true, animated: false) //viewWillAppear
+        // ViewIsAppearing and View Did Appear
+        sut.endAppearanceTransition()
+        
+        XCTAssertEqual(loader.loadCallCount, 1, "Expected first loading requests before view is loaded")
+        
+        // When valueChanged action of refreshControl is called, we perform load
+        sut.simulateUserInitiatedFeedReload()
+        
+        XCTAssertEqual(loader.loadCallCount, 2, "Expected second loading requests before view is loaded")
+        
+        sut.refreshControl?.simulatePullToRefresh()
+        
+        XCTAssertEqual(loader.loadCallCount, 3, "Expected third loading requests before view is loaded")
     }
     
     func test_viewDidLoad_loadsFeed() {
@@ -97,8 +118,8 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
     
-    func test_viewDidLoad_showLoadingIndicator() {
-        let (sut, _) = makeSUT()
+    func test_loadingFeedIndicator_isVisibleWhileLoadingTheFeed() {
+        let (sut, loader) = makeSUT()
 
         // viewDidLoad
         sut.loadViewIfNeeded()
@@ -112,42 +133,18 @@ final class FeedViewControllerTests: XCTestCase {
         // ViewIsAppearing and View Did Appear
         sut.endAppearanceTransition()
         
-        XCTAssertEqual(sut.isShowingLoadingIndicator(), true)
-    }
-    
-    func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut, loader) = makeSUT()
+        XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
-        
-        // View Will Appear is called
-        sut.beginAppearanceTransition(true, animated: false) //viewWillAppear
-        // ViewIsAppearing and View Did Appear
-        sut.endAppearanceTransition()
-        
-        loader.completeFeedLoading()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
-    }
-    
-    func test_pullToRefresh_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
+        loader.completeFeedLoading(at: 0)
+        XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
         
         sut.simulateUserInitiatedFeedReload()
+        XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")
         
-        XCTAssertEqual(sut.isShowingLoadingIndicator(), true)
+        loader.completeFeedLoading(at: 1)
+        XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
     }
-    
-    func test_pullToRefresh_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut, loader) = makeSUT()
         
-        sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
-    }
-    
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)
@@ -167,8 +164,8 @@ final class FeedViewControllerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func completeFeedLoading() {
-            completions[0](.success([]))
+        func completeFeedLoading(at index: Int) {
+            completions[index](.success([]))
         }
     }
 }
