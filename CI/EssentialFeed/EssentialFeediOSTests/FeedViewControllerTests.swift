@@ -113,7 +113,11 @@ final class FeedViewControllerTests: XCTestCase {
     }
     
     func test_loadFeedCompletion_rendersSuccesfullyLoadedFeed() {
-        let image0 = makeImage(location: "Facinas")
+        let image0 = makeImage(description: "description 0", location: "location 0")
+        let image1 = makeImage(description: nil, location: "location 1")
+        let image2 = makeImage(description: "another description", location: nil)
+        let image3 = makeImage(description: nil, location: nil)
+        
         let (sut, loader) = makeSUT()
         
         // View Will Appear is called
@@ -122,19 +126,28 @@ final class FeedViewControllerTests: XCTestCase {
         sut.endAppearanceTransition()
         
         // Test-specific DSL Methods decouple the test from implementation details such as UITableView, this way wou can freely and safely refactor production code, such as switching to a UICollectionView in the future without breaking the tests. The goal is to test behaviour, not implementation
+        
+        // 0 CASE
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
         
         loader.completeFeedLoading(at: 0, with: [image0])
         
-        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 1)
+        // ONE ELEMENT CASE
+        assertThat(sut, isRendering: [image0])
+    
+        sut.simulateUserInitiatedFeedReload()
         
-        assertThat(sut, hasViewConfiguredFor: image0, at: 0)
+        let arrayManyCase = [image0, image1, image2, image3]
+        loader.completeFeedLoading(at: 0, with: arrayManyCase)
+        
+        // MANY ELEMENT CASE
+        assertThat(sut, isRendering: arrayManyCase)
     }
     
     private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
         
-        guard let cell = view else {
+        guard let cell = view as? FeedImageCell else {
             return XCTFail("Expected \(FeedImageCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
         }
         
@@ -144,6 +157,16 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(cell.locationText, image.location, "Expected location text to be \(String(describing: image.location)) for image  view at index (\(index))", file: file, line: line)
         
         XCTAssertEqual(cell.descriptionText, image.description, "Expected description text to be \(String(describing: image.description)) for image view at index (\(index)", file: file, line: line)
+    }
+    
+    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+        guard sut.numberOfRenderedFeedImageViews() == feed.count else {
+            return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
+        }
+        
+        feed.enumerated().forEach { index, image in
+            assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
+        }
     }
     
     private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
@@ -201,8 +224,10 @@ extension FeedViewController {
         0
     }
     
-    func feedImageView(at index: Int) -> FeedImageCell? {
-        return tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? FeedImageCell
+    func feedImageView(at row: Int) -> UITableViewCell? {
+        let dataSource = tableView.dataSource
+        let indexPath = IndexPath(row: row, section: feedImagesSection)
+        return dataSource?.tableView(tableView, cellForRowAt: indexPath)
     }
 }
 
