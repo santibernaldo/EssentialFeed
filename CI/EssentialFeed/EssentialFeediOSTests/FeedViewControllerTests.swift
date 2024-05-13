@@ -8,6 +8,7 @@
 import XCTest
 import UIKit
 import EssentialFeed
+import EssentialFeediOS
 import Foundation
 
 /*
@@ -24,40 +25,6 @@ import Foundation
      [ ] Option to retry on image download error
      [ ] Preload when image view is near visible
  */
-
-final class FeedViewController: UITableViewController {
-    private var loader: FeedLoader?
-    
-    convenience init(loader: FeedLoader) {
-        self.init()
-        self.loader = loader
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        refreshControl = UIRefreshControl()
-        
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        
-    }
-    
-    // iOS 13+
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        
-        load()
-    }
-    
-    @objc private func load() {
-        refreshControl?.beginRefreshing()
-        
-        //refresh data
-        loader?.load(completion: { [weak self] _ in
-            self?.refreshControl?.endRefreshing()
-        })
-    }
-}
 
 final class FeedViewControllerTests: XCTestCase {
     
