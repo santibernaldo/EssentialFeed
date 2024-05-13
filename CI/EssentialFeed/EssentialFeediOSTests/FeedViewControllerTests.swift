@@ -113,7 +113,7 @@ final class FeedViewControllerTests: XCTestCase {
     }
     
     func test_loadFeedCompletion_rendersSuccesfullyLoadedFeed() {
-        let image = makeImage()
+        let image0 = makeImage(location: "Facinas")
         let (sut, loader) = makeSUT()
         
         // View Will Appear is called
@@ -124,11 +124,28 @@ final class FeedViewControllerTests: XCTestCase {
         // Test-specific DSL Methods decouple the test from implementation details such as UITableView, this way wou can freely and safely refactor production code, such as switching to a UICollectionView in the future without breaking the tests. The goal is to test behaviour, not implementation
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
         
-        loader.completeFeedLoading(at: 0, with: [image])
+        loader.completeFeedLoading(at: 0, with: [image0])
         
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 1)
-    }
         
+        assertThat(sut, hasViewConfiguredFor: image0, at: 0)
+    }
+    
+    private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
+        let view = sut.feedImageView(at: index)
+        
+        guard let cell = view else {
+            return XCTFail("Expected \(FeedImageCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+        }
+        
+        let shouldLocationBeVisible = (image.location != nil)
+        XCTAssertEqual(cell.isShowingLocation, shouldLocationBeVisible, "Expected `isShowingLocation` to be \(shouldLocationBeVisible) for image view at index (\(index))", file: file, line: line)
+        
+        XCTAssertEqual(cell.locationText, image.location, "Expected location text to be \(String(describing: image.location)) for image  view at index (\(index))", file: file, line: line)
+        
+        XCTAssertEqual(cell.descriptionText, image.description, "Expected description text to be \(String(describing: image.description)) for image view at index (\(index)", file: file, line: line)
+    }
+    
     private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
@@ -139,6 +156,13 @@ final class FeedViewControllerTests: XCTestCase {
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)
+    }
+    
+    private func assertFeedCellModelFor(view: FeedImageCell?, feed: FeedImage) {
+        XCTAssertNotNil(view)
+        XCTAssertEqual(view?.isShowingLocation, true)
+        XCTAssertEqual(view?.locationText, feed.location)
+        XCTAssertEqual(view?.descriptionText, feed.description)
     }
     
     class LoaderSpy: FeedLoader {
@@ -158,6 +182,7 @@ final class FeedViewControllerTests: XCTestCase {
     }
 }
 
+// DSL test-specific methods which abstract from implementation details
 extension FeedViewController {
     func simulateUserInitiatedFeedReload() {
         replaceRefreshControlWithFakeForiOS17Support()
@@ -174,6 +199,26 @@ extension FeedViewController {
     
     private var feedImagesSection: Int {
         0
+    }
+    
+    func feedImageView(at index: Int) -> FeedImageCell? {
+        return tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? FeedImageCell
+    }
+}
+
+// DSL test-specific methods for FeedImageCell which abstracts from implementation details
+extension FeedImageCell {
+    
+    var isShowingLocation: Bool {
+        return !locationContainer.isHidden
+    }
+    
+    var locationText: String? {
+        return locationLabel.text
+    }
+    
+    var descriptionText: String? {
+        return descriptionLabel.text
     }
 }
 
