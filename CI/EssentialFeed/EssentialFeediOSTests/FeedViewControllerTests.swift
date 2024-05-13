@@ -111,7 +111,28 @@ final class FeedViewControllerTests: XCTestCase {
         loader.completeFeedLoading(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
     }
+    
+    func test_loadFeedCompletion_rendersSuccesfullyLoadedFeed() {
+        let image = makeImage()
+        let (sut, loader) = makeSUT()
         
+        // View Will Appear is called
+        sut.beginAppearanceTransition(true, animated: false) //viewWillAppear
+        // ViewIsAppearing and View Did Appear
+        sut.endAppearanceTransition()
+        
+        // Test-specific DSL Methods decouple the test from implementation details such as UITableView, this way wou can freely and safely refactor production code, such as switching to a UICollectionView in the future without breaking the tests. The goal is to test behaviour, not implementation
+        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
+        
+        loader.completeFeedLoading(at: 0, with: [image])
+        
+        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 1)
+    }
+        
+    private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
+        return FeedImage(id: UUID(), description: description, location: location, url: url)
+    }
+    
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)
@@ -131,8 +152,8 @@ final class FeedViewControllerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func completeFeedLoading(at index: Int) {
-            completions[index](.success([]))
+        func completeFeedLoading(at index: Int, with feed: [FeedImage] = []) {
+            completions[index](.success(feed))
         }
     }
 }
@@ -145,6 +166,14 @@ extension FeedViewController {
     
     func isShowingLoadingIndicator() -> Bool {
         return refreshControl?.isRefreshing == true
+    }
+    
+    func numberOfRenderedFeedImageViews() -> Int {
+        tableView.numberOfRows(inSection: feedImagesSection)
+    }
+    
+    private var feedImagesSection: Int {
+        0
     }
 }
 
