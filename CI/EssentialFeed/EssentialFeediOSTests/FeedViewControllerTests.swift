@@ -37,11 +37,22 @@ final class FeedViewController: UITableViewController {
         super.viewDidLoad()
         
         refreshControl = UIRefreshControl()
+        
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        
+    }
+    
+    // iOS 13+
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
         load()
     }
     
     @objc private func load() {
+        refreshControl?.beginRefreshing()
+        
+        //refresh data
         loader?.load(completion: { _ in })
     }
 }
@@ -65,12 +76,35 @@ final class FeedViewControllerTests: XCTestCase {
     
     func test_pullToRefresh_loadsFeed() {
         let (sut, loader) = makeSUT()
+        
         sut.loadViewIfNeeded()
         
         // When valueChanged action of refreshControl is called, we perform load
         sut.refreshControl?.simulatePullToRefresh()
         
         XCTAssertEqual(loader.loadCallCount, 2)
+        
+        sut.refreshControl?.simulatePullToRefresh()
+        
+        XCTAssertEqual(loader.loadCallCount, 3)
+    }
+    
+    func test_viewDidLoad_showLoadingIndicator() {
+        let (sut, _) = makeSUT()
+
+        // viewDidLoad
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        
+        // When UIRefreshControl refreshes, it shows a Loading Indicator
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        
+        // View Will Appear is called
+        sut.beginAppearanceTransition(true, animated: false) //viewWillAppear
+        // ViewIsAppearing and View Did Appear
+        sut.endAppearanceTransition()
+        
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
     }
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -98,5 +132,33 @@ private extension UIRefreshControl {
                 (target as NSObject).perform(Selector($0))
             }
         }
+    }
+}
+
+private extension UITableViewController {
+    func replaceRefreshControlWithFakeForiOS17Support() {
+        let fake = FakeRefreshControl()
+        
+        refreshControl?.allTargets.forEach { target in
+            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+                fake.addTarget(target, action: Selector(action), for: .valueChanged)
+            }
+        }
+        
+        refreshControl = fake
+    }
+}
+
+private class FakeRefreshControl: UIRefreshControl {
+    private var _isRefresing = false
+    
+    override var isRefreshing: Bool { _isRefresing }
+    
+    override func beginRefreshing() {
+        _isRefresing = true
+    }
+    
+    override func endRefreshing() {
+        _isRefresing = false
     }
 }
