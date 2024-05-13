@@ -40,9 +40,15 @@ public final class FeedViewController: UITableViewController {
         
         //refresh data
         loader?.load(completion: { [weak self] result in
-            self?.tableModel = (try? result.get()) ?? []
-            self?.tableView.reloadData()
-            self?.refreshControl?.endRefreshing()
+            switch result {
+            case .success(let feedImages):
+                self?.tableModel = feedImages
+                self?.tableView.reloadData()
+                self?.refreshControl?.endRefreshing()
+            case .failure(let error):
+                break
+            }
+            
         })
     }
     
@@ -51,7 +57,7 @@ public final class FeedViewController: UITableViewController {
     }
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FeedImageCell.identifier) as! FeedImageCell
+        let cell = FeedImageCell()
         let cellModel = tableModel[indexPath.row]
         cell.locationContainer.isHidden = cellModel.location == nil
         cell.descriptionLabel.text = cellModel.description
