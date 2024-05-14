@@ -14,7 +14,8 @@ public protocol FeedImageDataLoaderTask {
 
 // Ideally we would have one method per protocol to respect the INTERFACE SEGREGATION PATTERN
 public protocol FeedImageDataLoader {
-    func loadImageData(from url: URL) -> FeedImageDataLoaderTask
+    typealias Result = Swift.Result<Data, Error>
+    func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask
 }
 
 public final class FeedViewController: UITableViewController {
@@ -71,7 +72,10 @@ public final class FeedViewController: UITableViewController {
         cell.locationContainer.isHidden = cellModel.location == nil
         cell.descriptionLabel.text = cellModel.description
         cell.locationLabel.text = cellModel.location
-        tasks[indexPath] = feedImageLoader?.loadImageData(from: cellModel.url)
+        cell.feedImageContainer.startShimmering()
+        tasks[indexPath] = feedImageLoader?.loadImageData(from: cellModel.url) { [weak cell] result in
+            cell?.feedImageContainer.stopShimmering()
+        }
         return cell
     }
     
