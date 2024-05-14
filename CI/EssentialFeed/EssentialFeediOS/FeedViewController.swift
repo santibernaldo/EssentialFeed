@@ -8,15 +8,20 @@
 import UIKit
 import EssentialFeed
 
+public protocol FeedImageDataLoaderTask {
+    func cancel()
+}
+
+// Ideally we would have one method per protocol to respect the INTERFACE SEGREGATION PATTERN
 public protocol FeedImageDataLoader {
-    func loadImageData(from url: URL)
-    func cancelImageDataLoad(from url: URL)
+    func loadImageData(from url: URL) -> FeedImageDataLoaderTask
 }
 
 public final class FeedViewController: UITableViewController {
     public var loader: FeedLoader?
     private var tableModel: [FeedImage] = []
     public var feedImageLoader: FeedImageDataLoader?
+    private var tasks = [IndexPath: FeedImageDataLoaderTask]()
     
     public convenience init(loader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init()
@@ -66,12 +71,12 @@ public final class FeedViewController: UITableViewController {
         cell.locationContainer.isHidden = cellModel.location == nil
         cell.descriptionLabel.text = cellModel.description
         cell.locationLabel.text = cellModel.location
-        feedImageLoader?.loadImageData(from: cellModel.url)
+        tasks[indexPath] = feedImageLoader?.loadImageData(from: cellModel.url)
         return cell
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let cellModel = tableModel[indexPath.row]
-        feedImageLoader?.cancelImageDataLoad(from: cellModel.url)
+        tasks[indexPath]?.cancel()
+        tasks[indexPath] = nil
     }
 }
