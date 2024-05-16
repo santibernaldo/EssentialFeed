@@ -23,8 +23,8 @@ import Foundation
      [✅] Cancel when image view is out of screen
      [✅] Show a loading indicator while loading image (shimmer)
      [✅] Renders image loaded from URL
-     [ ] Option to retry on image download error
-     [ ] Preload when image view is near visible
+     [✅] Option to retry on image download error
+     [✅] Preload when image view is near visible
  */
 
 final class FeedViewControllerTests: XCTestCase {
@@ -93,7 +93,7 @@ final class FeedViewControllerTests: XCTestCase {
         sut.replaceRefreshControlWithFakeForiOS17Support()
         
         // When UIRefreshControl refreshes, it shows a Loading Indicator
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
         
         // View Will Appear is called
         sut.beginAppearanceTransition(true, animated: false) //viewWillAppear
@@ -478,7 +478,7 @@ extension FeedViewController {
     }
     
     func isShowingLoadingIndicator() -> Bool {
-        return refreshControl?.isRefreshing == true
+        return refreshController?.view.isRefreshing == true
     }
     
     func numberOfRenderedFeedImageViews() -> Int {
@@ -569,17 +569,17 @@ private extension UIRefreshControl {
     }
 }
 
-private extension UITableViewController {
+private extension FeedViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
         let fake = FakeRefreshControl()
         
-        refreshControl?.allTargets.forEach { target in
-            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+        refreshController?.view.allTargets.forEach { target in
+            refreshController?.view.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
                 fake.addTarget(target, action: Selector(action), for: .valueChanged)
             }
         }
         
-        refreshControl = fake
+        refreshController?.view = fake
     }
 }
 
