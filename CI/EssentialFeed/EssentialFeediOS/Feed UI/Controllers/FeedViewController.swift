@@ -16,13 +16,18 @@ public final class FeedUIComposer {
     static public func composedFeedController(loader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
         let refreshController = FeedRefreshViewController(feedLoader: loader)
         let feedController = FeedViewController(refreshController: refreshController)
-        refreshController.onRefresh  = { [weak feedController] feed in
-            feedController?.tableModel = feed.map { model in
-                return FeedImageCellController(imageLoader: imageLoader, model: model)
-            }
-        }
+        refreshController.onRefresh  = adaptFeedCellControllers(forwardingTo: feedController, loader: imageLoader)
         
         return feedController
+    }
+    
+    // [FeedImage] -> Adapt -> FeedImageCellController
+    private static func adaptFeedCellControllers(forwardingTo controller: FeedViewController, loader: FeedImageDataLoader) -> ([FeedImage]) -> Void {
+        return { [weak controller] feed in
+            controller?.tableModel = feed.map { model in
+                return FeedImageCellController(imageLoader: loader, model: model)
+            }
+        }
     }
 }
 
