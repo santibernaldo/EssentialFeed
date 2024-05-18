@@ -14,12 +14,10 @@ final public class FeedRefreshViewController: NSObject {
     
     private let viewModel: FeedViewModel
     
-    init(feedLoader: FeedLoader) {
-        self.viewModel = FeedViewModel(feedLoader: feedLoader)
+    init(viewModel: FeedViewModel) {
+        self.viewModel = viewModel
     }
-    
-    public var onRefresh: (([FeedImage]) -> Void)?
-    
+        
     @objc public func refresh() {
         viewModel.loadFeed()
     }
@@ -31,10 +29,6 @@ final public class FeedRefreshViewController: NSObject {
                 self?.view.beginRefreshing()
             } else {
                 self?.view.endRefreshing()
-            }
-            
-            if let feed = viewModel.feed {
-                self?.onRefresh?(feed)
             }
         }
         // Binds the View with the ViewModel
