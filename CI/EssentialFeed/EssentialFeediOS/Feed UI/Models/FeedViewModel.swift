@@ -48,6 +48,8 @@ final class FeedViewModel {
     }
     
     func loadFeed() {
+        state = .loading
+        
         feedLoader.load { [weak self] result in
             if let feed = try? result.get() {
                 self?.state = .loaded(feed)

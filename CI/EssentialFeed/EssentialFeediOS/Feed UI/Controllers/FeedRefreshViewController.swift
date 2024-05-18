@@ -8,7 +8,7 @@
 import UIKit
 import EssentialFeed
 
-// We must
+// We must inherit from NSObject to implement the target/action, that's why we don't move the addTarget to the ViewModel, to keep it agnostic platform
 final public class FeedRefreshViewController: NSObject {
     public lazy var view = binded(UIRefreshControl())
     
@@ -21,7 +21,6 @@ final public class FeedRefreshViewController: NSObject {
     public var onRefresh: (([FeedImage]) -> Void)?
     
     @objc public func refresh() {
-        
         viewModel.loadFeed()
     }
     
