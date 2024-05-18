@@ -9,6 +9,7 @@ import EssentialFeed
 
 // ViewModel are agnostic platform, they don't know about the view
 final class FeedViewModel {
+    typealias Observer<T> = (T) -> Void
     private let feedLoader: FeedLoader
     
     init(feedLoader: FeedLoader) {
@@ -16,8 +17,8 @@ final class FeedViewModel {
     }
     
     // We notify the observer every time there's a state change
-    var onLoadingStateChange: ((Bool) -> Void)?
-    var onFeedLoad: (([FeedImage]) -> Void)?
+    var onLoadingStateChange: Observer<Bool>?
+    var onFeedLoad: Observer<[FeedImage]>?
 
     func loadFeed() {
         onLoadingStateChange?(true)
