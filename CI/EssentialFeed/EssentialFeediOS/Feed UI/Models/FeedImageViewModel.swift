@@ -8,6 +8,7 @@
 import Foundation
 import EssentialFeed
 
+// The generic type Image doesn't rely on UIKit or any other platform framework. This is a Cross-platform ViewModel
 final class FeedImageViewModel<Image> {
     typealias Observer<T> = (T) -> Void
     
