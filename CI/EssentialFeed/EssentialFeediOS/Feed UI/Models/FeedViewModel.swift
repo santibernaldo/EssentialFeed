@@ -10,6 +10,8 @@ import EssentialFeed
 // ViewModel are agnostic platform, they don't know about the view
 
 // This ViewModel is Platform Agnostic, it can be used on many platforms
+
+// View Model has dependencies and behaviour, that's different from View Presenter
 final class FeedViewModel {
     typealias Observer<T> = (T) -> Void
     private let feedLoader: FeedLoader
