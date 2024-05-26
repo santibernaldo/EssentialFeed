@@ -38,6 +38,8 @@
 		1C7F09C22BC1ACA000257FB6 /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F09C12BC1ACA000257FB6 /* FeedCacheTestHelpers.swift */; };
 		1C7F09C62BC1AE5600257FB6 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F09C52BC1AE5600257FB6 /* SharedTestHelpers.swift */; };
 		1C89449F2BF351EF00677D5D /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C89449E2BF351EF00677D5D /* UIView+Shimmering.swift */; };
+		1C93F9F42C0384C90015B3A5 /* FeedImagePresenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C93F9F32C0384C90015B3A5 /* FeedImagePresenterViewController.swift */; };
+		1C93F9F62C03851F0015B3A5 /* FeedImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C93F9F52C03851F0015B3A5 /* FeedImagePresenter.swift */; };
 		1C96C0122BDA9A3D00B1F88B /* InboxFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C96C0112BDA9A3D00B1F88B /* InboxFeedStoreSpecs.swift */; };
 		1C97C04C2BB9C04700578C25 /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C97C04B2BB9C04700578C25 /* LocalFeedLoader.swift */; };
 		1C97C04E2BB9C11E00578C25 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C97C04D2BB9C11E00578C25 /* FeedStore.swift */; };
@@ -136,6 +138,8 @@
 		1C7F09C12BC1ACA000257FB6 /* FeedCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCacheTestHelpers.swift; sourceTree = "<group>"; };
 		1C7F09C52BC1AE5600257FB6 /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		1C89449E2BF351EF00677D5D /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
+		1C93F9F32C0384C90015B3A5 /* FeedImagePresenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImagePresenterViewController.swift; sourceTree = "<group>"; };
+		1C93F9F52C03851F0015B3A5 /* FeedImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImagePresenter.swift; sourceTree = "<group>"; };
 		1C96C0112BDA9A3D00B1F88B /* InboxFeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxFeedStoreSpecs.swift; sourceTree = "<group>"; };
 		1C97C04B2BB9C04700578C25 /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		1C97C04D2BB9C11E00578C25 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
@@ -232,6 +236,7 @@
 				1C4C7FBB2BF8C45400B8B99B /* FeedViewModel.swift */,
 				1C2081512BFA090B0079ADD6 /* FeedImageViewModel.swift */,
 				1C51A5472C00D3E0001F8DB3 /* FeedPresenter.swift */,
+				1C93F9F52C03851F0015B3A5 /* FeedImagePresenter.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -266,6 +271,7 @@
 			children = (
 				1C51A54A2C00DACA001F8DB3 /* FeedRefreshPresenterViewController.swift */,
 				1C51A54C2C00DB57001F8DB3 /* FeedPresenterViewController.swift */,
+				1C93F9F32C0384C90015B3A5 /* FeedImagePresenterViewController.swift */,
 			);
 			path = "With Presenter";
 			sourceTree = "<group>";
@@ -736,8 +742,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C7A4D872BF5177500BC5E4C /* FeedImageDataLoader.swift in Sources */,
+				1C93F9F42C0384C90015B3A5 /* FeedImagePresenterViewController.swift in Sources */,
 				1C4C7FB92BF7C16E00B8B99B /* FeedUIComposer.swift in Sources */,
 				1CA1A9E52BF2447500F6DA9B /* FeedViewController.swift in Sources */,
+				1C93F9F62C03851F0015B3A5 /* FeedImagePresenter.swift in Sources */,
 				1C51A5482C00D3E0001F8DB3 /* FeedPresenter.swift in Sources */,
 				1C7A4D892BF51B6900BC5E4C /* FeedRefreshViewController.swift in Sources */,
 				1C51A54B2C00DACA001F8DB3 /* FeedRefreshPresenterViewController.swift in Sources */,
