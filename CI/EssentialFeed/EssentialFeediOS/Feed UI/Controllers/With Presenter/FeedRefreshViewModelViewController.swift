@@ -11,7 +11,7 @@ protocol FeedRefreshViewControllerDelegate {
     func didRequestFeedRefresh()
 }
 
-final class FeedRefreshViewModelViewController: NSObject {
+public final class FeedRefreshViewModelViewController: NSObject {
     
     
     // Legacy: make private for testing purposes

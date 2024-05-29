@@ -8,39 +8,45 @@
 import UIKit
 
 
-protocol FeedImageCellControllerDelegate {
-    func didRequestImage()
-    func didCancelImageRequest()
-}
-
-final class FeedImagePresenterCellController: FeedImageView {
-    private let delegate: FeedImageCellControllerDelegate
-    private lazy var cell = FeedImageCell()
+final class FeedImageViewModelCellController {
+    private let viewModel: FeedImageViewModel<UIImage>
     
-    init(delegate: FeedImageCellControllerDelegate) {
-        self.delegate = delegate
+    init(viewModel: FeedImageViewModel<UIImage>) {
+        self.viewModel = viewModel
     }
     
     func view() -> UITableViewCell {
-        delegate.didRequestImage()
+        let cell = binded(FeedImageCell())
+        viewModel.loadImageData()
         return cell
     }
     
     func preload() {
-        delegate.didRequestImage()
+        viewModel.loadImageData()
     }
     
     func cancelLoad() {
-        delegate.didCancelImageRequest()
+        viewModel.cancelImageDataLoad()
     }
     
-    func display(_ viewModel: FeedPresenterImageViewModel<UIImage>) {
+    private func binded(_ cell: FeedImageCell) -> FeedImageCell {
         cell.locationContainer.isHidden = !viewModel.hasLocation
         cell.locationLabel.text = viewModel.location
         cell.descriptionLabel.text = viewModel.description
-        cell.feedImageView.image = viewModel.image
-        cell.feedImageContainer.isShimmering = viewModel.isLoading
-        cell.feedImageRetryButton.isHidden = !viewModel.shouldRetry
-        cell.onRetry = delegate.didRequestImage
+        cell.onRetry = viewModel.loadImageData
+        
+        viewModel.onImageLoad = { [weak cell] image in
+            cell?.feedImageView.image = image
+        }
+        
+        viewModel.onImageLoadingStateChange = { [weak cell] isLoading in
+            cell?.feedImageContainer.isShimmering = isLoading
+        }
+        
+        viewModel.onShouldRetryImageLoadStateChange = { [weak cell] shouldRetry in
+            cell?.feedImageRetryButton.isHidden = !shouldRetry
+        }
+        
+        return cell
     }
 }

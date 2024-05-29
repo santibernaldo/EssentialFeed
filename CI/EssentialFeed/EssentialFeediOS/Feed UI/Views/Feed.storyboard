@@ -128,17 +128,17 @@ Location</string>
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
-                            <action selector="refresh" destination="mec-wg-lFj" eventType="valueChanged" id="e65-6K-V2r"/>
+                            <action selector="refresh" destination="mec-wg-lFj" eventType="valueChanged" id="i06-Yq-goB"/>
                         </connections>
                     </refreshControl>
                     <connections>
-                        <outlet property="refreshController" destination="mec-wg-lFj" id="FEj-TV-NCt"/>
+                        <outlet property="refreshController" destination="mec-wg-lFj" id="vvm-rN-rzl"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnW-bE-2DO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <customObject id="mec-wg-lFj" customClass="FeedRefreshViewController" customModule="EssentialFeediOS" customModuleProvider="target">
                     <connections>
-                        <outlet property="view" destination="Eht-qL-ZoB" id="NWR-ZE-8Ae"/>
+                        <outlet property="view" destination="Eht-qL-ZoB" id="Xhl-Sl-IJh"/>
                     </connections>
                 </customObject>
             </objects>

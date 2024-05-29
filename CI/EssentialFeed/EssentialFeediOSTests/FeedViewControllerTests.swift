@@ -478,7 +478,7 @@ extension FeedViewController {
     }
     
     func isShowingLoadingIndicator() -> Bool {
-        return refreshController?.view.isRefreshing == true
+        return refreshController?.view?.isRefreshing == true
     }
     
     func numberOfRenderedFeedImageViews() -> Int {
@@ -573,8 +573,8 @@ private extension FeedViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
         let fake = FakeRefreshControl()
         
-        refreshController?.view.allTargets.forEach { target in
-            refreshController?.view.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+        refreshController?.view?.allTargets.forEach { target in
+            refreshController?.view?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
                 fake.addTarget(target, action: Selector(action), for: .valueChanged)
             }
         }
