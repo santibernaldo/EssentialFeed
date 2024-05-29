@@ -7,13 +7,13 @@
 
 import UIKit
 
-public final class FeedPresenterViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var refreshController: FeedRefreshPresenterViewController?
+public final class FeedViewModelViewController: UITableViewController, UITableViewDataSourcePrefetching {
+    private var refreshController: FeedRefreshViewModelViewController?
     var tableModel = [FeedImageCellController]() {
         didSet { tableView.reloadData() }
     }
 
-    convenience init(refreshController: FeedRefreshPresenterViewController) {
+    convenience init(refreshController: FeedRefreshViewModelViewController) {
         self.init()
         self.refreshController = refreshController
     }
