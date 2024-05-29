@@ -128,7 +128,7 @@ Location</string>
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
-                            <action selector="refresh" destination="mec-wg-lFj" eventType="valueChanged" id="WV7-gF-ed3"/>
+                            <action selector="refresh" destination="mec-wg-lFj" eventType="valueChanged" id="e65-6K-V2r"/>
                         </connections>
                     </refreshControl>
                     <connections>
@@ -138,7 +138,7 @@ Location</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnW-bE-2DO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <customObject id="mec-wg-lFj" customClass="FeedRefreshViewController" customModule="EssentialFeediOS" customModuleProvider="target">
                     <connections>
-                        <outlet property="view" destination="Eht-qL-ZoB" id="BMz-cm-8Bb"/>
+                        <outlet property="view" destination="Eht-qL-ZoB" id="NWR-ZE-8Ae"/>
                     </connections>
                 </customObject>
             </objects>
