@@ -29,6 +29,14 @@ import Foundation
 
 final class FeedViewControllerTests: XCTestCase {
     
+    func test_feedView_hasTitle() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.title, "My Feed")
+    }
+
     // We make all the assertions of the loadCallCount due to the TEMPORAL COUPLING on one place. The order of the methods called rely on the View Cycle, something that's out of our control. So better to centralize this on one test, where more of one assertion on the test is recommended
     
     // We are being explicit with the progress of the expectations and the order.

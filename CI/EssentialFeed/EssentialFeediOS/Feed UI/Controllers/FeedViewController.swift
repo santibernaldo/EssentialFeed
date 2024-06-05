@@ -22,6 +22,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         tableView.register(FeedImageCell.self, forCellReuseIdentifier: FeedImageCell.identifier)
             
         tableView.prefetchDataSource = self
+        
+        title = "My Feed"
     }
     
     // iOS 13+
