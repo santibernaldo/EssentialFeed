@@ -46,6 +46,10 @@ final class FeedPresenter {
     var feedView: FeedView
     var loadingView: FeedLoadingView
     
+    static var title: String {
+        return "My Feed"
+    }
+    
     init(feedView: FeedView, loadingView: FeedLoadingView) {
         self.feedView = feedView
         self.loadingView = loadingView
