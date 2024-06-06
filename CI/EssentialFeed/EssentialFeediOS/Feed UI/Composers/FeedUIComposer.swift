@@ -13,7 +13,7 @@ public final class FeedUIComposer {
     private init() {}
     
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
+        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: MainQueueDispatchDecorator(decoratee: feedLoader))
     
         let feedController = FeedViewController.makeWith(title: FeedPresenter.title)
         
@@ -42,6 +42,30 @@ public final class FeedUIComposer {
             controller?.tableModel = feed.map { model in
                 FeedImageViewModelCellController(viewModel:
                                             FeedImageViewModel(model: model, imageLoader: loader, imageTransformer: UIImage.init))
+            }
+        }
+    }
+}
+
+// The decorator pattern add behaviour to an instance, while keeping the same interface
+
+// It's going to behave as a FeedLoader forwarding the messager to the
+// decoratee
+private final class MainQueueDispatchDecorator: FeedLoader {
+    private let decoratee: FeedLoader
+    
+    init(decoratee: FeedLoader) {
+        self.decoratee = decoratee
+    }
+    
+    func load(completion: @escaping (FeedLoader.Result) -> ()) {
+        decoratee.load { result in
+            if Thread.isMainThread {
+                completion(result)
+            } else {
+                DispatchQueue.main.async {
+                    completion(result)
+                }
             }
         }
     }
