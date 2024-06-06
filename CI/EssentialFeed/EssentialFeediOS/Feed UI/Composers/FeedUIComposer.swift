@@ -47,43 +47,7 @@ public final class FeedUIComposer {
     }
 }
 
-// The decorator pattern add behaviour to an instance, while keeping the same interface
 
-// It's going to behave as a FeedLoader forwarding the messager to the
-// decoratee
-private final class MainQueueDispatchDecorator<T> {
-    private let decoratee: T
-    
-    init(decoratee: T) {
-        self.decoratee = decoratee
-    }
-    
-    func dispatch(completion: @escaping () -> ()) {
-        if Thread.isMainThread {
-            completion()
-        } else {
-            DispatchQueue.main.async {
-               completion()
-            }
-        }
-    }
-}
-
-extension MainQueueDispatchDecorator: FeedLoader where T == FeedLoader {
-    func load(completion: @escaping (FeedLoader.Result) -> ()) {
-        decoratee.load { [weak self] result in
-            self?.dispatch{ completion(result) }
-        }
-    }
-}
-
-extension MainQueueDispatchDecorator: FeedImageDataLoader where T == FeedImageDataLoader {
-    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        return decoratee.loadImageData(from: url) { [weak self] result in
-            self?.dispatch { completion(result) }
-        }
-    }
-}
 
 private extension FeedViewController {
     static func makeWith(title: String) -> FeedViewController {
@@ -92,27 +56,6 @@ private extension FeedViewController {
         let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
         feedController.title = title
         return feedController
-    }
-}
-
-private final class WeakRefVirtualProxy<T: AnyObject> {
-    private weak var object: T?
-
-    init(_ object: T) {
-        self.object = object
-    }
-}
-
-extension WeakRefVirtualProxy: FeedLoadingView where T: FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel) {
-        object?.display(viewModel)
-    }
-}
-
-extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == UIImage {
-    
-    func display(_ model: FeedPresenterImageViewModel<UIImage>) {
-        object?.display(model)
     }
 }
 
