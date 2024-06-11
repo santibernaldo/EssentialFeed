@@ -260,20 +260,10 @@
 			path = Composers;
 			sourceTree = "<group>";
 		};
-		1C4C7FBA2BF8C44A00B8B99B /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				1C4C7FBB2BF8C45400B8B99B /* FeedViewModel.swift */,
-				1C2081512BFA090B0079ADD6 /* FeedImageViewModel.swift */,
-				1C51A5472C00D3E0001F8DB3 /* FeedPresenter.swift */,
-				1C93F9F52C03851F0015B3A5 /* FeedImagePresenter.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		1C4CB6392BECF0BA0029F8DC /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				1C7F76992C189A380080BBB7 /* Feed Presentation */,
 				1C7A4D852BF5174F00BC5E4C /* Feed Image Loader */,
 				1C7A4D822BF516F600BC5E4C /* Feed UI */,
 				1C4CB63B2BECF0BA0029F8DC /* EssentialFeediOS.docc */,
@@ -367,7 +357,6 @@
 		1C7A4D822BF516F600BC5E4C /* Feed UI */ = {
 			isa = PBXGroup;
 			children = (
-				1C4C7FBA2BF8C44A00B8B99B /* Models */,
 				1C4C7FB72BF7C16000B8B99B /* Composers */,
 				1C7A4D832BF516FB00BC5E4C /* Controllers */,
 				1C7A4D842BF5170100BC5E4C /* Views */,
@@ -413,6 +402,17 @@
 				1C7F09C52BC1AE5600257FB6 /* SharedTestHelpers.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1C7F76992C189A380080BBB7 /* Feed Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				1C93F9F52C03851F0015B3A5 /* FeedImagePresenter.swift */,
+				1C51A5472C00D3E0001F8DB3 /* FeedPresenter.swift */,
+				1C2081512BFA090B0079ADD6 /* FeedImageViewModel.swift */,
+				1C4C7FBB2BF8C45400B8B99B /* FeedViewModel.swift */,
+			);
+			path = "Feed Presentation";
 			sourceTree = "<group>";
 		};
 		1C97C04A2BB9C03D00578C25 /* Feed Cache */ = {
