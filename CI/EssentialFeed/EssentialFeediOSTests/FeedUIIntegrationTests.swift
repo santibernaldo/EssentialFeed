@@ -41,7 +41,7 @@ final class FeedUIIntegrationTests: XCTestCase {
     
     // We are being explicit with the progress of the expectations and the order.
     
-    // Working with frameworks, we don't have control over Temporal Coupling.
+    // Working with frameworks, we don't have control over Temporal Coupling. We work with framework events, that we don't have the control of how they will behave in the future. So explicitly we indicate the order of them in one single test, to help the reader in future iterations.
     func test_loadFeedActions_requestFeedFromLoader() {
         let (sut, loader) = makeSUT()
         
