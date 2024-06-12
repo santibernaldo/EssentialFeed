@@ -381,6 +381,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
     }
     
+    // We make sure the image is not rendered when the cell is off-screen
     func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
         let (sut, loader) = makeSUT()
         
