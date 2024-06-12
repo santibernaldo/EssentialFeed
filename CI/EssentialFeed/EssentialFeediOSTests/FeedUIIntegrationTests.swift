@@ -423,6 +423,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.endAppearanceTransition()
         
         loader.completeFeedLoading(with: [makeImage()])
+        
         _ = sut.simulateFeedImageViewVisible(at: 0)
         
         let exp = expectation(description: "Wait for background queue")
@@ -525,6 +526,18 @@ final class FeedUIIntegrationTests: XCTestCase {
             return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url)
             }
         }
+        
+        /*
+         Hi Deepak, Yes, that's it. We are creating and returning a new TaskSpy structure. We create a new TaskSpy by using its memberwise initializer. The full version of the initialization code would be:
+         TaskSpy(cancelCallback: {
+
+         })
+         However, since the memberwise initializer expects a closure as the last (and only) argument, we use the closure trailing syntax which makes the TaskSpy initialization expression:
+         TaskSpy {
+
+         }
+
+         */
         
         func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
             imageRequests[index].completion(.success(imageData))
