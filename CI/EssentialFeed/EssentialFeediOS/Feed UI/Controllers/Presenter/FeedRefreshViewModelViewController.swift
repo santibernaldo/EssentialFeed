@@ -17,9 +17,9 @@ public final class FeedRefreshViewModelViewController: NSObject {
     // Legacy: make private for testing purposes
     public lazy var view = binded(UIRefreshControl())
     
-    private let viewModel: FeedViewModel
+    private let viewModel: FeedMVVM
     
-    init(viewModel: FeedViewModel) {
+    init(viewModel: FeedMVVM) {
         self.viewModel = viewModel
     }
         
