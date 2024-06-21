@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C2081522BFA090B0079ADD6 /* FeedImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2081512BFA090B0079ADD6 /* FeedImageViewModel.swift */; };
+		1C3900BF2C256AB1000BC1A4 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3900BE2C256AB1000BC1A4 /* ErrorView.swift */; };
 		1C4C7FB92BF7C16E00B8B99B /* FeedUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4C7FB82BF7C16E00B8B99B /* FeedUIComposer.swift */; };
 		1C4C7FBC2BF8C45400B8B99B /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4C7FBB2BF8C45400B8B99B /* FeedViewModel.swift */; };
 		1C4CB63C2BECF0BA0029F8DC /* EssentialFeediOS.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1C4CB63B2BECF0BA0029F8DC /* EssentialFeediOS.docc */; };
@@ -119,6 +120,7 @@
 
 /* Begin PBXFileReference section */
 		1C2081512BFA090B0079ADD6 /* FeedImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageViewModel.swift; sourceTree = "<group>"; };
+		1C3900BE2C256AB1000BC1A4 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		1C4C7FB82BF7C16E00B8B99B /* FeedUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUIComposer.swift; sourceTree = "<group>"; };
 		1C4C7FBB2BF8C45400B8B99B /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 		1C4CB6382BECF0BA0029F8DC /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -386,6 +388,7 @@
 				1C7162C22C04F4F700BB90C4 /* Feed.xcassets */,
 				1CB35D532C07BBC600CBE261 /* UITableView+Dequeueing.swift .swift */,
 				1C645B432C10AB8F00ED2E2A /* UIImageView+Animations.swift */,
+				1C3900BE2C256AB1000BC1A4 /* ErrorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -817,6 +820,7 @@
 				1C93F9F62C03851F0015B3A5 /* FeedImagePresenter.swift in Sources */,
 				1C51A5482C00D3E0001F8DB3 /* FeedPresenter.swift in Sources */,
 				1C7A4D892BF51B6900BC5E4C /* FeedRefreshViewController.swift in Sources */,
+				1C3900BF2C256AB1000BC1A4 /* ErrorView.swift in Sources */,
 				1C51A54B2C00DACA001F8DB3 /* FeedRefreshViewModelViewController.swift in Sources */,
 				1C2081522BFA090B0079ADD6 /* FeedImageViewModel.swift in Sources */,
 				1CB35D542C07BBC600CBE261 /* UITableView+Dequeueing.swift .swift in Sources */,
