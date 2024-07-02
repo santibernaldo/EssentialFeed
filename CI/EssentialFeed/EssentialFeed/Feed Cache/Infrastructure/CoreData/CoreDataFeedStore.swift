@@ -35,17 +35,23 @@ public final class CoreDataFeedStore: FeedStore {
 
     public func retrieve(completion: @escaping RetrievalCompletion) {
         perform { context in
-            do {
-                if let cache = try ManagedCache.find(in: context) {
-                    completion(.success(CachedFeed(feed: cache.localFeed, timestamp: cache.timestamp)))
-                } else {
-                    completion(.success(.none))
+            // An optional can be mapped as a .some or .none value if none is found
+            completion(Result {
+                try ManagedCache.find(in: context).map {
+                    return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
                 }
-            } catch {
-                completion(.failure(error))
-            }
+            })
         }
-
+            // WAS THIS PREVIOUS CODE
+//            do {
+//                if let cache = try ManagedCache.find(in: context) {
+//                    completion(.success(CachedFeed(feed: cache.localFeed, timestamp: cache.timestamp)))
+//                } else {
+//                    completion(.success(.none))
+//                }
+//            } catch {
+//                completion(.failure(error))
+//            }
     }
     
     public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {

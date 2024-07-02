@@ -1,0 +1,10 @@
+/* 
+  Feed.strings
+  EssentialFeed
+
+  Created by Santiago Ochoa Bernaldo de Quiros on 5/6/24.
+  
+*/
+
+"FEED_TITLE_VALUE"="My Feed";
+"FEED_VIEW_CONNECTION_ERROR"="Couldn`t connect to the server";
