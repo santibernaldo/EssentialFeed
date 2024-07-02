@@ -8,7 +8,7 @@
 import Foundation
 
 // This one doesn't know about the API, it's like the Domain object
-public struct FeedImage: Equatable {
+public struct FeedImage: Hashable {
     public let id: UUID
     public var description: String?
     public let location: String?
