@@ -33,7 +33,6 @@
 		1C5B7A3D2BCAF0F500C84FFB /* XCTestCase+FeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B7A3C2BCAF0F500C84FFB /* XCTestCase+FeedStoreSpecs.swift */; };
 		1C5B98792BC5522D0033C507 /* CodableFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5B98782BC5522D0033C507 /* CodableFeedStoreTests.swift */; };
 		1C5E44102BF7A301007CBBE7 /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5E440F2BF7A301007CBBE7 /* FeedImageCellController.swift */; };
-		1C6276502C34340D008499FA /* FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7A4D862BF5177500BC5E4C /* FeedImageDataLoader.swift */; };
 		1C645B442C10AB8F00ED2E2A /* UIImageView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C645B432C10AB8F00ED2E2A /* UIImageView+Animations.swift */; };
 		1C645B472C10B6A600ED2E2A /* Feed.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C645B452C10B6A600ED2E2A /* Feed.strings */; };
 		1C645B4A2C10B95D00ED2E2A /* FeedViewControllerTests+Localization.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C645B492C10B95D00ED2E2A /* FeedViewControllerTests+Localization.swift .swift */; };
@@ -858,7 +857,6 @@
 				1C81CB562C1225A400E9EACA /* FeedViewAdapter.swift in Sources */,
 				1C51A54D2C00DB57001F8DB3 /* FeedViewModelViewController.swift in Sources */,
 				1CA1A9E72BF2523800F6DA9B /* FeedImageCell.swift in Sources */,
-				1C6276502C34340D008499FA /* FeedImageDataLoader.swift in Sources */,
 				1C4CB63C2BECF0BA0029F8DC /* EssentialFeediOS.docc in Sources */,
 				1C645B442C10AB8F00ED2E2A /* UIImageView+Animations.swift in Sources */,
 				1C4C7FBC2BF8C45400B8B99B /* FeedMVVM.swift in Sources */,
