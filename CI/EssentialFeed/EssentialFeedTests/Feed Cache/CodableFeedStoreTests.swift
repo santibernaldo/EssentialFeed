@@ -124,14 +124,14 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
     }
     
     func test_delete_deliversErrorOnDeletionError() {
-        let noDeletePermissionURL = cachesDirectory()
+        let noDeletePermissionURL = noDeletePermissionURL()
         let sut = makeSUT(storeURL: noDeletePermissionURL)
         
         assertThatDeleteDeliversErrorOnDeletionError(on: sut)
     }
     
     func test_delete_hasNoSideEffectsOnDeletionError() {
-        let noDeletePermissionURL = cachesDirectory()
+        let noDeletePermissionURL = noDeletePermissionURL()
         let sut = makeSUT(storeURL: noDeletePermissionURL)
         
         assertThatDeleteHasNoSideEffectsOnDeletionError(on: sut)
@@ -169,6 +169,13 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
     
     private func cachesDirectory() -> URL {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+    }
+    
+    //The cache directory permission is different in the iOS simulator (you can delete the directory on the simulator, but not on the macOS target!). So, as Shawn described above, you need to use the .systemDomainMask only for the 'deletion error' tests. For example:
+    
+    //Just in case anyone else runs into the same issue I had when running the CodableFeedStoreTests on iOS, it was due to the fact that when running the tests on the simulator, we do in fact have permission to delete the caches directory from the filesystem. To fix, change how you get the supposed directory without deletion permission to use the systemDomainMask instead:
+    private func noDeletePermissionURL() -> URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!
     }
     
     private func deleteStoreArtifacts() {
