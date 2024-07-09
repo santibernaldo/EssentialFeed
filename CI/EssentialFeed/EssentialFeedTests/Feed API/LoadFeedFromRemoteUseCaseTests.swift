@@ -129,6 +129,11 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     // We accumulate all the properties we recieve.
     private class HTTPClientSpy: HTTPClient {
         
+        private struct Task: HTTPClientTask {
+                    func cancel() {}
+                }
+
+        
         private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         var requestedURLS: [URL] {
@@ -151,7 +156,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         }
         
         // The signature of the get method are the parameters we're using here
-        func get(url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
             
             // We're not stubbing, from the test (setting the error manually), min 6:53 from 'Handling Errors Invalid Paths', hence we're not creating behaviour here, checking if we got some error unwrapping if
             /*
@@ -171,6 +176,8 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
            
             // We just accumulate all the properties we receive
             messages.append((url, completion))
+            
+            return Task()
         }
     }
     

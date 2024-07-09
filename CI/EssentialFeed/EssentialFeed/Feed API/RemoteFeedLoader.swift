@@ -27,7 +27,7 @@ public final class RemoteFeedLoader: FeedLoader {
     }
     
     public func load(completion: @escaping (FeedLoader.Result) -> ()){
-        client.get(url: url) { [weak self] result in
+        client.get(from: url) { [weak self] result in
             
             // With the static FeedMapper.map into the completion, we avoid a memory leak
             // And unwrapping the self, we avoiding calling the completion in case RemoteFeedLoader
