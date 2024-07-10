@@ -13,9 +13,9 @@ import EssentialFeed
 class HTTPClientSpy: HTTPClient {
     
     private struct Task: HTTPClientTask {
-        func cancel() {}
+        let callback: () -> Void
+        func cancel() { callback() }
     }
-    
     
     private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
     private(set) var cancelledURLs = [URL]()
@@ -61,6 +61,8 @@ class HTTPClientSpy: HTTPClient {
         // We just accumulate all the properties we receive
         messages.append((url, completion))
         
-        return Task()
+        return Task { [weak self] in
+            self?.cancelledURLs.append(url)
+        }
     }
 }
