@@ -38,7 +38,7 @@ public final class CoreDataFeedStore: FeedStore {
             // An optional can be mapped as a .some or .none value if none is found
             completion(Result {
                 try ManagedCache.find(in: context).map {
-                    return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
+                    CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
                 }
             })
         }
