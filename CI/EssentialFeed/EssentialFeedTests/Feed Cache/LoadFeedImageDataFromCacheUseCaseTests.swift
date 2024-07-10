@@ -1,9 +1,6 @@
-//
-//  Copyright © 2019 Essential Developer. All rights reserved.
-//
 
-import EssentialFeed
 import XCTest
+import EssentialFeed
 
 class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     
@@ -27,7 +24,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         expect(sut, toCompleteWith: failed(), when: {
             let retrievalError = anyNSError()
-            store.complete(with: retrievalError)
+            store.completeRetrieval(with: retrievalError)
         })
     }
 
@@ -35,7 +32,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         expect(sut, toCompleteWith: notFound(), when: {
-            store.complete(with: .none)
+            store.completeRetrieval(with: .none)
         })
     }
     
@@ -44,7 +41,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let foundData = anyData()
         
         expect(sut, toCompleteWith: .success(foundData), when: {
-            store.complete(with: foundData)
+            store.completeRetrieval(with: foundData)
         })
     }
     
@@ -56,9 +53,9 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let task = sut.loadImageData(from: anyURL()) { received.append($0) }
         task.cancel()
         
-        store.complete(with: foundData)
-        store.complete(with: .none)
-        store.complete(with: anyNSError())
+        store.completeRetrieval(with: foundData)
+        store.completeRetrieval(with: .none)
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertTrue(received.isEmpty, "Expected no received results after cancelling task")
     }
@@ -71,7 +68,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         _ = sut?.loadImageData(from: anyURL()) { received.append($0) }
         
         sut = nil
-        store.complete(with: anyData())
+        store.completeRetrieval(with: anyData())
         
         XCTAssertTrue(received.isEmpty, "Expected no received results after instance has been deallocated")
     }
@@ -87,11 +84,11 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     }
     
     private func failed() -> FeedImageDataLoader.Result {
-        return .failure(LocalFeedImageDataLoader.Error.failed)
+        return .failure(LocalFeedImageDataLoader.LoadError.failed)
     }
     
     private func notFound() -> FeedImageDataLoader.Result {
-        return .failure(LocalFeedImageDataLoader.Error.notFound)
+        return .failure(LocalFeedImageDataLoader.LoadError.notFound)
     }
     
     private func never(file: StaticString = #file, line: UInt = #line) {
@@ -106,8 +103,8 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
             case let (.success(receivedData), .success(expectedData)):
                 XCTAssertEqual(receivedData, expectedData, file: file, line: line)
                 
-            case (.failure(let receivedError as LocalFeedImageDataLoader.Error),
-                  .failure(let expectedError as LocalFeedImageDataLoader.Error)):
+            case (.failure(let receivedError as LocalFeedImageDataLoader.LoadError),
+                  .failure(let expectedError as LocalFeedImageDataLoader.LoadError)):
                 XCTAssertEqual(receivedError, expectedError, file: file, line: line)
                 
             default:
@@ -120,4 +117,5 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         action()
         wait(for: [exp], timeout: 1.0)
     }
+    
 }

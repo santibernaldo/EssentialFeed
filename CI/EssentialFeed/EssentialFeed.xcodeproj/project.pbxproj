@@ -344,6 +344,7 @@
 			children = (
 				1C5361F72BBC646900F49D3E /* FeedStoreSpy.swift */,
 				1C7F09C12BC1ACA000257FB6 /* FeedCacheTestHelpers.swift */,
+				1CAD51142C3E9C0C0079A2F7 /* FeedImageDataStoreSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -443,7 +444,6 @@
 			children = (
 				1C7F09C52BC1AE5600257FB6 /* SharedTestHelpers.swift */,
 				1CAD51032C3DA4910079A2F7 /* HTTPClientSpy.swift */,
-				1CAD51142C3E9C0C0079A2F7 /* FeedImageDataStoreSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
