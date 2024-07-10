@@ -20,13 +20,13 @@ public final class CoreDataFeedStore: FeedStore {
         case failedToLoadPersistentContainer(Error)
     }
     
-    public init(storeURL: URL) throws {
+    public init(storeURL: URL, in bundle: Bundle = .main) throws {
         guard let model = CoreDataFeedStore.model else {
             throw StoreError.modelNotFound
         }
         
         do {
-            container = try NSPersistentContainer.load(name: CoreDataFeedStore.modelName, model: model, url: storeURL)
+            container = try NSPersistentContainer.load(name: CoreDataFeedStore.modelName, model: model, url: storeURL, in: bundle)
             context = container.newBackgroundContext()
         } catch {
             throw StoreError.failedToLoadPersistentContainer(error)
