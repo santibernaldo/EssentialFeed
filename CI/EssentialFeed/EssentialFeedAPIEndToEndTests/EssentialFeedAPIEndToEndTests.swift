@@ -90,7 +90,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     func getFeedResult(file: StaticString = #filePath,
                        line: UInt = #line) -> FeedLoader.Result? {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        let testServerURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
         
         // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
