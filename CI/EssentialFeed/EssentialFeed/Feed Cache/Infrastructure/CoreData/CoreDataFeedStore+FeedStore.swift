@@ -5,7 +5,7 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 11/7/24.
 //
 
-}
+
 import CoreData
 
 extension CoreDataFeedStore: FeedStore {
