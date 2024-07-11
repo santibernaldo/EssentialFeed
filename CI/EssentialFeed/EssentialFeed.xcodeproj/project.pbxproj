@@ -38,6 +38,8 @@
 		1C645B4A2C10B95D00ED2E2A /* FeedViewControllerTests+Localization.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C645B492C10B95D00ED2E2A /* FeedViewControllerTests+Localization.swift .swift */; };
 		1C645B4E2C10BC4800ED2E2A /* FeedLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C645B4D2C10BC4800ED2E2A /* FeedLocalizationTests.swift */; };
 		1C6532602C3FC366002B8848 /* CoreDataFeedStore+FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C65325F2C3FC366002B8848 /* CoreDataFeedStore+FeedStore.swift */; };
+		1C6532612C3FCD3C002B8848 /* FeedImageDataStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD51142C3E9C0C0079A2F7 /* FeedImageDataStoreSpy.swift */; };
+		1C6532632C3FCE27002B8848 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F09C52BC1AE5600257FB6 /* SharedTestHelpers.swift */; };
 		1C6F9FC02BB456B700B05F8E /* SaveCacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6F9FBF2BB456B700B05F8E /* SaveCacheFeedUseCaseTests.swift */; };
 		1C7162C12C04F49300BB90C4 /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C7162C02C04F49300BB90C4 /* Feed.storyboard */; };
 		1C7162C32C04F4F700BB90C4 /* Feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C7162C22C04F4F700BB90C4 /* Feed.xcassets */; };
@@ -931,6 +933,7 @@
 			files = (
 				1CC4EDD42BDBF83900702EA4 /* SharedTestHelpers.swift in Sources */,
 				1C592A9A2BCFF0BF0090AA7F /* EssentialFeedCacheIntegrationTests.swift in Sources */,
+				1C6532612C3FCD3C002B8848 /* FeedImageDataStoreSpy.swift in Sources */,
 				1CC4EDD32BDBF82700702EA4 /* FeedCacheTestHelpers.swift in Sources */,
 				1CC4EDD22BDBF4DB00702EA4 /* XCTestCase+MemoryLeakTrackingHelper.swift in Sources */,
 			);
@@ -940,6 +943,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C6532632C3FCE27002B8848 /* SharedTestHelpers.swift in Sources */,
 				1CAD510F2C3E93800079A2F7 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */,
 				1C7538E82BA46AAD007FD138 /* EssentialFeedAPIEndToEndTests.swift in Sources */,
 				1CF565842BA995860074D1B8 /* XCTestCase+MemoryLeakTrackingHelper.swift in Sources */,

@@ -5,6 +5,8 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 9/7/24.
 //
 
+import EssentialFeed
+
 public final class RemoteFeedImageDataLoader: FeedImageDataLoader {
     private let client: HTTPClient
     

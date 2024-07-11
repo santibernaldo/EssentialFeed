@@ -18,7 +18,7 @@ public protocol FeedStore {
     typealias InsertionCompletion = (InsertionResult) -> Void
     
     typealias RetrievalResult = Swift.Result<CachedFeed?, Error>
-    typealias RetrievalCompletion = (RetrievalResult?) -> Void
+    typealias RetrievalCompletion = (RetrievalResult) -> Void
 
     /// The client is the responsible to use the right thread type, Main Queue to use this data on a main thread, or on a background thread
     
