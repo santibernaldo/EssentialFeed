@@ -85,15 +85,35 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
     }
     
     func test_validateFeedCache_doesNotDeleteRecentlySavedFeed() {
-            let feedLoaderToPerformSave = makeFeedLoader()
-            let feedLoaderToPerformValidation = makeFeedLoader()
-            let feed = makeUniqueFeed().models
-
-            save(feed, with: feedLoaderToPerformSave)
-            validateCache(with: feedLoaderToPerformValidation)
-
-            expect(feedLoaderToPerformSave, toLoad: feed)
-        }
+        let feedLoaderToPerformSave = makeFeedLoader()
+        let feedLoaderToPerformValidation = makeFeedLoader()
+        let feed = makeUniqueFeed().models
+        
+        save(feed, with: feedLoaderToPerformSave)
+        validateCache(with: feedLoaderToPerformValidation)
+        
+        expect(feedLoaderToPerformSave, toLoad: feed)
+    }
+    
+    func test_validateFeedCache_deletesFeedSavedInADistantPast() {
+        let feedLoaderToPerformSave = makeFeedLoader(currentDate: .distantPast)
+        let feedLoaderToPerformValidation = makeFeedLoader(currentDate: Date())
+        let feed = makeUniqueFeed().models
+        
+        save(feed, with: feedLoaderToPerformSave)
+        validateCache(with: feedLoaderToPerformValidation)
+        
+        expect(feedLoaderToPerformSave, toLoad: [])
+    }
+    
+    private func makeFeedLoader(currentDate: Date = Date(), file: StaticString = #file, line: UInt = #line) -> LocalFeedLoader {
+        let storeURL = testSpecificStoreURL()
+        let store = try! CoreDataFeedStore(storeURL: storeURL)
+        let sut = LocalFeedLoader(store: store, currentDate: { currentDate })
+        trackForMemoryLeaks(store, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
+    }
     
     // MARK: - Helpers
     
