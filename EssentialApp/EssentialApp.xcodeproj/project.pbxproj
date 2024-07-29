@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C6B99A42C57C881002D5458 /* FeedLoaderWithFallbackCompositeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6B99A32C57C881002D5458 /* FeedLoaderWithFallbackCompositeTests.swift */; };
+		1C6B99A62C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */; };
 		1C6CDE1C2C35914300ED004B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CDE1B2C35914300ED004B /* AppDelegate.swift */; };
 		1C6CDE1E2C35914300ED004B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */; };
 		1C6CDE202C35914300ED004B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CDE1F2C35914300ED004B /* ViewController.swift */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		1C6B999A2C57C872002D5458 /* EssentialAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C6B99A32C57C881002D5458 /* FeedLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
+		1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
 		1C6CDE182C35914300ED004B /* EssentialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C6CDE1B2C35914300ED004B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				1C6CDE1B2C35914300ED004B /* AppDelegate.swift */,
 				1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */,
 				1C6CDE1F2C35914300ED004B /* ViewController.swift */,
+				1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */,
 				1C6CDE212C35914300ED004B /* Main.storyboard */,
 				1C6CDE242C35914400ED004B /* Assets.xcassets */,
 				1C6CDE262C35914400ED004B /* LaunchScreen.storyboard */,
@@ -242,6 +245,7 @@
 			files = (
 				1C6CDE202C35914300ED004B /* ViewController.swift in Sources */,
 				1C6CDE1C2C35914300ED004B /* AppDelegate.swift in Sources */,
+				1C6B99A62C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				1C6CDE1E2C35914300ED004B /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
