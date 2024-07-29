@@ -75,7 +75,6 @@
 		1CAD51042C3DA4910079A2F7 /* HTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD51032C3DA4910079A2F7 /* HTTPClientSpy.swift */; };
 		1CAD51052C3DA4F10079A2F7 /* HTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD51032C3DA4910079A2F7 /* HTTPClientSpy.swift */; };
 		1CAD51072C3DA6AB0079A2F7 /* RemoteFeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD51062C3DA6AB0079A2F7 /* RemoteFeedImageDataLoader.swift */; };
-		1CAD51082C3DA6C40079A2F7 /* RemoteFeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD51062C3DA6AB0079A2F7 /* RemoteFeedImageDataLoader.swift */; };
 		1CAD510C2C3E8CC40079A2F7 /* HTTPURLResponse+StatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD51092C3E8C680079A2F7 /* HTTPURLResponse+StatusCode.swift */; };
 		1CAD510E2C3E91500079A2F7 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD510D2C3E91500079A2F7 /* LoadFeedImageDataFromCacheUseCaseTests.swift */; };
 		1CAD510F2C3E93800079A2F7 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD510D2C3E91500079A2F7 /* LoadFeedImageDataFromCacheUseCaseTests.swift */; };
@@ -906,7 +905,6 @@
 				1C89449F2BF351EF00677D5D /* UIView+Shimmering.swift in Sources */,
 				1C81CB562C1225A400E9EACA /* FeedViewAdapter.swift in Sources */,
 				1C51A54D2C00DB57001F8DB3 /* FeedViewModelViewController.swift in Sources */,
-				1CAD51082C3DA6C40079A2F7 /* RemoteFeedImageDataLoader.swift in Sources */,
 				1CA1A9E72BF2523800F6DA9B /* FeedImageCell.swift in Sources */,
 				1C4CB63C2BECF0BA0029F8DC /* EssentialFeediOS.docc in Sources */,
 				1C645B442C10AB8F00ED2E2A /* UIImageView+Animations.swift in Sources */,
