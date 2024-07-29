@@ -7,7 +7,7 @@
 
 import XCTest
 import EssentialFeed
-
+import EssentialApp
 
 final class FeedLoaderWithFallbackCompositeTests: XCTestCase {
     
