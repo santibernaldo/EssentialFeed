@@ -20,6 +20,11 @@
           "containerPath" : "container:EssentialFeed.xcodeproj",
           "identifier" : "1C4CB6372BECF0BA0029F8DC",
           "name" : "EssentialFeediOS"
+        },
+        {
+          "containerPath" : "container:EssentialApp\/EssentialApp.xcodeproj",
+          "identifier" : "1C6CDE172C35914300ED004B",
+          "name" : "EssentialApp"
         }
       ]
     },
@@ -53,6 +58,13 @@
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "1C4CB6402BECF0BA0029F8DC",
         "name" : "EssentialFeediOSTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:EssentialApp\/EssentialApp.xcodeproj",
+        "identifier" : "1C6B99992C57C872002D5458",
+        "name" : "EssentialAppTests"
       }
     }
   ],
