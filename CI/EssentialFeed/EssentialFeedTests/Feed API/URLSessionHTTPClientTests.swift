@@ -140,6 +140,8 @@ class URLSessionHTTPClientTests: XCTestCase {
         return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }
     
+    // With Stubs, we set the values Upfront
+    // With Spys, we capture the values, so we can use them later
     private class URLProtocolStub: URLProtocol {
         private struct Stub {
             let data: Data?

@@ -125,6 +125,8 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    // With Stubs, we set the values Upfront
+    // With Spys, we capture the values, so we can use them later
     private class LoaderSpy: FeedImageDataLoader {
         private var messages = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
 
