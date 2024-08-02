@@ -5,8 +5,6 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 2/8/24.
 //
 
-import EssentialFeed
-
 public final class FeedLoaderCacheDecorator: FeedLoader {
     private let decoratee: FeedLoader
     private let cache: FeedCache
