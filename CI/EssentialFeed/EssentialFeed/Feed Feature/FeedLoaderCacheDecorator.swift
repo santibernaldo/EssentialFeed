@@ -1,8 +1,8 @@
 //
 //  FeedLoaderCacheDecorator.swift
-//  EssentialApp
+//  EssentialFeed
 //
-//  Created by Santiago Ochoa Bernaldo de Quiros on 2/8/24.
+//  Created by Santiago Ochoa Bernaldo de Quiros on 3/8/24.
 //
 
 public final class FeedLoaderCacheDecorator: FeedLoader {

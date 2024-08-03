@@ -5,7 +5,6 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 31/7/24.
 //
 
-
 import XCTest
 
 extension XCTestCase {
