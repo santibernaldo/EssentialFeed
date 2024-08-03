@@ -5,6 +5,7 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 3/8/24.
 //
 
+// When you want to add a new behaviour to a type without changing it, you can use Decorators
 class FeedImageDataLoaderCacheDecorator: FeedImageDataLoader {
     private let decoratee: FeedImageDataLoader
     private let cache: FeedImageDataCache

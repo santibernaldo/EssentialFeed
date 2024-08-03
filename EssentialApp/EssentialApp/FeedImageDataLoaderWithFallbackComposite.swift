@@ -7,6 +7,7 @@
 
 import EssentialFeed
 
+// When you want to compose types that conform to a common interface, you can use Compoties
 public class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     private let primary: FeedImageDataLoader
     private let fallback: FeedImageDataLoader
