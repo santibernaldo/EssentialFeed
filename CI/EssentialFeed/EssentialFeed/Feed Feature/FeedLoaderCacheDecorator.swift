@@ -5,6 +5,11 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 3/8/24.
 //
 
+/*
+ Not every client of the FeedLoader protocol needs the save method (Interface Segregation Principle).
+ 
+ That's why we use the Decorator pattern
+ */
 public final class FeedLoaderCacheDecorator: FeedLoader {
     private let decoratee: FeedLoader
     private let cache: FeedCache
