@@ -23,8 +23,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
         
-        
-        
         let remoteClient = makeRemoteClient()
         let remoteFeedLoader = RemoteFeedLoader(client: remoteClient, url: url)
         let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
@@ -32,6 +30,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let localStoreURL = NSPersistentContainer
             .defaultDirectoryURL()
             .appendingPathComponent("feed-store.sqlite")
+        
+        // We remove the artifacts for the case when there's no cache and we're offline
+        // (test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache)
+        if CommandLine.arguments.contains("reset") {
+            try? FileManager.default.removeItem(at: localStoreURL)
+        }
         
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
         let localFeedLoader = LocalFeedLoader(store: localStore, currentDate: Date.init)
