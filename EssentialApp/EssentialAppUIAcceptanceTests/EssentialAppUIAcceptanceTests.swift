@@ -11,7 +11,7 @@ final class EssentialAppUIAcceptanceTests: XCTestCase {
 
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
         let app = XCUIApplication()
-        
+        app.launchArguments = ["reset"]
         app.launch()
         
         // Identifier added on the 'Identifier' field of the Custom Class of the Inspector's View
@@ -24,6 +24,8 @@ final class EssentialAppUIAcceptanceTests: XCTestCase {
     
     func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() {
         let onlineApp = XCUIApplication()
+        // We reset here the state, so the next time the app launches on this test, we can use the cache saved
+        onlineApp.launchArguments = ["reset"]
         onlineApp.launch()
         
         // After we've run the app for the first time, and saved on to the cache, we use the 'launchArguments' identifiers, to identify that we are running the app with the Cache Saved. So we can fake the Offline connection, and test that we are showing
