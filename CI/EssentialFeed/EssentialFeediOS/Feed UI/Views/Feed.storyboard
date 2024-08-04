@@ -64,6 +64,7 @@ Location</string>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pC7-gl-ypr">
                                                             <rect key="frame" x="0.0" y="0.0" width="353" height="353"/>
+                                                            <accessibility key="accessibilityConfiguration" identifier="feed-image-view"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="pC7-gl-ypr" secondAttribute="height" multiplier="1:1" id="ONK-wh-VJI"/>
                                                             </constraints>
@@ -119,6 +120,7 @@ Location</string>
                                         <constraint firstAttribute="bottomMargin" secondItem="TOe-9b-riR" secondAttribute="bottom" priority="999" constant="6" id="sq4-0Y-rBJ"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration" identifier="feed-image-cell"/>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="rxd-Q8-HAr" id="9K1-12-eHV"/>
                                     <outlet property="feedImageContainer" destination="DWb-VU-4Nh" id="XaT-Sz-HLA"/>
@@ -159,7 +161,7 @@ Location</string>
     <resources>
         <image name="pin" width="10" height="14.333333015441895"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
