@@ -33,9 +33,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // We remove the artifacts for the case when there's no cache and we're offline
         // (test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache)
+        
+        /*
+         WE ADD COMPILATION DIRECTIVES, SO THIS CODE IS NOT PUSHED ON PRODUCTION, AND ONLY USED FOR TESTS
+         
+         EVERY TEST CODE SHOULD BE IN-BETWEEN COMPILATION DIRECTIVES
+         */
+        #if DEBUG
         if CommandLine.arguments.contains("reset") {
             try? FileManager.default.removeItem(at: localStoreURL)
         }
+        #endif
         
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
         let localFeedLoader = LocalFeedLoader(store: localStore, currentDate: Date.init)
@@ -82,18 +90,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    #if DEBUG
     private func makeRemoteClient() -> HTTPClient {
+        
         switch UserDefaults.standard.string(forKey: "connectivity") {
         case "offline":
             return AlwaysFailingHTTPClient()
             
         default:
+        
             return URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         }
     }
+    #endif
 }
 
-
+#if DEBUG
 private class AlwaysFailingHTTPClient: HTTPClient {
     private class Task: HTTPClientTask {
         func cancel() {}
@@ -104,3 +116,4 @@ private class AlwaysFailingHTTPClient: HTTPClient {
         return Task()
     }
 }
+#endif
