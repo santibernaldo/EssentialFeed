@@ -30,6 +30,7 @@
 		1CDB050B2C5E629F00AB1937 /* XCTestCase-FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDB050A2C5E629F00AB1937 /* XCTestCase-FeedImageDataLoader.swift */; };
 		1CDB050F2C5E6B8400AB1937 /* FeedImageDataLoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDB050E2C5E6B8400AB1937 /* FeedImageDataLoaderSpy.swift */; };
 		1CDB051B2C5FAA9B00AB1937 /* EssentialAppUIAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDB051A2C5FAA9B00AB1937 /* EssentialAppUIAcceptanceTests.swift */; };
+		1CDB05242C5FBFFE00AB1937 /* DebuggingSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDB05232C5FBFFE00AB1937 /* DebuggingSceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		1CDB050E2C5E6B8400AB1937 /* FeedImageDataLoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderSpy.swift; sourceTree = "<group>"; };
 		1CDB05182C5FAA9B00AB1937 /* EssentialAppUIAcceptanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUIAcceptanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDB051A2C5FAA9B00AB1937 /* EssentialAppUIAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialAppUIAcceptanceTests.swift; sourceTree = "<group>"; };
+		1CDB05232C5FBFFE00AB1937 /* DebuggingSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggingSceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 			children = (
 				1C6CDE1B2C35914300ED004B /* AppDelegate.swift */,
 				1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */,
+				1CDB05232C5FBFFE00AB1937 /* DebuggingSceneDelegate.swift */,
 				1C6CDE1F2C35914300ED004B /* ViewController.swift */,
 				1C944FF82C5A4AEC007D48BE /* FeedImageDataLoaderWithFallbackComposite.swift */,
 				1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */,
@@ -349,6 +352,7 @@
 			files = (
 				1C6CDE202C35914300ED004B /* ViewController.swift in Sources */,
 				1C6CDE1C2C35914300ED004B /* AppDelegate.swift in Sources */,
+				1CDB05242C5FBFFE00AB1937 /* DebuggingSceneDelegate.swift in Sources */,
 				1C6B99A62C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				1C6CDE1E2C35914300ED004B /* SceneDelegate.swift in Sources */,
 				1C944FF92C5A4AEC007D48BE /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */,
