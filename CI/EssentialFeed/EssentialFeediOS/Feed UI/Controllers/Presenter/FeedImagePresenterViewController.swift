@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class FeedImageViewModelCellController {
+public final class FeedImageViewModelCellController {
     private let viewModel: FeedImageViewModel<UIImage>
     
     init(viewModel: FeedImageViewModel<UIImage>) {

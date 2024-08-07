@@ -12,11 +12,11 @@ import EssentialFeed
 // This ViewModel is Platform Agnostic, it can be used on many platforms
 
 // View Model has dependencies and behaviour, that's different from View Presenter
-final class FeedMVVM {
+public final class FeedMVVM {
     typealias Observer<T> = (T) -> Void
     private let feedLoader: FeedLoader
     
-    init(feedLoader: FeedLoader) {
+    public init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
     }
     

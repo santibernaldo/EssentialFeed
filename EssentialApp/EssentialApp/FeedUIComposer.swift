@@ -7,6 +7,7 @@
 
 import UIKit
 import EssentialFeed
+import EssentialFeediOS
 
 public final class FeedUIComposer {
     
@@ -27,22 +28,22 @@ public final class FeedUIComposer {
         return feedController
     }
 
-    public static func feedComposedViewModel(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewModelViewController {
-        let feedViewModel = FeedMVVM(feedLoader: feedLoader)
-        let refreshController = FeedRefreshViewModelViewController(viewModel: feedViewModel)
-        let feedController = FeedViewModelViewController(refreshController: refreshController)
-        feedViewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedController, loader: imageLoader)
-        return feedController
-    }
-    
-    private static func adaptFeedToCellControllers(forwardingTo controller: FeedViewModelViewController, loader: FeedImageDataLoader) -> ([FeedImage]) -> Void {
-        return { [weak controller] feed in
-            controller?.tableModel = feed.map { model in
-                FeedImageViewModelCellController(viewModel:
-                                            FeedImageViewModel(model: model, imageLoader: loader, imageTransformer: UIImage.init))
-            }
-        }
-    }
+//    public static func feedComposedViewModel(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewModelViewController {
+//        let feedViewModel = FeedMVVM(feedLoader: feedLoader)
+//        let refreshController = FeedRefreshViewModelViewController(viewModel: feedViewModel)
+//        let feedController = FeedViewModelViewController(refreshController: refreshController)
+//        feedViewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedController, loader: imageLoader)
+//        return feedController
+//    }
+//    
+//    private static func adaptFeedToCellControllers(forwardingTo controller: FeedViewModelViewController, loader: FeedImageDataLoader) -> ([FeedImage]) -> Void {
+//        return { [weak controller] feed in
+//            controller?.tableModel = feed.map { model in
+//                FeedImageViewModelCellController(viewModel:
+//                                            FeedImageViewModel(model: model, imageLoader: loader, imageTransformer: UIImage.init))
+//            }
+//        }
+//    }
 }
 
 private extension FeedViewController {

@@ -23,6 +23,10 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
             // hideMessage()
         }
     }
+    
+    public func display(_ cellControllers: [FeedImageCellController]) {
+        tableModel = cellControllers
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
