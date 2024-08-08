@@ -66,13 +66,6 @@
         "identifier" : "1C7538E42BA46AAD007FD138",
         "name" : "EssentialFeedAPIEndToEndTests"
       }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:EssentialApp\/EssentialApp.xcodeproj",
-        "identifier" : "1CDB05172C5FAA9B00AB1937",
-        "name" : "EssentialAppUIAcceptanceTests"
-      }
     }
   ],
   "version" : 1
