@@ -22,28 +22,12 @@ public final class FeedUIComposer {
         refreshController.delegate = presentationAdapter
         
         presentationAdapter.presenter = FeedPresenter(
-            feedView: FeedViewAdapter(controller: feedController, imageLoader: MainQueueDispatchDecorator(decoratee: imageLoader)), errorView: WeakRefVirtualProxy(feedController),
+            feedView: FeedViewAdapter(controller: feedController, imageLoader: MainQueueDispatchDecorator(decoratee: imageLoader)), 
+            errorView: WeakRefVirtualProxy(feedController),
             loadingView: WeakRefVirtualProxy(refreshController))
         
         return feedController
     }
-
-//    public static func feedComposedViewModel(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewModelViewController {
-//        let feedViewModel = FeedMVVM(feedLoader: feedLoader)
-//        let refreshController = FeedRefreshViewModelViewController(viewModel: feedViewModel)
-//        let feedController = FeedViewModelViewController(refreshController: refreshController)
-//        feedViewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedController, loader: imageLoader)
-//        return feedController
-//    }
-//    
-//    private static func adaptFeedToCellControllers(forwardingTo controller: FeedViewModelViewController, loader: FeedImageDataLoader) -> ([FeedImage]) -> Void {
-//        return { [weak controller] feed in
-//            controller?.tableModel = feed.map { model in
-//                FeedImageViewModelCellController(viewModel:
-//                                            FeedImageViewModel(model: model, imageLoader: loader, imageTransformer: UIImage.init))
-//            }
-//        }
-//    }
 }
 
 private extension FeedViewController {

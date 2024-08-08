@@ -8,26 +8,28 @@
 import UIKit
 import EssentialFeed
 
-public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedErrorView {
+public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView, FeedErrorView {
     
     @IBOutlet public var refreshController: FeedRefreshViewController?
     
-    var tableModel = [FeedImageCellController]() {
-        didSet { tableView.reloadData() }
-    }
-    
-    public func display(_ viewModel: FeedErrorViewModel) {
-        if let message = viewModel.message {
-            // showMessage()
-        } else {
-            // hideMessage()
+    private var tableModel = [FeedImageCellController]() {
+        didSet {
+            tableView.reloadData()
         }
     }
     
     public func display(_ cellControllers: [FeedImageCellController]) {
         tableModel = cellControllers
     }
-
+    
+    public func display(_ viewModel: FeedLoadingViewModel) {
+        refreshController?.view?.update(isRefreshing: viewModel.isLoading)
+    }
+    
+    public func display(_ viewModel: FeedErrorViewModel) {
+        
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
