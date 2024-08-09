@@ -13,6 +13,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     @IBOutlet public weak var errorView: ErrorView?
     @IBOutlet public var refreshController: FeedRefreshViewController?
     
+    private var loadingControllers = [IndexPath: FeedImageCellController]()
+    
     private var tableModel = [FeedImageCellController]() {
         didSet {
             tableView.reloadData()
@@ -20,6 +22,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     public func display(_ cellControllers: [FeedImageCellController]) {
+        loadingControllers = [:]
         tableModel = cellControllers
     }
     
@@ -80,10 +83,18 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     private func cellController(forRowAt indexPath: IndexPath) -> FeedImageCellController {
-        return tableModel[indexPath.row]
+        let controller = tableModel[indexPath.row]
+        loadingControllers[indexPath] = controller
+        return controller
     }
     
+    /*
+     When updating the table model and reloading the table, UIKit calls didEndDisplayingCell for each removed cell that was previously visible. Since we're canceling requests in this method, we could be sending messages to the new models or potentially crashing in case the new table model has fewer items than the previous one!
+
+     This is not a big problem at the moment since items cannot be removed from the feed. But we cannot assume the backend will keep this behavior going further.
+     */
     private func cancelCellControllerLoad(forRowAt indexPath: IndexPath) {
-        cellController(forRowAt: indexPath).cancelLoad()
+        loadingControllers[indexPath]?.cancelLoad()
+        loadingControllers[indexPath] = nil
     }
 }
