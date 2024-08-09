@@ -10,6 +10,7 @@ import EssentialFeed
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView, FeedErrorView {
     
+    @IBOutlet public weak var errorView: ErrorView?
     @IBOutlet public var refreshController: FeedRefreshViewController?
     
     private var tableModel = [FeedImageCellController]() {
@@ -27,7 +28,17 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     public func display(_ viewModel: FeedErrorViewModel) {
+        if let message = viewModel.message {
+            errorView?.show(message: message)
+        } else {
+            errorView?.hideMessage()
+        }
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
+        tableView.sizeTableHeaderToFit()
     }
     
     public override func viewDidLoad() {

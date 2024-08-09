@@ -15,9 +15,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Jyn-jP-1Ie" customClass="ErrorView" customModule="MVP" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="34"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V34-SF-KPq">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="34"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <inset key="contentEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="8"/>
+                                    <state key="normal" title="Error label">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="hideMessage" destination="Jyn-jP-1Ie" eventType="touchUpInside" id="6fB-Nb-rd5"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstItem="V34-SF-KPq" firstAttribute="leading" secondItem="Jyn-jP-1Ie" secondAttribute="leading" id="Oau-zJ-GMC"/>
+                                <constraint firstAttribute="trailing" secondItem="V34-SF-KPq" secondAttribute="trailing" id="lyp-rG-rhe"/>
+                                <constraint firstItem="V34-SF-KPq" firstAttribute="top" secondItem="Jyn-jP-1Ie" secondAttribute="top" id="wuA-E6-sgV"/>
+                                <constraint firstAttribute="bottom" secondItem="V34-SF-KPq" secondAttribute="bottom" id="yJB-PM-xQK"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="button" destination="V34-SF-KPq" id="htU-Ff-t9Q"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="580" id="jtB-C1-bmP" customClass="FeedImageCell" customModule="EssentialFeediOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="393" height="580"/>
+                                <rect key="frame" x="0.0" y="84" width="393" height="580"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jtB-C1-bmP" id="869-Ax-v2O">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="580"/>
@@ -145,6 +173,7 @@ Location</string>
                         </connections>
                     </refreshControl>
                     <connections>
+                        <outlet property="errorView" destination="Jyn-jP-1Ie" id="vfx-JD-IMg"/>
                         <outlet property="refreshController" destination="mec-wg-lFj" id="vvm-rN-rzl"/>
                     </connections>
                 </tableViewController>
@@ -161,7 +190,7 @@ Location</string>
     <resources>
         <image name="pin" width="10" height="14.333333015441895"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
