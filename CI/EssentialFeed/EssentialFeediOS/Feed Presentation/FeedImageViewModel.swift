@@ -9,7 +9,7 @@ import Foundation
 import EssentialFeed
 
 // The generic type Image doesn't rely on UIKit or any other platform framework. This is a Cross-platform ViewModel
-final class FeedImageViewModel<Image> {
+public final class FeedImageViewModel<Image> {
     typealias Observer<T> = (T) -> Void
     
     private var task: FeedImageDataLoaderTask?
@@ -17,7 +17,7 @@ final class FeedImageViewModel<Image> {
     private let imageLoader: FeedImageDataLoader
     private let imageTransformer: (Data) -> Image?
     
-    init(model: FeedImage, imageLoader: FeedImageDataLoader, imageTransformer: @escaping (Data) -> Image?) {
+    public init(model: FeedImage, imageLoader: FeedImageDataLoader, imageTransformer: @escaping (Data) -> Image?) {
         self.model = model
         self.imageLoader = imageLoader
         self.imageTransformer = imageTransformer
