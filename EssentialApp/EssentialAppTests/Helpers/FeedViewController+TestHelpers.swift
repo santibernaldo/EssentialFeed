@@ -89,7 +89,9 @@ extension FeedViewController {
             prepareForFirstAppearance()
         }
         
+        // View Will Appear is called
         beginAppearanceTransition(true, animated: false)
+        // ViewIsAppearing and View Did Appear
         endAppearanceTransition()
     }
     
