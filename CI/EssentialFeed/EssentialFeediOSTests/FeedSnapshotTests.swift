@@ -10,6 +10,19 @@ import XCTest
 import EssentialFeed
 
 // First, we call the 'record' on every test to check the image created is the one we want to use in the future to compare it every time we run the tests. And then, we use the 'assert' to compare it with the previous snapshot saved
+
+/*
+ Some of the traits of snapshot testing are:
+
+ It allows you to easily review visuals on pull requests as you can store the snapshot artifacts in git.
+ They reveal visual bugs that other testing strategies won’t pick up easily (e.g., odd rendering in specific localizations).
+ They improve the collaboration with the design team as you can actually easily present them with visuals aids.
+ They allow you to automate the capturing of screenshots (e.g., for App Store Connect).
+ They offer a significantly more performant alternative for automating testing visuals than manual or UI testing.
+ Moreover, you can commit the snapshot artifacts to your git repository. Thus, everyone in the team will have access to them.
+
+
+ */
 class FeedSnapshotTests: XCTestCase {
     
     func test_emptyFeed() {
@@ -17,8 +30,8 @@ class FeedSnapshotTests: XCTestCase {
         
         sut.display(emptyFeed())
 
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_FEED_light")
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_FEED_dark")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_FEED_light")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_FEED_dark")
     }
     
     func test_feedWithContent() {
@@ -26,8 +39,8 @@ class FeedSnapshotTests: XCTestCase {
         
         sut.display(feedWithContent())
 
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_CONTENT_light")
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_CONTENT_dark")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_CONTENT_light")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_CONTENT_dark")
     }
     
     func test_feedWithErrorMessage() {
@@ -35,8 +48,8 @@ class FeedSnapshotTests: XCTestCase {
 
         sut.display(.error(message: "This is a\nmulti-line\nerror message"))
 
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_ERROR_MESSAGE_light")
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_ERROR_MESSAGE_dark")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_ERROR_MESSAGE_light")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_ERROR_MESSAGE_dark")
     }
     
     func test_feedWithFailedImageLoading() {
@@ -44,8 +57,8 @@ class FeedSnapshotTests: XCTestCase {
 
         sut.display(feedWithFailedImageLoading())
 
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
-        record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
+        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
     }
     
     // MARK: - Helpers
