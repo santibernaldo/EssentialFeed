@@ -9,6 +9,12 @@ import UIKit
 import CoreData
 import EssentialFeed
 
+/*
+ SceneDelegate acting as the Composition Root:
+ it allows us to keep the modules needed decoupled
+ 
+ The problem with having every module coupled, or a shared module coupled with all the rest, it is that every time you change something in the shared module, it can breaks one of the other modules, or even if you don't break them, you have to recompile o redeploy all the other modules which can live in other repositories
+ */
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     

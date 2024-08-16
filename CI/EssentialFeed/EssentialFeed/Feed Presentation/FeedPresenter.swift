@@ -64,16 +64,19 @@ public final class FeedPresenter {
                                  comment: "Error message displayed when we can't load the image feed from the server")
     }
     
+    // Void -> creates view models -> sends to the UI
     public func didStartLoadingFeed() {
         errorView.display(.noError)
         loadingView.display(FeedLoadingViewModel(isLoading: true))
     }
     
-    public func didFinishLoadingFeed(with feed: [FeedImage]) {
+    // [FeedImage] -> creates view models -> sends to the UI
+     public func didFinishLoadingFeed(with feed: [FeedImage]) {
         feedView.display(FeedViewModel(feed: feed))
         loadingView.display(FeedLoadingViewModel(isLoading: false))
     }
     
+    // Error -> creates view models -> sends to the UI
     public func didFinishLoadingFeed(with error: Error) {
         errorView.display(FeedErrorViewModel.error(message: feedLoadError))
         loadingView.display(FeedLoadingViewModel(isLoading: false))

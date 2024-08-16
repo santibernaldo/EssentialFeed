@@ -16,6 +16,7 @@ class SceneDelegateTests: XCTestCase {
         sut.window = UIWindow()
 
         sut.configureWindow()
+        
 
         let root = sut.window?.rootViewController
         let rootNavigation = root as? UINavigationController

@@ -9,6 +9,14 @@ import UIKit
 import EssentialFeediOS
 
 // DSL test-specific methods which abstract from implementation details
+
+/*
+ DSL stands for Domain-Specific Language. It's a broad topic, but in this context, it's a technique for modeling APIs tailored to a particular domain.
+
+ The idea is to create simple and clear APIs that make it easier to understand the domain without exposing implementation details.
+
+ For example, the Date.minusFeedCacheMaxAge API hides implementation details about calculating the max cache age, and provides a clear context in the domain of the 'Feed Cache'.
+ */
 extension FeedViewController {
     func simulateUserInitiatedFeedReload() {
         replaceRefreshControlWithFakeForiOS17Support()

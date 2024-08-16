@@ -22,6 +22,9 @@ extension Date {
         return 7
     }
     
+    /*
+     DSL Date.minusFeedCacheMaxAge API hides implementation details about calculating the max cache age, and provides a clear context in the domain of the 'Feed Cache'.
+     */
     func minusFeedCacheMaxAge() -> Date {
         return adding(days: -feedCacheMaxAgeInDays)
     }
