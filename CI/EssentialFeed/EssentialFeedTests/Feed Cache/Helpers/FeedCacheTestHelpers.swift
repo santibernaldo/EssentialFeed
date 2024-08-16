@@ -24,6 +24,10 @@ extension Date {
     
     /*
      DSL Date.minusFeedCacheMaxAge API hides implementation details about calculating the max cache age, and provides a clear context in the domain of the 'Feed Cache'.
+     
+     The Date class doesn't normally know anything about "caching Feed objects", so the extension minusFeedCacheMaxAge was added to it so that function can be called on any valid Date object.
+
+     You could say that the minusFeedCacheMaxAge function is "domain-specific language" for working with cached objects.
      */
     func minusFeedCacheMaxAge() -> Date {
         return adding(days: -feedCacheMaxAgeInDays)
