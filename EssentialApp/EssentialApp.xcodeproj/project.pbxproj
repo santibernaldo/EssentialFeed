@@ -91,6 +91,7 @@
 		1C1E82252C62900F00DA2109 /* FeedUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		1C1E82322C6291CF00DA2109 /* FeedUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUIIntegrationTests.swift; sourceTree = "<group>"; };
 		1C6081112C63984C0038C2CE /* FeedAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedAcceptanceTests.swift; sourceTree = "<group>"; };
+		1C6387352C70A73B002807F1 /* EssentialApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialApp.xctestplan; sourceTree = "<group>"; };
 		1C6B999A2C57C872002D5458 /* EssentialAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C6B99A32C57C881002D5458 /* FeedLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
 		1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
@@ -136,6 +137,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C6387342C70A704002807F1 /* Test Plans */ = {
+			isa = PBXGroup;
+			children = (
+				1C6387352C70A73B002807F1 /* EssentialApp.xctestplan */,
+			);
+			path = "Test Plans";
+			sourceTree = "<group>";
+		};
 		1C6B999B2C57C872002D5458 /* EssentialAppTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +196,7 @@
 				1C6CDE242C35914400ED004B /* Assets.xcassets */,
 				1C6CDE262C35914400ED004B /* LaunchScreen.storyboard */,
 				1C6CDE292C35914400ED004B /* Info.plist */,
+				1C6387342C70A704002807F1 /* Test Plans */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";

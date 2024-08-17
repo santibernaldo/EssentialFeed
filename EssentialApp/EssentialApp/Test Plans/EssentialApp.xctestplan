@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "BEACF3B4-253D-402E-AF50-7571FE6083D0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:EssentialApp\/EssentialApp.xcodeproj",
+        "identifier" : "1C6B99992C57C872002D5458",
+        "name" : "EssentialAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}
