@@ -10,6 +10,8 @@ import EssentialFeediOS
 
 final class FeedLoaderPresentationAdapter: FeedRefreshViewControllerDelegate {
     private let feedLoader: FeedLoader
+    
+    // FeedPresenter expects an array of Feed to be passed to the view, so the FeedLoaderPresentationAdapter communicates with the FeedLoader to get this data and pass it to the view through the presenter
     var presenter: FeedPresenter?
     
     init(feedLoader: FeedLoader) {
