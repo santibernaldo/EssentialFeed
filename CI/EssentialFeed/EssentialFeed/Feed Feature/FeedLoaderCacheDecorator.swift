@@ -40,6 +40,7 @@ public final class FeedLoaderCacheDecorator: FeedLoader {
 }
 
 private extension FeedCache {
+    // If you use the save without ignoring, maybe you think you forgot what to do with the result. So you're doing yourself a gift.
     func saveIgnoringResult(_ feed: [FeedImage]) {
         save(feed) { _ in }
     }
