@@ -25,6 +25,15 @@ public final class FeedLoaderCacheDecorator: FeedLoader {
                 self?.cache.saveIgnoringResult(feed)
             }
             completion(result)
+            // WAY OF REMOVING IFS
+            /*
+             decoratee.load { [weak self] result in
+                 completion(result.map { feed in
+                    self?.cache.save(feed) { _ in }
+                    return
+                })
+            })
+             */
         }
     }
 }

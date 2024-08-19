@@ -41,10 +41,11 @@ public final class RemoteFeedImageDataLoader: FeedImageDataLoader {
     }
     
     public func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+        // We create a task that can be cancelled
         let task = HTTPClientTaskWrapper(completion)
         task.wrapped = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
-
+            // when we get the result, we complete the task
             task.complete(with: result
                 .mapError { _ in Error.connectivity }
                 .flatMap { (data, response) in

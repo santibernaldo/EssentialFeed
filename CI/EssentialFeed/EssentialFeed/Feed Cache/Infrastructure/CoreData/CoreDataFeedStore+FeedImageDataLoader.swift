@@ -7,6 +7,7 @@ extension CoreDataFeedStore: FeedImageDataStore {
         perform { context in
             completion(Result {
                 try ManagedFeedImage.first(with: url, in: context)
+                // If its found, stores the data
                     .map { $0.data = data }
                     .map(context.save)
             })

@@ -13,6 +13,9 @@ class ManagedFeedImage: NSManagedObject {
     @NSManaged var imageDescription: String?
     @NSManaged var location: String?
     @NSManaged var url: URL
+    // This is a implementation detail of the CoreData module.
+    
+    // We have a copy of the FeedImage, but with CoreData implementation details, that FeedImage shouldn't know. So these implementation details doesn't affect the FeedImage, nor is not re-compiled again. Its in a different module.
     @NSManaged var data: Data?
     @NSManaged var cache: ManagedCache
 }
