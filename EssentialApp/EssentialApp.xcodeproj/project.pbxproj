@@ -28,7 +28,6 @@
 		1C6B99A62C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */; };
 		1C6CDE1C2C35914300ED004B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CDE1B2C35914300ED004B /* AppDelegate.swift */; };
 		1C6CDE1E2C35914300ED004B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */; };
-		1C6CDE202C35914300ED004B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CDE1F2C35914300ED004B /* ViewController.swift */; };
 		1C6CDE252C35914400ED004B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C6CDE242C35914400ED004B /* Assets.xcassets */; };
 		1C6CDE282C35914400ED004B /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1C6CDE272C35914400ED004B /* Base */; };
 		1C6CDE392C35943600ED004B /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C6CDE382C35943600ED004B /* EssentialFeed.framework */; };
@@ -98,7 +97,6 @@
 		1C6CDE182C35914300ED004B /* EssentialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C6CDE1B2C35914300ED004B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		1C6CDE1F2C35914300ED004B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1C6CDE242C35914400ED004B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C6CDE272C35914400ED004B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C6CDE292C35914400ED004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -184,7 +182,6 @@
 			children = (
 				1C6CDE1B2C35914300ED004B /* AppDelegate.swift */,
 				1C6CDE1D2C35914300ED004B /* SceneDelegate.swift */,
-				1C6CDE1F2C35914300ED004B /* ViewController.swift */,
 				1C944FF82C5A4AEC007D48BE /* FeedImageDataLoaderWithFallbackComposite.swift */,
 				1C6B99A52C57DDFA002D5458 /* FeedLoaderWithFallbackComposite.swift */,
 				1C1E82052C628C1E00DA2109 /* FeedUIComposer.swift */,
@@ -362,7 +359,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C6CDE202C35914300ED004B /* ViewController.swift in Sources */,
 				1C1E820D2C628C1E00DA2109 /* FeedUIComposer.swift in Sources */,
 				1C1E82082C628C1E00DA2109 /* MainQueueDispatchDecorator.swift in Sources */,
 				1C1E82092C628C1E00DA2109 /* WeakRefVirtualProxy.swift in Sources */,

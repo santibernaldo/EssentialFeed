@@ -9,7 +9,7 @@ import Foundation
 import EssentialFeed
 
 public class FeedImageDataStoreSpy: FeedImageDataStore {
-    enum Message: Equatable {
+    public enum Message: Equatable {
         case insert(data: Data, for: URL)
         case retrieve(dataFor: URL)
     }
