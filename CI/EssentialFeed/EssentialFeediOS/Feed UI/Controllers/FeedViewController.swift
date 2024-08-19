@@ -13,6 +13,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     @IBOutlet public weak var errorView: ErrorView?
     @IBOutlet public var refreshController: FeedRefreshViewController?
     
+    // Keeping track of the cell controllers shown on screen, to cancel the image loading on them
     private var loadingControllers = [IndexPath: FeedImageCellController]()
     
     private var tableModel = [FeedImageCellController]() {
