@@ -12,6 +12,7 @@
  */
 public final class FeedLoaderCacheDecorator: FeedLoader {
     private let decoratee: FeedLoader
+    // FeedCache is an abstraction of the FeedCache saving, which is implemented by the LocalFeedLoader. We could pass here the LocalFeedLoader, but it can break our tests because of one of their dependencies. So we abstract the only thing we need, which is saving.
     private let cache: FeedCache
     
     public init(decoratee: FeedLoader, cache: FeedCache) {
