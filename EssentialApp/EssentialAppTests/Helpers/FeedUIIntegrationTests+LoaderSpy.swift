@@ -11,24 +11,25 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
-        private var completionsFeedRequests = [(FeedLoader.Result) -> Void]()
+        
+        private var feedRequests = [(FeedLoader.Result) -> Void]()
         
         var loadFeedRequestCallCount: Int {
-            return completionsFeedRequests.count
+            return feedRequests.count
         }
         
         func completeFeedLoading(at index: Int = 0, with feed: [FeedImage] = []) {
-            completionsFeedRequests[index](.success(feed))
+            feedRequests[index](.success(feed))
         }
         
         func completeFeedLoadingWithError(at index: Int = 0) {
             let error = NSError(domain: "an error", code: 0)
-            completionsFeedRequests[index](.failure(error))
+            feedRequests[index](.failure(error))
         }
         
         // MARK: - FeedLoader
         func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            completionsFeedRequests.append(completion)
+            feedRequests.append(completion)
         }
         
         // MARK: - FeedImageDataLoader

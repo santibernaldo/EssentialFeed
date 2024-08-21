@@ -8,15 +8,16 @@
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 // FeedViewAdapter
 
 // // [FeedImage] -> creates view models -> sends to the UI
 final class FeedViewAdapter: FeedView {
     private weak var controller: FeedViewController?
-    private let imageLoader: FeedImageDataLoader
+    private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
     
-    init(controller: FeedViewController, imageLoader: FeedImageDataLoader) {
+    init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
         self.controller = controller
         self.imageLoader = imageLoader
     }
@@ -28,7 +29,7 @@ final class FeedViewAdapter: FeedView {
         controller?.display(feedImageCellControllers)
     }
     
-    func getImageCellControllers(viewModel: FeedViewModel, imageLoader: FeedImageDataLoader) -> [FeedImageCellController] {
+    func getImageCellControllers(viewModel: FeedViewModel, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> [FeedImageCellController] {
         viewModel.feed.map { model in
             let adapter = FeedImageDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: imageLoader)
             let view = FeedImageCellController(delegate: adapter)

@@ -15,7 +15,7 @@ import EssentialFeediOS
 class FeedAcceptanceTests: XCTestCase {
 
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
-        let feed = launch(httpClient: .online(response), store: .empty)
+        let feed = launch(httpClient: .online(response), store: .withNonExpiredFeedCache)
 
         XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 2)
         XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData())
