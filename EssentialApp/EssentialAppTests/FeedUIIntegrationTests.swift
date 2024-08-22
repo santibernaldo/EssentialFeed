@@ -92,7 +92,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
 
         // viewDidLoad
-        sut.loadViewIfNeeded()
+        sut.simulateAppearance()
         sut.replaceRefreshControlWithFakeForiOS17Support()
         
         // When UIRefreshControl refreshes, it shows a Loading Indicator
@@ -186,7 +186,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
-        
+                
         loader.completeFeedLoading(with: [image0, image1])
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not visible")
         
