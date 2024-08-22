@@ -20,11 +20,7 @@ final public class FeedRefreshViewController: NSObject, FeedLoadingView {
     }
     
     public func display(_ viewModel: FeedLoadingViewModel) {
-        if viewModel.isLoading {
-            view?.beginRefreshing()
-        } else {
-            view?.endRefreshing()
-        }
+        view?.update(isRefreshing: viewModel.isLoading)
     }
     
     private func loadView() -> UIRefreshControl {
