@@ -139,7 +139,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         
         let arrayManyCase = [image0, image1, image2, image3]
-        loader.completeFeedLoading(at: 0, with: arrayManyCase)
+        loader.completeFeedLoading(at: 1, with: arrayManyCase)
         
         // MANY ELEMENT CASE
         assertThat(sut, isRendering: arrayManyCase)
