@@ -5,6 +5,7 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 13/5/24.
 //
 
+
 import UIKit
 import EssentialFeed
 
@@ -15,7 +16,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     // Keeping track of the cell controllers shown on screen, to cancel the image loading on them
     private var loadingControllers = [IndexPath: FeedImageCellController]()
-    
+    private var viewAppeared = false
+
     private var tableModel = [FeedImageCellController]() {
         didSet {
             tableView.reloadData()
@@ -58,7 +60,11 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     public override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         
-        refreshController?.refresh()
+        if !viewAppeared {
+            viewAppeared = true
+            refreshController?.refresh()
+        }
+        
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
