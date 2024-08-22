@@ -90,14 +90,10 @@ final class FeedUIIntegrationTests: XCTestCase {
     
     func test_loadingFeedIndicator_isVisibleWhileLoadingTheFeed() {
         let (sut, loader) = makeSUT()
-
-        // viewDidLoad
-        sut.simulateAppearance()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         
-        // When UIRefreshControl refreshes, it shows a Loading Indicator
         XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
-        
+
+
         sut.simulateAppearance()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")
@@ -112,7 +108,8 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoadingWithError()
+        
+        loader.completeFeedLoadingWithError(at: 2)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
     }
     
