@@ -49,7 +49,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
             XCTAssertEqual(items[7], expectedImage(at: 7))
             
         case let .failure(error)?:
-            XCTFail("Exoected successful feed result, got \(error) instead")
+            XCTFail("ExPected successful feed result, got \(error) instead")
             
         default:
             XCTFail("Expected successful feed result, got no result instead")
@@ -57,15 +57,47 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         
     }
     
+    func test_endToEndTestServerGETFeedImageDataResult_matchesFixedTestAccountData() {
+        switch getFeedImageDataResult() {
+        case let .success(data)?:
+            XCTAssertFalse(data.isEmpty, "Expected non-empty image data")
+            
+        case let .failure(error)?:
+            XCTFail("Expected successful image data result, got \(error) instead")
+            
+        default:
+            XCTFail("Expected successful image data result, got no result instead")
+        }
+    }
+    
+    private func getFeedImageDataResult(file: StaticString = #file, line: UInt = #line) -> FeedImageDataLoader.Result? {
+            let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed/73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")!
+            let loader = RemoteFeedImageDataLoader(client: ephemeralClient())
+            
+            trackForMemoryLeaks(loader, file: file, line: line)
+
+            let exp = expectation(description: "Wait for load completion")
+
+            var receivedResult: FeedImageDataLoader.Result?
+            _ = loader.loadImageData(from: testServerURL) { result in
+                receivedResult = result
+                exp.fulfill()
+            }
+            wait(for: [exp], timeout: 5.0)
+
+            return receivedResult
+        }
+    
     func getFeedResult(file: StaticString = #filePath,
                        line: UInt = #line) -> FeedLoader.Result? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         
         // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-        let loader = RemoteFeedLoader(client: client, url: testServerURL)
+        let loader = RemoteFeedLoader(client: ephemeralClient(), url: testServerURL)
         
         trackForMemoryLeaks(client, file: file, line: line)
+    
         trackForMemoryLeaks(loader, file: file, line: line)
         
         let exp = expectation(description: "wait for load description")
@@ -90,6 +122,12 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
             description: description(at: index),
             location: location(at: index),
             url: url(at: index))
+    }
+    
+    private func ephemeralClient(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+        trackForMemoryLeaks(client, file: file, line: line)
+        return client
     }
     
     private func id(at index: Int) -> UUID {

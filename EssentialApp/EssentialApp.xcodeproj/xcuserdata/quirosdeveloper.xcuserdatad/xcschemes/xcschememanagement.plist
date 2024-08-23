@@ -4,10 +4,28 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>EssentialApp.xcscheme_^#shared#^_</key>
+		<key>EssentialAppTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>8</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>1C6B99992C57C872002D5458</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1C6CDE172C35914300ED004B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1CDB05172C5FAA9B00AB1937</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

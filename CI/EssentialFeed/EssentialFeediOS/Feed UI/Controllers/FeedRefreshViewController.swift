@@ -13,18 +13,14 @@ final public class FeedRefreshViewController: NSObject, FeedLoadingView {
     // Legacy: make private for testing purposes
     @IBOutlet public var view: UIRefreshControl?
     
-    var delegate: FeedRefreshViewControllerDelegate?
+    public var delegate: FeedRefreshViewControllerDelegate?
     
     @IBAction func refresh() {
         delegate?.didRequestFeedRefresh()
     }
     
     public func display(_ viewModel: FeedLoadingViewModel) {
-        if viewModel.isLoading {
-            view?.beginRefreshing()
-        } else {
-            view?.endRefreshing()
-        }
+        view?.update(isRefreshing: viewModel.isLoading)
     }
     
     private func loadView() -> UIRefreshControl {

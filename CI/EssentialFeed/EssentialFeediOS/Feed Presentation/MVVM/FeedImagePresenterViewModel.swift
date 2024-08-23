@@ -5,7 +5,7 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 21/6/24.
 //
 
-struct FeedPresenterImageViewModel<Image> {
+public struct FeedPresenterImageViewModel<Image> {
     let description: String?
     let location: String?
     let image: Image?
