@@ -8,6 +8,7 @@
 import Foundation
 
 public final class RemoteLoader<Resource> {
+    // The URL is a detail of the implementation of the RemoteFeedLoader
     private let url: URL
     private let client: HTTPClient
     private let mapper: Mapper
@@ -28,8 +29,16 @@ public final class RemoteLoader<Resource> {
     
     public func load(completion: @escaping (Result) -> Void) {
         client.get(from: url) { [weak self] result in
-            guard let self = self else { return }
             
+            // With the static FeedMapper.map into the completion, we avoid a memory leak
+            // And unwrapping the self, we avoiding calling the completion in case RemoteFeedLoader
+            // have been deallocated. Sometimes UIViewControllers have been deallocated, but some
+            // labels or other properties are called through a completionBlock after
+            guard let self = self else { return }
+                        
+            //Without this self, we can create a retain cycle. We don't know the implementation of the client, maybe it's a Singleton
+            
+            // We can check without this self != nil the instance is deallocated but we call the completion: test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated
             switch result {
             case let .success((data, response)):
                 completion(self.map(data, from: response))
