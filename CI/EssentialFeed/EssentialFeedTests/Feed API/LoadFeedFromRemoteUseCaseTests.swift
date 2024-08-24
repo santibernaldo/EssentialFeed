@@ -14,7 +14,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     func test_init_DoesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
                 
-        XCTAssertTrue(client.requestedURLS.isEmpty)
+        XCTAssertTrue(client.requestedURLs.isEmpty)
     }
     
     func test_load_RequestDataFromURL() {
@@ -25,7 +25,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         sut.load { _ in }
         
         // When asserting objects collaborating, is not enough to test the values passed, but we need to ask how many times was the method invoked
-        XCTAssertEqual(client.requestedURLS, [url])
+        XCTAssertEqual(client.requestedURLs, [url])
     }
     
     // We test that 'load' is only called once from the RemoteFeedLoader, using the client. Cause this code can gets duplicated during merge or other situations, and we are bound to avoid that.
@@ -38,7 +38,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         sut.load { _ in }
         
         // When asserting objects collaborating, is not enough to test the values passed, but we need to ask how many times was the method invoked
-        XCTAssertEqual(client.requestedURLS, [url, url])
+        XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
     func test_load_deliversErrorOnClientError() {

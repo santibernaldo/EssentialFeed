@@ -13,7 +13,7 @@ class LoadFeedImageDataFromRemoteUseCaseTests: XCTestCase {
     func test_init_doesNotPerformAnyURLRequest() {
         let (_, client) = makeSUT()
         
-        XCTAssertTrue(client.requestedURLS.isEmpty)
+        XCTAssertTrue(client.requestedURLs.isEmpty)
     }
     
     func test_loadImageDataFromURL_requestsDataFromURL() {
@@ -22,7 +22,7 @@ class LoadFeedImageDataFromRemoteUseCaseTests: XCTestCase {
         
         _ = sut.loadImageData(from: url) { _ in }
         
-        XCTAssertEqual(client.requestedURLS, [url])
+        XCTAssertEqual(client.requestedURLs, [url])
     }
     
     func test_loadImageDataFromURLTwice_requestsDataFromURLTwice() {
@@ -32,7 +32,7 @@ class LoadFeedImageDataFromRemoteUseCaseTests: XCTestCase {
         _ = sut.loadImageData(from: url) { _ in }
         _ = sut.loadImageData(from: url) { _ in }
 
-        XCTAssertEqual(client.requestedURLS, [url, url])
+        XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
     func test_loadImageDataFromURL_deliversConnectivityErrorOnClientError() {
