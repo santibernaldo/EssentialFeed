@@ -33,7 +33,7 @@
             reference = "container:CI.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:CI/EssentialFeed/CI.xctestplan"
+            reference = "container:CI/EssentialFeed/CI_macOS.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
