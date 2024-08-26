@@ -68,6 +68,8 @@
 		1C7F0C1A2C7CDF4600A1CBDE /* SharedLocalizationTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F0C182C7CDEEA00A1CBDE /* SharedLocalizationTestHelpers.swift */; };
 		1C7F0C1C2C7CE00A00A1CBDE /* ResourceLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F0C1B2C7CE00A00A1CBDE /* ResourceLoadingView.swift */; };
 		1C7F0C1E2C7CE04B00A1CBDE /* ResourceLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F0C1D2C7CE04B00A1CBDE /* ResourceLoadingViewModel.swift */; };
+		1C7F0C202C7CE0D800A1CBDE /* ResourceErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F0C1F2C7CE0D800A1CBDE /* ResourceErrorView.swift */; };
+		1C7F0C222C7CE0F100A1CBDE /* ResourceErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7F0C212C7CE0F100A1CBDE /* ResourceErrorViewModel.swift */; };
 		1C85DC9F2C25A23C0005268F /* FeedImagePresenterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C85DC9E2C25A23C0005268F /* FeedImagePresenterViewModel.swift */; };
 		1C89449F2BF351EF00677D5D /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C89449E2BF351EF00677D5D /* UIView+Shimmering.swift */; };
 		1C93F9F42C0384C90015B3A5 /* FeedImagePresenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C93F9F32C0384C90015B3A5 /* FeedImagePresenterViewController.swift */; };
@@ -212,6 +214,8 @@
 		1C7F0C182C7CDEEA00A1CBDE /* SharedLocalizationTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLocalizationTestHelpers.swift; sourceTree = "<group>"; };
 		1C7F0C1B2C7CE00A00A1CBDE /* ResourceLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoadingView.swift; sourceTree = "<group>"; };
 		1C7F0C1D2C7CE04B00A1CBDE /* ResourceLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoadingViewModel.swift; sourceTree = "<group>"; };
+		1C7F0C1F2C7CE0D800A1CBDE /* ResourceErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceErrorView.swift; sourceTree = "<group>"; };
+		1C7F0C212C7CE0F100A1CBDE /* ResourceErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceErrorViewModel.swift; sourceTree = "<group>"; };
 		1C85DC9E2C25A23C0005268F /* FeedImagePresenterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImagePresenterViewModel.swift; sourceTree = "<group>"; };
 		1C89449E2BF351EF00677D5D /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
 		1C93F9F32C0384C90015B3A5 /* FeedImagePresenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImagePresenterViewController.swift; sourceTree = "<group>"; };
@@ -570,6 +574,8 @@
 				1C7F0C142C7CDD8200A1CBDE /* Shared.strings */,
 				1C7F0C1B2C7CE00A00A1CBDE /* ResourceLoadingView.swift */,
 				1C7F0C1D2C7CE04B00A1CBDE /* ResourceLoadingViewModel.swift */,
+				1C7F0C1F2C7CE0D800A1CBDE /* ResourceErrorView.swift */,
+				1C7F0C212C7CE0F100A1CBDE /* ResourceErrorViewModel.swift */,
 			);
 			path = "Shared Presentation";
 			sourceTree = "<group>";
@@ -1099,8 +1105,10 @@
 				1CAD51072C3DA6AB0079A2F7 /* RemoteFeedImageDataLoader.swift in Sources */,
 				1C4FE0912BC852DA00B230AB /* CodableFeedStore.swift in Sources */,
 				1C7F0C1C2C7CE00A00A1CBDE /* ResourceLoadingView.swift in Sources */,
+				1C7F0C222C7CE0F100A1CBDE /* ResourceErrorViewModel.swift in Sources */,
 				E4E6C19C2B8DEA8D003FD4BD /* HTTPClient.swift in Sources */,
 				1CDB05132C5E714400AB1937 /* FeedImageDataLoaderCacheDecorator.swift in Sources */,
+				1C7F0C202C7CE0D800A1CBDE /* ResourceErrorView.swift in Sources */,
 				E41924362B88923500EEC789 /* FeedImage.swift in Sources */,
 				1C3900C82C2585EA000BC1A4 /* FeedPresenter.swift in Sources */,
 				1C7F0C072C7CC49200A1CBDE /* FeedImageDataMapper.swift in Sources */,

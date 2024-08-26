@@ -5,18 +5,6 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 21/6/24.
 //
 
-public struct FeedErrorViewModel {
-    public let message: String?
-    
-    static var noError: FeedErrorViewModel {
-        return FeedErrorViewModel(message: nil)
-    }
-    
-    public static func error(message: String) -> FeedErrorViewModel {
-        return FeedErrorViewModel(message: message)
-    }
-}
-
 public struct FeedViewModel {
     public let feed: [FeedImage]
 }
@@ -29,17 +17,13 @@ public protocol FeedLoadingView {
     func display(_ viewModel: ResourceLoadingViewModel)
 }
 
-public protocol FeedErrorView {
-    func display(_ viewModel: FeedErrorViewModel)
-}
-
 public final class FeedPresenter {
     private let feedView: FeedView
-    private let errorView: FeedErrorView
+    private let errorView: ResourceErrorView
     private let loadingView: FeedLoadingView
     
     public init(feedView: FeedView,
-         errorView: FeedErrorView,
+         errorView: ResourceErrorView,
          loadingView: FeedLoadingView) {
         self.errorView = errorView
         self.loadingView = loadingView
@@ -74,7 +58,7 @@ public final class FeedPresenter {
     
     // Error -> creates view models -> sends to the UI
     public func didFinishLoadingFeed(with error: Error) {
-        errorView.display(FeedErrorViewModel.error(message: feedLoadError))
+        errorView.display(.error(message: feedLoadError))
         loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }
 }
