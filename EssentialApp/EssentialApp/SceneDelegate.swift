@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LocalFeedLoader(store: store, currentDate: Date.init)
     }()
     
-    private lazy var remoteFeedLoader = RemoteLoader(url: remoteURL, client: httpClient, mapper: FeedItemsMapper.map)
+    private lazy var remoteFeedLoader = httpClient.getPublisher(url: remoteURL)
 
     private lazy var remoteImageLoader = {
         RemoteFeedImageDataLoader(client: httpClient)
@@ -93,7 +93,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // So we defers the execution of it
         return remoteFeedLoader
-            .loadPublisher()
+            .tryMap(FeedItemsMapper.map)
             .caching(to: localFeedLoader)
             // When fallback, the `load` of the localFeedLoader is called
             .fallback(to: localFeedLoader.loadPublisher)
