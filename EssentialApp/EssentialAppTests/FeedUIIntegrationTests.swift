@@ -375,6 +375,9 @@ final class FeedUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    /*
+     Hello Mihai, great questions! ## 1. Why these last two tests have no assertions? The last two tests don't have an assertion because we're simulating the conditions of a scenario where we expect no output. We already tested the rendering behavior when the loader completes. So, we just want to make sure it "doesn't crash" when the loader completes in a background thread. In this case, we rely on the Main Thread Checker and the Swift Runtime to suspend the execution of the program when there's a call to UIKit APIs outside of the main thread. ## 2. I wonder if there would be any way to improve these 2 tests in order that they should fail if we remove the production code that dispatches to the main thread. By removing or commenting out the code, as you did, you do get a test failure: a crash! Any interruption to the app's building or execution phases should be considered a red state (from the red/green/refactor TDD steps). Thus, a crash during a test execution is viewed as a test failure. In short, a test will either pass or fail. Crashing is failing. So here are some conditions that prevent a test from passing (failure): • Assertion failure • Compile-time errors • Runtime errors Regardless of the failure condition, the test needs to be short, concise, fast, and reliable. So, when one of the conditions above occurs, you know precisely the reason why and you can replicate it until it's fixed. For instance, when you comment out the main thread dispatch, you can precisely identify the issue by looking at the test name and scope. --- Now, if you're a testing an API where you cannot rely on the Main Thread Checker, there are other approaches. For example, in case you were testing a FeedLoader implementation (or any other asynchronous API), and you wanted to make sure it delivers results in the main thread, you could create the following assertion in your test:
+     */
     func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
         
@@ -386,6 +389,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
+          
             loader.completeImageLoading(with: self.anyImageData(), at: 0)
             exp.fulfill()
         }
