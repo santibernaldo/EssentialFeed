@@ -94,7 +94,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         
         // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-        let loader = RemoteFeedLoader(client: ephemeralClient(), url: testServerURL)
+        let loader = RemoteLoader(url: testServerURL, client: ephemeralClient(), mapper: FeedItemsMapper.map)
         
         trackForMemoryLeaks(client, file: file, line: line)
     
@@ -124,6 +124,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
             url: url(at: index))
     }
     
+    // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
     private func ephemeralClient(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         trackForMemoryLeaks(client, file: file, line: line)
