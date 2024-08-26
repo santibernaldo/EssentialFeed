@@ -21,9 +21,11 @@ class RemoteLoaderTests: XCTestCase {
         
         sut.load { _ in }
         
+        // When asserting objects collaborating, is not enough to test the values passed, but we need to ask how many times was the method invoked
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
+    // We test that 'load' is only called once from the RemoteFeedLoader, using the client. Cause this code can gets duplicated during merge or other situations, and we are bound to avoid that.
     func test_loadTwice_requestsDataFromURLTwice() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
@@ -31,6 +33,7 @@ class RemoteLoaderTests: XCTestCase {
         sut.load { _ in }
         sut.load { _ in }
         
+        // When asserting objects collaborating, is not enough to test the values passed, but we need to ask how many times was the method invoked
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
