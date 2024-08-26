@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import EssentialFeed
 
+// Our RemoteLoader generic
 public extension HTTPClient {
     typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
 
