@@ -51,8 +51,8 @@ public final class FeedPresenter {
     }
     
     // [FeedImage] -> creates view models -> sends to the UI
-     public func didFinishLoadingFeed(with feed: [FeedImage]) {
-        feedView.display(FeedViewModel(feed: feed))
+    public func didFinishLoadingFeed(with feed: [FeedImage]) {
+        feedView.display(Self.map(feed))
         loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }
     
