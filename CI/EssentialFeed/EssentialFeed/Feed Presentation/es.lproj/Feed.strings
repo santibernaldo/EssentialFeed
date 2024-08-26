@@ -8,4 +8,4 @@
 
 
 "FEED_TITLE_VALUE"="Mi feed";
-"FEED_VIEW_CONNECTION_ERROR"="No pudo conectar al servidor";
+"GENERIC_CONNECTION_ERROR"="No pudo conectar al servidor";
