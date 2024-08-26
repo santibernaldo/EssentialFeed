@@ -6,11 +6,13 @@
 //
 
 
+
 import Foundation
 import Combine
 import EssentialFeed
 
-// Our RemoteLoader generic
+// Our RemoteLoader generic, where we don`t inject dependencies (Combine functional way)
+// We compose dependencies (composed on the composition root, SceneDelegate)
 public extension HTTPClient {
     typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
 
@@ -57,7 +59,7 @@ private extension FeedImageDataCache {
     }
 }
 
-public extension FeedLoader {
+public extension LocalFeedLoader {
     typealias Publisher = AnyPublisher<[FeedImage], Error>
     
     func loadPublisher() -> Publisher {

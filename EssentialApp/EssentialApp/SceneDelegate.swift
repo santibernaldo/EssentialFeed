@@ -84,7 +84,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     // AnyPublisher -> produces an array of FeedImage or an error
-    private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
+    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
         // There are many Publishers we can create, one of them is 'Future'. It starts with a completionBlock, and once the work is done, is returns some result
 
         // The signature of the completion `load` expects is the same one of the ÁnyPublisher returned
@@ -92,9 +92,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Future fires would fire the request every time we call 'makeRemoteFeedLoaderWithLocallFallback', not when someone subscribes to it
         
         // So we defers the execution of it
-        return remoteFeedLoader
-            .tryMap(FeedItemsMapper.map)
-            .caching(to: localFeedLoader)
+        
+        //         [  side-effect  ]
+        //         -pure function-
+        //         [  side-effect  ]
+        return remoteFeedLoader             //  [ network request ]
+            .tryMap(FeedItemsMapper.map)    //  -     mapping     -
+            .caching(to: localFeedLoader)   //  [     caching     ]
             // When fallback, the `load` of the localFeedLoader is called
             .fallback(to: localFeedLoader.loadPublisher)
     }

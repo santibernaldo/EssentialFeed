@@ -8,28 +8,33 @@
 import Foundation
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 extension FeedUIIntegrationTests {
-    class LoaderSpy: FeedLoader, FeedImageDataLoader {
+    
+    class LoaderSpy: FeedImageDataLoader {
         
-        private var feedRequests = [(FeedLoader.Result) -> Void]()
+        // MARK: - FeedLoader
         
-        var loadFeedRequestCallCount: Int {
+        private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
+        
+        var loadFeedCallCount: Int {
             return feedRequests.count
         }
         
-        func completeFeedLoading(at index: Int = 0, with feed: [FeedImage] = []) {
-            feedRequests[index](.success(feed))
+        func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
+            let publisher = PassthroughSubject<[FeedImage], Error>()
+            feedRequests.append(publisher)
+            return publisher.eraseToAnyPublisher()
+        }
+        
+        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
+            feedRequests[index].send(feed)
         }
         
         func completeFeedLoadingWithError(at index: Int = 0) {
             let error = NSError(domain: "an error", code: 0)
-            feedRequests[index](.failure(error))
-        }
-        
-        // MARK: - FeedLoader
-        func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            feedRequests.append(completion)
+            feedRequests[index].send(completion: .failure(error))
         }
         
         // MARK: - FeedImageDataLoader
@@ -51,22 +56,8 @@ extension FeedUIIntegrationTests {
         
         func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
             imageRequests.append((url, completion))
-            
-            return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url)
-            }
+            return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
         }
-        
-        /*
-         Hi Deepak, Yes, that's it. We are creating and returning a new TaskSpy structure. We create a new TaskSpy by using its memberwise initializer. The full version of the initialization code would be:
-         TaskSpy(cancelCallback: {
-
-         })
-         However, since the memberwise initializer expects a closure as the last (and only) argument, we use the closure trailing syntax which makes the TaskSpy initialization expression:
-         TaskSpy {
-
-         }
-
-         */
         
         func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
             imageRequests[index].completion(.success(imageData))

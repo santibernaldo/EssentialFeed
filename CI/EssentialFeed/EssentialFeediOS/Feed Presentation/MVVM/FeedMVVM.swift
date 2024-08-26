@@ -6,6 +6,7 @@
 //
 
 import EssentialFeed
+import Combine
 
 // ViewModel are agnostic platform, they don't know about the view
 
@@ -14,9 +15,10 @@ import EssentialFeed
 // View Model has dependencies and behaviour, that's different from View Presenter
 public final class FeedMVVM {
     typealias Observer<T> = (T) -> Void
-    private let feedLoader: FeedLoader
+    private let feedLoader: AnyPublisher<[FeedImage], Error>
+    private var cancellable: Cancellable?
     
-    public init(feedLoader: FeedLoader) {
+    public init(feedLoader: AnyPublisher<[FeedImage], Error>) {
         self.feedLoader = feedLoader
     }
     
@@ -27,12 +29,16 @@ public final class FeedMVVM {
     func loadFeed() {
         onLoadingStateChange?(true)
         
-        feedLoader.load { [weak self] result in
-            if let feed = try? result.get() {
+        cancellable = feedLoader.sink(
+            receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished: break
+                    
+                case let .failure(error):
+                    self?.onLoadingStateChange?(false)
+                }
+            }, receiveValue: { [weak self] feed in
                 self?.onFeedLoad?(feed)
-            }
-            
-            self?.onLoadingStateChange?(false)
-        }
+            })
     }
 }
