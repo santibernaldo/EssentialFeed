@@ -16,7 +16,7 @@ class LoadResourcePresenterTests: XCTestCase {
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
     }
 
-    func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+    func test_didStartLoading_displaysNoErrorMessageAndStartsLoading() {
         let (sut, view) = makeSUT()
 
         sut.didStartLoadingFeed()
@@ -29,7 +29,7 @@ class LoadResourcePresenterTests: XCTestCase {
 
     func test_didFinishLoadingFeed_displaysFeedAndStopsLoading() {
         let (sut, view) = makeSUT()
-        let feed = uniqueImageFeed().models
+        let feed = makeUniqueFeed().models
 
         sut.didFinishLoadingFeed(with: feed)
 
