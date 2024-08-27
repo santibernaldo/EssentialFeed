@@ -16,8 +16,7 @@ public final class FeedUIComposer {
     
     public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
         
-        let presentationAdapter = FeedLoaderPresentationAdapter(
-            feedLoader: { feedLoader().dispatchOnMainQueue() })
+        let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>(loader: feedLoader)
         
         let feedController = FeedViewController.makeWith(
             title: FeedPresenter.title)
@@ -36,6 +35,12 @@ public final class FeedUIComposer {
         return feedController
     }
 
+}
+
+extension LoadResourcePresentationAdapter: FeedRefreshViewControllerDelegate where Resource == [FeedImage], View == FeedViewAdapter {
+    func didRequestFeedRefresh() {
+        loadResource()
+    }
 }
 
 private extension FeedViewController {
