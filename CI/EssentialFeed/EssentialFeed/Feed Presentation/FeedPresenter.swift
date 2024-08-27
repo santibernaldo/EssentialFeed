@@ -9,10 +9,6 @@ public struct FeedViewModel {
     public let feed: [FeedImage]
 }
 
-public protocol FeedLoadingView {
-    func display(_ viewModel: ResourceLoadingViewModel)
-}
-
 public final class FeedPresenter {
     public static var title: String {
         NSLocalizedString("FEED_VIEW_TITLE",

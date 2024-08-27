@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView, ResourceErrorView {
+public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, ResourceLoadingView, ResourceErrorView {
     
     @IBOutlet public weak var errorView: ErrorView?
     @IBOutlet public var refreshController: FeedRefreshViewController?
@@ -32,7 +32,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     public func display(_ viewModel: ResourceLoadingViewModel) {
         refreshController?.view?.update(isRefreshing: viewModel.isLoading)
     }
-    
+        
     public func display(_ viewModel: ResourceErrorViewModel) {
         if let message = viewModel.message {
             errorView?.show(message: message)

@@ -6,6 +6,7 @@
 //
 
 public struct FeedImageViewModel<Image> {
+
     public let description: String?
     public let location: String?
     public let image: Image?
@@ -14,5 +15,13 @@ public struct FeedImageViewModel<Image> {
     
     public var hasLocation: Bool {
         return location != nil
+    }
+    
+    public init(description: String? = nil, location: String? = nil, image: Image? = nil, isLoading: Bool, shouldRetry: Bool) {
+        self.description = description
+        self.location = location
+        self.image = image
+        self.isLoading = isLoading
+        self.shouldRetry = shouldRetry
     }
 }
