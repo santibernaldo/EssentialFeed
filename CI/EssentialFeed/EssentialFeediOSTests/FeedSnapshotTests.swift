@@ -232,11 +232,11 @@ private extension FeedViewController {
 }
 
 private class ImageStub: FeedImageCellControllerDelegate {
-    let viewModel: FeedPresenterImageViewModel<UIImage>
+    let viewModel: FeedImageViewModel<UIImage>
     weak var controller: FeedImageCellController?
 
     init(description: String?, location: String?, image: UIImage?) {
-        viewModel = FeedPresenterImageViewModel(
+        viewModel = FeedImageViewModel(
             description: description,
             location: location,
             image: image,
