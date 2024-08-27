@@ -13,7 +13,7 @@ public final class FeedPresenter {
     public static var title: String {
         NSLocalizedString("FEED_VIEW_TITLE",
                           tableName: "Feed",
-                          bundle: Bundle(for: FeedPresenter.self),
+                          bundle: Bundle(for: Self.self),
                           comment: "Title for the feed view")
     }
     

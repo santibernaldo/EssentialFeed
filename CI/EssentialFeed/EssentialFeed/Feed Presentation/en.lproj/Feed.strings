@@ -6,5 +6,5 @@
   
 */
 
-"FEED_TITLE_VALUE"="My Feed";
+"FEED_VIEW_TITLE"="My Feed";
 "GENERIC_CONNECTION_ERROR"="Couldn`t connect to the server";
