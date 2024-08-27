@@ -9,7 +9,7 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsPresenterTests: XCTestCase {
-    
+
     func test_title_isLocalized() {
         XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
     }
@@ -23,12 +23,12 @@ class ImageCommentsPresenterTests: XCTestCase {
             ImageComment(
                 id: UUID(),
                 message: "a message",
-                createdAt: now.adding(minutes: -5),
+                createdAt: now.adding(minutes: -5, calendar: calendar),
                 username: "a username"),
             ImageComment(
                 id: UUID(),
                 message: "another message",
-                createdAt: now.adding(days: -1),
+                createdAt: now.adding(days: -1, calendar: calendar),
                 username: "another username")
         ]
         
@@ -54,7 +54,7 @@ class ImageCommentsPresenterTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    
+
     private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
         let table = "ImageComments"
         let bundle = Bundle(for: ImageCommentsPresenter.self)
@@ -64,4 +64,5 @@ class ImageCommentsPresenterTests: XCTestCase {
         }
         return value
     }
+
 }
