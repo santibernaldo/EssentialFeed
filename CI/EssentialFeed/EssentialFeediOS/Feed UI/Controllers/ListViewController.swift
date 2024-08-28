@@ -10,9 +10,9 @@ import UIKit
 import EssentialFeed
 
 // STAR: Every protocol with one method can be replaced with a closure
-public protocol FeedViewControllerDelegate {
-    func didRequestFeedRefresh()
-}
+//public protocol FeedViewControllerDelegate {
+//    func didRequestFeedRefresh()
+//}
 
 public protocol CellController {
     func view(in tableView: UITableView) -> UITableViewCell
@@ -24,7 +24,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     
     @IBOutlet public weak var errorView: ErrorView?
     
-    public var delegate: FeedViewControllerDelegate?
+    public var onRefresh: (() -> Void)?
     
     // Keeping track of the cell controllers shown on screen, to cancel the image loading on them
     private var loadingControllers = [IndexPath: CellController]()
@@ -78,7 +78,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     }
     
     @IBAction private func refresh() {
-        delegate?.didRequestFeedRefresh()
+        onRefresh?()
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
