@@ -17,7 +17,7 @@ import EssentialFeediOS
 
  For example, the Date.minusFeedCacheMaxAge API hides implementation details about calculating the max cache age, and provides a clear context in the domain of the 'Feed Cache'.
  */
-extension FeedViewController {
+extension ListViewController {
     func simulateUserInitiatedFeedReload() {
         replaceRefreshControlWithFakeForiOS17Support()
         refreshControl?.simulatePullToRefresh()

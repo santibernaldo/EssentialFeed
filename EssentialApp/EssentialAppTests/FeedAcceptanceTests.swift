@@ -62,13 +62,13 @@ class FeedAcceptanceTests: XCTestCase {
     private func launch(
         httpClient: HTTPClientStub = .offline,
         store: InMemoryFeedStore = .empty
-    ) -> FeedViewController {
+    ) -> ListViewController {
         let sut = SceneDelegate(httpClient: httpClient, store: store)
         sut.window = UIWindow()
         sut.configureWindow()
 
         let nav = sut.window?.rootViewController as? UINavigationController
-        let vc = nav?.topViewController as! FeedViewController
+        let vc = nav?.topViewController as! ListViewController
         /*
          The refresh method will be called on viewIsAppearing to start the request. But the test never calls viewIsAppearing, so the refresh method is never called, and the test fails because it never start to load the data. You need to trigger viewIsAppearing in the test to hit the refresh method and start the request. You can do it in the launch method:
          */
