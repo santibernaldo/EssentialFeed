@@ -19,12 +19,11 @@ import EssentialFeediOS
  */
 extension ListViewController {
     func simulateUserInitiatedFeedReload() {
-        replaceRefreshControlWithFakeForiOS17Support()
         refreshControl?.simulatePullToRefresh()
     }
     
     func isShowingLoadingIndicator() -> Bool {
-        return refreshController?.view?.isRefreshing == true
+        refreshControl?.isRefreshing == true
     }
     
     func numberOfRenderedFeedImageViews() -> Int {
@@ -82,13 +81,14 @@ extension ListViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
         let fake = FakeRefreshControl()
         
-        refreshController?.view?.allTargets.forEach { target in
-            refreshController?.view?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+        // Transfering actions from the refreshControl to the fakeOne
+        refreshControl?.allTargets.forEach { target in
+            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
                 fake.addTarget(target, action: Selector(action), for: .valueChanged)
             }
         }
         
-        refreshController?.view = fake
+        refreshControl = fake
     }
     
     func renderedFeedImageData(at index: Int) -> Data? {
@@ -109,7 +109,6 @@ extension ListViewController {
     
     private func prepareForFirstAppearance() {
         setSmallFrameToPreventRenderingCells()
-        replaceRefreshControlWithFakeForiOS17Support()
     }
     
     private func setSmallFrameToPreventRenderingCells() {

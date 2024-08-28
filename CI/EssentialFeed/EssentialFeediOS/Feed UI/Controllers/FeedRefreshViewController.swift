@@ -8,29 +8,23 @@
 import UIKit
 import EssentialFeed
 
-public protocol FeedRefreshViewControllerDelegate {
-    func didRequestFeedRefresh()
-}
-
 // We must inherit from NSObject to implement the target/action, that's why we don't move the addTarget to the ViewModel, to keep it agnostic platform
-final public class FeedRefreshViewController: NSObject, ResourceLoadingView {
-    // Legacy: make private for testing purposes
-    @IBOutlet public var view: UIRefreshControl?
-    
-    public var delegate: FeedRefreshViewControllerDelegate?
-    
-    @IBAction func refresh() {
-        delegate?.didRequestFeedRefresh()
-    }
-    
-    public func display(_ viewModel: ResourceLoadingViewModel) {
-        view?.update(isRefreshing: viewModel.isLoading)
-    }
-    
-    private func loadView() -> UIRefreshControl {
-        let view = UIRefreshControl()
-        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        return view
-    }
-    
-}
+//final public class FeedRefreshViewController: NSObject, ResourceLoadingView {
+//    // Legacy: make private for testing purposes
+//    @IBOutlet public var view: UIRefreshControl?
+//    
+//    public var delegate: FeedRefreshViewControllerDelegate?
+//    
+//    
+//    
+//    public func display(_ viewModel: ResourceLoadingViewModel) {
+//        view?.update(isRefreshing: viewModel.isLoading)
+//    }
+//    
+//    private func loadView() -> UIRefreshControl {
+//        let view = UIRefreshControl()
+//        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+//        return view
+//    }
+//    
+//}

@@ -24,8 +24,7 @@ public final class FeedUIComposer {
         let feedController = ListViewController.makeWith(
             title: FeedPresenter.title)
         
-        let refreshController = feedController.refreshController!
-        refreshController.delegate = presentationAdapter
+        feedController.delegate = presentationAdapter
         
         presentationAdapter.presenter = LoadResourcePresenter(
             resourceView: FeedViewAdapter(
@@ -40,7 +39,7 @@ public final class FeedUIComposer {
 
 }
 
-extension LoadResourcePresentationAdapter: FeedRefreshViewControllerDelegate where Resource == [FeedImage], View == FeedViewAdapter {
+extension LoadResourcePresentationAdapter: FeedViewControllerDelegate where Resource == [FeedImage], View == FeedViewAdapter {
     func didRequestFeedRefresh() {
         loadResource()
     }

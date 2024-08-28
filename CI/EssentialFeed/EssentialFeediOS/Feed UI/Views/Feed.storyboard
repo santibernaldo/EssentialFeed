@@ -15,7 +15,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="Jyn-jP-1Ie" customClass="ErrorView" customModule="MVP" customModuleProvider="target">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Jyn-jP-1Ie" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="393" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -169,20 +169,14 @@ Location</string>
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
-                            <action selector="refresh" destination="mec-wg-lFj" eventType="valueChanged" id="i06-Yq-goB"/>
+                            <action selector="refresh" destination="F8I-Ld-ok3" eventType="valueChanged" id="B0g-SP-bMd"/>
                         </connections>
                     </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="Jyn-jP-1Ie" id="vfx-JD-IMg"/>
-                        <outlet property="refreshController" destination="mec-wg-lFj" id="vvm-rN-rzl"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnW-bE-2DO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="mec-wg-lFj" customClass="FeedRefreshViewController" customModule="EssentialFeediOS" customModuleProvider="target">
-                    <connections>
-                        <outlet property="view" destination="Eht-qL-ZoB" id="Xhl-Sl-IJh"/>
-                    </connections>
-                </customObject>
             </objects>
             <point key="canvasLocation" x="275.57251908396944" y="-52.112676056338032"/>
         </scene>

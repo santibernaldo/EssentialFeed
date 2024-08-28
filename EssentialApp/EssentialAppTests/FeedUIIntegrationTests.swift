@@ -92,8 +92,8 @@ final class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
-
-
+        
+        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")

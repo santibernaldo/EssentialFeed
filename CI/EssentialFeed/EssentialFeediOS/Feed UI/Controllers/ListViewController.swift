@@ -9,6 +9,11 @@
 import UIKit
 import EssentialFeed
 
+// STAR: Every protocol with one method can be replaced with a closure
+public protocol FeedViewControllerDelegate {
+    func didRequestFeedRefresh()
+}
+
 public protocol CellController {
     func view(in tableView: UITableView) -> UITableViewCell
     func preload()
@@ -18,7 +23,8 @@ public protocol CellController {
 public final class ListViewController: UITableViewController, UITableViewDataSourcePrefetching, ResourceLoadingView, ResourceErrorView {
     
     @IBOutlet public weak var errorView: ErrorView?
-    @IBOutlet public var refreshController: FeedRefreshViewController?
+    
+    public var delegate: FeedViewControllerDelegate?
     
     // Keeping track of the cell controllers shown on screen, to cancel the image loading on them
     private var loadingControllers = [IndexPath: CellController]()
@@ -27,23 +33,6 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     private var tableModel = [CellController]() {
         didSet {
             tableView.reloadData()
-        }
-    }
-    
-    public func display(_ cellControllers: [CellController]) {
-        loadingControllers = [:]
-        tableModel = cellControllers
-    }
-    
-    public func display(_ viewModel: ResourceLoadingViewModel) {
-        refreshController?.view?.update(isRefreshing: viewModel.isLoading)
-    }
-        
-    public func display(_ viewModel: ResourceErrorViewModel) {
-        if let message = viewModel.message {
-            errorView?.show(message: message)
-        } else {
-            errorView?.hideMessage()
         }
     }
     
@@ -56,10 +45,8 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        refreshControl = refreshController?.view
         tableView.register(FeedImageCell.self, forCellReuseIdentifier: FeedImageCell.identifier)
-            
-        tableView.prefetchDataSource = self        
+        tableView.prefetchDataSource = self
     }
     
     // iOS 13+
@@ -68,9 +55,30 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         
         if !viewAppeared {
             viewAppeared = true
-            refreshController?.refresh()
+            refresh()
         }
         
+    }
+    
+    public func display(_ cellControllers: [CellController]) {
+        loadingControllers = [:]
+        tableModel = cellControllers
+    }
+    
+    public func display(_ viewModel: ResourceLoadingViewModel) {
+        refreshControl?.update(isRefreshing: viewModel.isLoading)
+    }
+        
+    public func display(_ viewModel: ResourceErrorViewModel) {
+        if let message = viewModel.message {
+            errorView?.show(message: message)
+        } else {
+            errorView?.hideMessage()
+        }
+    }
+    
+    @IBAction private func refresh() {
+        delegate?.didRequestFeedRefresh()
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
