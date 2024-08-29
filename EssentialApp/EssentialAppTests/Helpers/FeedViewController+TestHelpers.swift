@@ -75,7 +75,7 @@ extension ListViewController {
     }
     
     var errorMessage: String? {
-        errorView?.message ?? nil
+        errorView.message 
     }
     
     func replaceRefreshControlWithFakeForiOS17Support() {
