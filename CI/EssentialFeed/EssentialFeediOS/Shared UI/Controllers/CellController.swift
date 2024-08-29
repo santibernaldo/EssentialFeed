@@ -5,6 +5,8 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 29/8/24.
 //
 
+import UIKit
+
 public struct CellController {
     let dataSource: UITableViewDataSource
     let delegate: UITableViewDelegate?
