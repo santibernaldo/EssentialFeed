@@ -17,11 +17,6 @@ import EssentialFeed
 // old view, preload and cancelLoad, shared a common interface between UIKit, that's why we moved onto UIKit specific protocols
 public typealias CellController = UITableViewDataSource & UITableViewDelegate & UITableViewDataSourcePrefetching
 
-public extension CellController {
-    func preload() {}
-    func cancelLoad() {}
-}
-
 public final class ListViewController: UITableViewController, UITableViewDataSourcePrefetching, ResourceLoadingView, ResourceErrorView {
     
     @IBOutlet public weak var errorView: ErrorView?
