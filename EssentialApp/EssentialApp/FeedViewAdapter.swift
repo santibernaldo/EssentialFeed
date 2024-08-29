@@ -31,7 +31,7 @@ final class FeedViewAdapter: ResourceView {
         controller?.display(feedImageCellControllers)
     }
     
-    func getImageCellControllers(viewModel: FeedViewModel, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> [FeedImageCellController] {
+    func getImageCellControllers(viewModel: FeedViewModel, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> [CellController] {
         viewModel.feed.map { model in
             let adapter = ImageDataPresentationAdapter(loader: { [imageLoader] in
                 imageLoader(model.url)
@@ -47,7 +47,8 @@ final class FeedViewAdapter: ResourceView {
                 errorView: WeakRefVirtualProxy(view),
                 mapper: UIImage.tryMake)
             
-            return view
+            // View is a FeedImageCellController, which implements all the protocols of the tuple contained in CellController. So we can pass all of them
+            return CellController(view)
         }
     }
 }
