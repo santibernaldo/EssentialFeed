@@ -7,6 +7,7 @@
 
 import UIKit
 
+// STAR: UIButton is much more testable than Tap Gesture, and provides a much more user experience accesibility
 public final class ErrorView: UIButton {
     public var message: String? {
         get { return isVisible ? title(for: .normal) : nil }

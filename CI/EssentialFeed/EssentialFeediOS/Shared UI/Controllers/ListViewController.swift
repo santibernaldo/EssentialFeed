@@ -36,6 +36,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        
         tableView.sizeTableHeaderToFit()
     }
     
@@ -65,6 +66,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         errorView.onHide = { [weak self] in
             guard self != nil else { return }
             self?.tableView.beginUpdates()
+            // When the Height of the Header changes, we need to update the Header Size manually
             self?.tableView.sizeTableHeaderToFit()
             self?.tableView.endUpdates()
         }
