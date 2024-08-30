@@ -8,6 +8,8 @@
 import UIKit
 
 // STAR: UIButton is much more testable than Tap Gesture, and provides a much more user experience accesibility
+
+// STAR: Error View is configured programatically, so we don't replicate ErrorView on storyboards. Imagine we need to change the style of an ErrorView, we don't want to do it on every storyboard where ErrorView is imported
 public final class ErrorView: UIButton {
     public var message: String? {
         get { return isVisible ? title(for: .normal) : nil }
