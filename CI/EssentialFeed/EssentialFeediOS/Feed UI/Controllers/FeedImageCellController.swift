@@ -39,6 +39,8 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
         cell?.locationLabel.text = viewModel.location
         cell?.descriptionLabel.text = viewModel.description
         cell?.feedImageView.image = nil
+        
+        // STAR: Because the animation of the ErroView dismiss, it can holds the instance longer than it should in memory. And it causes back in production
         cell?.onRetry = { [weak self] in
             self?.delegate.didRequestImage()
         }
