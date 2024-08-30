@@ -39,7 +39,10 @@ public final class ErrorView: UIButton {
         titleLabel?.textColor = .white
         titleLabel?.textAlignment = .center
         titleLabel?.numberOfLines = 0
-        titleLabel?.font = .systemFont(ofSize: 17)
+        // STAR: Content Size dynamic font configuration
+        // Template fonts .body.. which we can use for specific cases, in case we don't have a Designer, they can be useful
+        titleLabel?.font = .preferredFont(forTextStyle: .body)
+        titleLabel?.adjustsFontForContentSizeCategory = true
     }
         
     private var isVisible: Bool {
