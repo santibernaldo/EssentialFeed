@@ -72,6 +72,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     }
     
     private func configureTableView() {
+        dataSource.defaultRowAnimation = .fade
         tableView.dataSource = dataSource
         tableView.register(FeedImageCell.self, forCellReuseIdentifier: FeedImageCell.identifier)
         tableView.prefetchDataSource = self
