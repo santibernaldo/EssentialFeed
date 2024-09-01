@@ -97,7 +97,8 @@ private extension ListViewController {
         let cells: [CellController] = stubs.map { stub in
             let cellController = FeedImageCellController(viewModel: stub.viewModel, delegate: stub)
             stub.controller = cellController
-            return CellController(cellController)
+            // STAR: We pass a unique id on the test because we don't want to keep track of the changes for the Diffable Data Source
+            return CellController(id: UUID(), cellController)
         }
         
         display(cells)

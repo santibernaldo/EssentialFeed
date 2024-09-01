@@ -48,7 +48,7 @@ final class FeedViewAdapter: ResourceView {
                 mapper: UIImage.tryMake)
             
             // View is a FeedImageCellController, which implements all the protocols of the tuple contained in CellController. So we can pass all of them
-            return CellController(view)
+            return CellController(id: model, view)
         }
     }
 }

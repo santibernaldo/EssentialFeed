@@ -23,15 +23,15 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     
     public var onRefresh: (() -> Void)?
     
-    // Keeping track of the cell controllers shown on screen, to cancel the image loading on them
-    private var loadingControllers = [IndexPath: CellController]()
     private var viewAppeared = false
 
-    private var tableModel = [CellController]() {
-        didSet {
-            tableView.reloadData()
+    // STAR: Every time we update the tableModel, we update the whole table view, so we don't want that. We need a DiffableDataSource
+    // STAR: The Diffable should be Hashable, so the Diffable can compare any change found in the model
+    private lazy var dataSource: UITableViewDiffableDataSource<Int, CellController> = {
+        .init(tableView: tableView) { (tableView, index, controller) in
+            controller.dataSource.tableView(tableView, cellForRowAt: index)
         }
-    }
+    }()
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -44,8 +44,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         super.viewDidLoad()
         
         configureErrorView()
-        tableView.register(FeedImageCell.self, forCellReuseIdentifier: FeedImageCell.identifier)
-        tableView.prefetchDataSource = self
+        configureTableView()
     }
     
     private func configureErrorView() {
@@ -72,6 +71,12 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         }
     }
     
+    private func configureTableView() {
+        tableView.dataSource = dataSource
+        tableView.register(FeedImageCell.self, forCellReuseIdentifier: FeedImageCell.identifier)
+        tableView.prefetchDataSource = self
+    }
+    
     // iOS 13+
     public override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
@@ -83,9 +88,27 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         
     }
     
+    // STAR: Dynamic font type with Diffable Data Source.
+    // We listen to changes to Dynamic Type, and we reload the tableView manually
+    public override func traitCollectionDidChange(_ previous: UITraitCollection?) {
+        if previous?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            tableView.reloadData()
+        }
+    }
+    
     public func display(_ cellControllers: [CellController]) {
-        loadingControllers = [:]
-        tableModel = cellControllers
+        var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
+        // Only when we append the section, the dataSource knows the number of sections. Otherwise, its zero
+        snapshot.appendSections([0])
+        snapshot.appendItems(cellControllers, toSection: 0)
+        // On iOS 14 and before, calling apply(snapshot, animatingDifferences: false) would call reloadData on the table/collection view and reload all cells. And calling apply(snapshot, animatingDifferences: true) would perform a diff on the data source and only update cells that the data changed.
+        
+        //But on iOS 15+, passing false or true in animatingDifferences will perform a diff and only update cells that the data changed.
+        if #available(iOS 15.0, *) {
+          dataSource.applySnapshotUsingReloadData(snapshot)
+        } else {
+          dataSource.apply(snapshot)
+        }
     }
     
     public func display(_ viewModel: ResourceLoadingViewModel) {
@@ -100,49 +123,29 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         onRefresh?()
     }
     
-    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableModel.count
-    }
-    
-    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // The controller is dispatching cellForRow at each cell
-        let ds = cellController(forRowAt: indexPath).dataSource
-        return ds.tableView(tableView, cellForRowAt: indexPath)
-    }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let dl = removeLoadingController(forRowAt: indexPath)?.delegate
+        let dl = cellController(at: indexPath)?.delegate
         dl?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
     }
     
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            let dsp = cellController(forRowAt: indexPath).dataSourcePrefetching
+            let dsp = cellController(at: indexPath)?.dataSourcePrefetching
             dsp?.tableView(tableView, prefetchRowsAt: [indexPath])
         }
     }
     
     public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            let dsp = cellController(forRowAt: indexPath).dataSourcePrefetching
+            let dsp = cellController(at: indexPath)?.dataSourcePrefetching
             dsp?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
         }
     }
     
-    private func cellController(forRowAt indexPath: IndexPath) -> CellController {
-        let controller = tableModel[indexPath.row]
-        loadingControllers[indexPath] = controller
-        return controller
+    private func cellController(at indexPath: IndexPath) -> CellController? {
+        dataSource.itemIdentifier(for: indexPath)
     }
     
-    /*
-     When updating the table model and reloading the table, UIKit calls didEndDisplayingCell for each removed cell that was previously visible. Since we're canceling requests in this method, we could be sending messages to the new models or potentially crashing in case the new table model has fewer items than the previous one!
-
-     This is not a big problem at the moment since items cannot be removed from the feed. But we cannot assume the backend will keep this behavior going further.
-     */
-    private func removeLoadingController(forRowAt indexPath: IndexPath) -> CellController? {
-        let controller = loadingControllers[indexPath]
-        loadingControllers[indexPath] = nil
-        return controller
-    }
+    
 }

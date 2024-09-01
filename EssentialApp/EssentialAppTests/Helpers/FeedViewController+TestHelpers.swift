@@ -27,7 +27,8 @@ extension ListViewController {
     }
     
     func numberOfRenderedFeedImageViews() -> Int {
-        tableView.numberOfRows(inSection: feedImagesSection)
+        // Until we don't append with Diffable Datasource the numberOfSections on the Snapshot, we don't know the number of sections, so we can check number of rows
+        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: feedImagesSection)
     }
     
     private var feedImagesSection: Int {
@@ -109,6 +110,16 @@ extension ListViewController {
         beginAppearanceTransition(true, animated: false)
         // ViewIsAppearing and View Did Appear
         endAppearanceTransition()
+    }
+    
+    public override func loadViewIfNeeded() {
+        super.loadViewIfNeeded()
+        
+        // STAR: We prevent loading cells ahead of time with Diffable Data Source on all tests
+        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
+        // Since there`s enough space on the table View, to load the two cells, the Diffable will render the two cells ahead of time
+        // We want to prevent render those cells, so we set the frame of the table View to a very small frame
+        // So then only when we call the methods (completeImageLoading), it will render the cells
     }
     
     private func prepareForFirstAppearance() {

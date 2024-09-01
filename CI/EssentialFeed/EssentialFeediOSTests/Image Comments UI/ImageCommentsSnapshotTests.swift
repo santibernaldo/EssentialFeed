@@ -38,7 +38,7 @@ final class ImageCommentsSnapshotTests: XCTestCase {
     
     private func comments() -> [CellController] {
         // STAR: We only pass DataSource on the touple, as ImageCommentCellController only implements the DataSource
-        commentControllers().map { CellController($0) }
+        commentControllers().map { CellController(id: UUID(), $0) }
     }
     
     // STAR: 3 comments CellController, one with SHORT TEXT, one with MEDIUM TEXT, one with LONG TEXT
