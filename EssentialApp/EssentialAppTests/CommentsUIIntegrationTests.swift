@@ -37,7 +37,7 @@ class CommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
     }
     
-    func test_loadingFeedIndicator_isVisibleWhileLoadingComments() {
+    func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
         let (sut, loader) = makeSUT()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
