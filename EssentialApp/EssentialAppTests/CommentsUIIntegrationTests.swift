@@ -142,6 +142,37 @@ class CommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.errorMessage, nil)
     }
     
+    // STAR: With the trackForMemoryLeaks we're tracking this, but how's a requirement we explicity write a test
+    func test_deinit_cancelsRunningRequest() {
+        var cancelCallCount = 0
+        
+        var sut: ListViewController?
+        
+        // STAR: Without the autorelease pool, the test is not passing. This can be checked on the Memory Graph, after checking on the ListViewController object listed there, that autorelease pool is holding a reference on the ListViewController
+        
+        // STAR: Like this, we control the autorelease pool lifetime
+        // It there's is an autorelease object that will only will release when the test ends, we will free up from memory with this statement, the reference of the sut
+        // We control the lifetime of the autorelease
+        autoreleasepool {
+            sut = CommentsUIComposer.commentsComposedWith(commentsLoader: {
+                // When we receive a cancel event (reveiveCancel) on the commentsLoader, passed on CommentsPresentationAdapter, we increase the 'cancelCount'
+                PassthroughSubject<[ImageComment], Error>()
+                    .handleEvents(receiveCancel: {
+                        cancelCallCount += 1
+                    }).eraseToAnyPublisher()
+            })
+            
+            // This will trigger a load of the commentsLoader
+            sut?.simulateAppearance()
+        }
+        
+        XCTAssertEqual(cancelCallCount, 0)
+        
+        sut = nil
+        
+        XCTAssertEqual(cancelCallCount, 1)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ListViewController, loader: LoaderSpy) {
