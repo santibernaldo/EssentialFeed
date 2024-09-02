@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ImageCommentCell: UITableViewCell {
+public class ImageCommentCell: UITableViewCell {
 
     static let identifier: String = "ImageCommentCell"
     
