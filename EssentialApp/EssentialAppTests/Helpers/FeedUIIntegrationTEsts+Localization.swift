@@ -5,7 +5,6 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 26/8/24.
 //
 
-
 import Foundation
 import XCTest
 import EssentialFeed
@@ -22,4 +21,10 @@ extension FeedUIIntegrationTests {
     public var feedTitle: String {
         FeedPresenter.title
     }
+    
+    public var commentsTitle: String {
+        ImageCommentsPresenter.title
+    }
 }
+
+

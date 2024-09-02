@@ -15,12 +15,12 @@ import Combine
 
 final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
 
-    override func test_feedView_hasTitle() {
+    func test_commentsView_hasTitle() {
         let (sut, _) = makeSUT()
         
-        sut.loadViewIfNeeded()
+        sut.simulateAppearance()
         
-        XCTAssertEqual(sut.title, feedTitle)
+        XCTAssertEqual(sut.title, commentsTitle)
     }
 
     // We make all the assertions of the loadCallCount due to the TEMPORAL COUPLING on one place. The order of the methods called rely on the View Cycle, something that's out of our control. So better to centralize this on one test, where more of one assertion on the test is recommended

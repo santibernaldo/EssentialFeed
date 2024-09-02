@@ -23,7 +23,7 @@ public final class CommentsUIComposer {
         let presentationAdapter = FeedPresentationAdapter(loader: commentsLoader)
         
         let feedController = ListViewController.makeWith(
-            title: FeedPresenter.title)
+            title: ImageCommentsPresenter.title)
         
         // When 'loadResource' is Called, it triggers the 'onRefresh'
         feedController.onRefresh = presentationAdapter.loadResource
