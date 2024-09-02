@@ -49,6 +49,7 @@ final class CommentsViewAdapter: ResourceView {
     }
     
     func display(_ viewModel: ImageCommentsViewModel) {
+        // Rendering the comments on screen
         controller?.display(viewModel.comments.map { viewModel in
             CellController(id: viewModel, ImageCommentCellController(model: viewModel))
         })
