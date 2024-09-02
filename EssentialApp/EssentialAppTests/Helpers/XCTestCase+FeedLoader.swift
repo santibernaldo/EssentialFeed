@@ -13,7 +13,7 @@
 //// MARK: - Helpers
 //
 //extension FeedLoaderTestCase {
-//    func expect(_ sut: FeedLoader, toCompleteWith expectedResult: FeedLoader.Result, file: StaticString = #file, line: UInt = #line) {
+//    func expect(_ sut: FeedLoader, toCompleteWith expectedResult: FeedLoader.Result, file: StaticString = #filePath, line: UInt = #line) {
 //        let exp = expectation(description: "Wait for load completion")
 //        
 //        sut.load { receivedResult in

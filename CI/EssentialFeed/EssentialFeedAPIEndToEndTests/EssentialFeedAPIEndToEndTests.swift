@@ -70,7 +70,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         }
     }
     
-    private func getFeedImageDataResult(file: StaticString = #file, line: UInt = #line) -> FeedImageDataLoader.Result? {
+    private func getFeedImageDataResult(file: StaticString = #filePath, line: UInt = #line) -> FeedImageDataLoader.Result? {
         let client = ephemeralClient()
        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed/73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")!
 
@@ -92,7 +92,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         return receivedResult
     }
     
-    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> Swift.Result<[FeedImage], Error>? {
+    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> Swift.Result<[FeedImage], Error>? {
         let client = ephemeralClient()
         let exp = expectation(description: "Wait for load completion")
         
@@ -127,7 +127,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
     
     // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
-    private func ephemeralClient(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
+    private func ephemeralClient(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         trackForMemoryLeaks(client, file: file, line: line)
         return client

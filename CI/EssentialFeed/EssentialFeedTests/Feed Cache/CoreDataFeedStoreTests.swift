@@ -83,7 +83,7 @@ final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     }
     
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> FeedStore {
         // dev/null doesn't leave any artifacts
         // The 'null' device discards all data writen to it, but reports that the write operation succeeded.
         // We create a CoreDAta stack with an in-memory persistent store configuration for the tests

@@ -87,7 +87,7 @@
 //    private func makeSUT(
 //        url: URL = URL(string: "https://a-url.com")!,
 //        mapper: @escaping RemoteLoader<String>.Mapper = { _, _ in "any" },
-//        file: StaticString = #file,
+//        file: StaticString = #filePath,
 //        line: UInt = #line
 //    ) -> (sut: RemoteLoader<String>, client: HTTPClientSpy) {
 //        let client = HTTPClientSpy()
@@ -119,7 +119,7 @@
 //        return try! JSONSerialization.data(withJSONObject: json)
 //    }
 //    
-//    private func expect(_ sut: RemoteLoader<String>, toCompleteWith expectedResult: RemoteLoader<String>.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+//    private func expect(_ sut: RemoteLoader<String>, toCompleteWith expectedResult: RemoteLoader<String>.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 //        let exp = expectation(description: "Wait for load completion")
 //        
 //        sut.load { receivedResult in
