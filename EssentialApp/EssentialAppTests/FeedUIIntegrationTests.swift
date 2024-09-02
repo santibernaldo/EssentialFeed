@@ -410,6 +410,31 @@ final class FeedUIIntegrationTests: XCTestCase {
     }
     
     /*
+     Capture cell reference and load/reload cell resources on willDisplayCell as a fix for iOS 15 cell prefetching behavior change.
+
+     Background: On iOS 15+, for performance reasons, the table view data source may not recreate a cell using the cellForRow method if there's a cached cell for the given IndexPath. In this case, it'll just call willDisplayCell. However, we release a reference of the cell and cancel requests on didEndDisplayingCell.
+
+     So, since cellForRow may not be called anymore, we need to implement willDisplayCell to know when the cached cell is becoming visible again to recapture a reference of the cell and load/reload any resource needed for the cell.
+     */
+    func test_feedImageView_reloadsImageURLWhenBecomingVisibleAgain() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        
+        loader.completeFeedLoading(with: [image0, image1])
+
+        sut.simulateFeedImageBecomingVisibleAgain(at: 0)
+
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image0.url], "Expected two image URL request after first view becomes visible again")
+
+        sut.simulateFeedImageBecomingVisibleAgain(at: 1)
+
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image0.url, image1.url, image1.url], "Expected two new image URL request after second view becomes visible again")
+    }
+    
+    /*
      
      How to fix bugs effectively?
      
