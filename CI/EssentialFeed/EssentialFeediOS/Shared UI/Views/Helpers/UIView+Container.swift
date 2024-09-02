@@ -5,6 +5,8 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 1/9/24.
 //
 
+import UIKit
+
 extension UIView {
 
     public func makeContainer() -> UIView {
