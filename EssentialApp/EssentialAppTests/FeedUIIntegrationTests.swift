@@ -56,7 +56,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected first loading requests before view is loaded")
         
         // When valueChanged action of refreshControl is called, we perform load
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected second loading requests before view is loaded")
         
@@ -79,7 +79,7 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateAppearance()
         
         // When valueChanged action of refreshControl is called, we perform load
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         XCTAssertEqual(loader.loadFeedCallCount, 2)
         
@@ -101,13 +101,13 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")
         
         loader.completeFeedLoading(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         loader.completeFeedLoadingWithError(at: 2)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
@@ -122,7 +122,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoadingWithError(at: 0)
         XCTAssertEqual(sut.errorMessage, loadError)
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertEqual(sut.errorMessage, nil)
     }
     
@@ -159,7 +159,7 @@ class FeedUIIntegrationTests: XCTestCase {
         // ONE ELEMENT CASE
         assertThat(sut, isRendering: [image0])
     
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         let arrayManyCase = [image0, image1, image2, image3]
         loader.completeFeedLoading(with: arrayManyCase, at: 1)
@@ -178,7 +178,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(with: [image0], at: 0)
         assertThat(sut, isRendering: [image0])
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
     }
@@ -453,7 +453,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(with: [image0, image1], at: 0)
         assertThat(sut, isRendering: [image0, image1])
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         loader.completeFeedLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
