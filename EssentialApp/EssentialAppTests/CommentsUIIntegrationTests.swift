@@ -13,7 +13,7 @@ import Foundation
 import EssentialApp
 import Combine
 
-class CommentsUIIntegrationTests: FeedUIIntegrationTests {
+class CommentsUIIntegrationTests: XCTestCase {
 
     func test_commentsView_hasTitle() {
         let (sut, _) = makeSUT()
@@ -104,7 +104,7 @@ class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         assertThat(sut, isRendering: [comment])
     }
     
-    override func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+    func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
         sut.simulateAppearance()
 
@@ -116,7 +116,7 @@ class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         wait(for: [exp], timeout: 1.0)
     }
 
-    override func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+    func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
@@ -129,7 +129,7 @@ class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         XCTAssertEqual(sut.errorMessage, nil)
     }
     
-    override func test_tapOnErrorView_hidesErrorMessage() {
+    func test_tapOnErrorView_hidesErrorMessage() {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
@@ -162,6 +162,7 @@ class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         let viewModel = ImageCommentsPresenter.map(comments)
         
         viewModel.comments.enumerated().forEach { index, comment in
+            // STAR: Getting the values from the ImageCommentCell rendered
             XCTAssertEqual(sut.commentMessage(at: index), comment.message, "message at \(index)", file: file, line: line)
             XCTAssertEqual(sut.commentDate(at: index), comment.date, "date at \(index)", file: file, line: line)
             XCTAssertEqual(sut.commentUsername(at: index), comment.username, "username at \(index)", file: file, line: line)

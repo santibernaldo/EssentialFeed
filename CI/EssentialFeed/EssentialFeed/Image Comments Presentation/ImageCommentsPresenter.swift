@@ -12,6 +12,7 @@ public struct ImageCommentsViewModel {
     public let comments: [ImageCommentViewModel]
 }
 
+// STAR: Our model is Hashable, it's just data
 public struct ImageCommentViewModel: Hashable {
     public let message: String
     public let date: String
