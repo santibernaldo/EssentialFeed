@@ -38,6 +38,26 @@ class FeedUIIntegrationTests: XCTestCase {
         
         XCTAssertEqual(sut.title, feedTitle)
     }
+    
+    func test_imageSelection_notifiesHandler() {
+        let image0 = makeImage(description: "description 0", location: "location 0")
+        let image1 = makeImage(description: nil, location: "location 1")
+        var selectedImages = [FeedImage]()
+        // We append the selected image to the array
+        let (sut, loader) = makeSUT(selection: { selectedImages.append($0)})
+               
+        sut.simulateAppearance()
+        
+        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
+        
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
+        
+        sut.simulateTapOnFeedImage(at: 0)
+        XCTAssertEqual(selectedImages, [image0])
+        
+        sut.simulateTapOnFeedImage(at: 1)
+        XCTAssertEqual(selectedImages, [image0, image1])
+    }
 
     // We make all the assertions of the loadCallCount due to the TEMPORAL COUPLING on one place. The order of the methods called rely on the View Cycle, something that's out of our control. So better to centralize this on one test, where more of one assertion on the test is recommended
     
@@ -467,9 +487,15 @@ class FeedUIIntegrationTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ListViewController, loader: LoaderSpy) {
+    private func makeSUT(
+        selection: @escaping (FeedImage) -> Void = { _ in },
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (sut: ListViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+        let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, 
+                                                  imageLoader: loader.loadImageDataPublisher,
+                                                  selection: selection)
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)
