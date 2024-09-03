@@ -48,7 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             imageLoader: makeLocalImageLoaderWithRemoteFallback,
             selection: showComments))
     
-    private lazy var remoteURLFeed: URL = baseURL.appendingPathComponent("/v1/feed")
+    private lazy var remoteURLFeed: URL = FeedEndpoint.get.url(baseURL: baseURL)
 
     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
         self.init()
@@ -73,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showComments(for image: FeedImage) {
-        let url = baseURL.appendingPathComponent("/v1/image/\(image.id)/comments")
+        let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
         let comments = CommentsUIComposer.commentsComposedWith(commentsLoader: makeRemoteCommentsLoader(url: url))
         navigationController.pushViewController(comments, animated: true)
     }
