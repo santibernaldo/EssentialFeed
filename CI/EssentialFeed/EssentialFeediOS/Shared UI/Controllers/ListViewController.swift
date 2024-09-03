@@ -32,6 +32,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
             controller.dataSource.tableView(tableView, cellForRowAt: index)
         }
     }()
+    private var onViewIsAppearing: ((ListViewController) -> Void)?
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -44,6 +45,10 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         super.viewDidLoad()
         
         configureTableView()
+        onViewIsAppearing = { vc in
+            vc.onViewIsAppearing = nil
+            vc.refresh()
+        }
     }
 
     private func configureTableView() {
@@ -68,7 +73,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         
         if !viewAppeared {
             viewAppeared = true
-            refresh()
+            onViewIsAppearing?(self)
         }
         
     }
