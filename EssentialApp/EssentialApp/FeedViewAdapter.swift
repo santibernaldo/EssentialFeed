@@ -28,9 +28,16 @@ final class FeedViewAdapter: ResourceView {
     
     func display(_ viewModel: Paginated<FeedImage>) {
         // the object passed onto the display method as parameter is the data expected by the controller
-        let feedImageCellControllers = getImageCellControllers(viewModel: viewModel, imageLoader: imageLoader)
+        let feed = getImageCellControllers(viewModel: viewModel, imageLoader: imageLoader)
         
-        controller?.display(feedImageCellControllers)
+        // STAR: Every time there's a new callback (willdisplay is triggered), it will call loadMore.
+        let loadMore = LoadMoreCellController {
+            viewModel.loadMore?{ _ in }
+        }
+        
+        let loadMoreSection = [CellController(id: UUID(), loadMore)]
+        
+        controller?.display(feed, loadMoreSection)
     }
     
     func getImageCellControllers(viewModel: Paginated<FeedImage>, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> [CellController] {

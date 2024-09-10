@@ -16,7 +16,7 @@ public struct Paginated<Item> {
     public let items: [Item]
     // Action of loadMore items
     // STAR: If I don't have a closure, I can`t load more. That's the Optional part
-    let loadMore: ((@escaping LoadMoreCompletion) -> Void)?
+    public let loadMore: ((@escaping LoadMoreCompletion) -> Void)?
     
     public init(items: [Item], loadMore: ((@escaping LoadMoreCompletion) -> Void)? = nil) {
            self.items = items

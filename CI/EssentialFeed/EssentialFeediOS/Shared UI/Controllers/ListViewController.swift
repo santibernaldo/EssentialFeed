@@ -89,18 +89,20 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         }
     }
     
-    public func display(_ cellControllers: [CellController]) {
+    public func display(_ sections: [CellController]...) {
         var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
-        // Only when we append the section, the dataSource knows the number of sections. Otherwise, its zero
-        snapshot.appendSections([0])
-        snapshot.appendItems(cellControllers, toSection: 0)
+        sections.enumerated().forEach { section, cellControllers in
+            snapshot.appendSections([section])
+            snapshot.appendItems(cellControllers, toSection: section)
+        }
+        
         // On iOS 14 and before, calling apply(snapshot, animatingDifferences: false) would call reloadData on the table/collection view and reload all cells. And calling apply(snapshot, animatingDifferences: true) would perform a diff on the data source and only update cells that the data changed.
         
         //But on iOS 15+, passing false or true in animatingDifferences will perform a diff and only update cells that the data changed.
         if #available(iOS 15.0, *) {
-          dataSource.applySnapshotUsingReloadData(snapshot)
+            dataSource.applySnapshotUsingReloadData(snapshot)
         } else {
-          dataSource.apply(snapshot)
+            dataSource.apply(snapshot)
         }
     }
     

@@ -9,6 +9,19 @@ import XCTest
 @testable import EssentialFeediOS
 import EssentialFeed
 
+/*
+ 
+ [✅] Layout (Snapshot Tests)
+ [ ] Infinity Scroll Experience (Integration Tests)
+     [ ] Trigger "Load more" action on scroll to bottom
+         [ ] Only if there are more items to load
+         [ ] Only if not already loading
+     [ ] Show loading indicator while loading
+     [ ] Show error message on failure
+         [ ] Tap on error to retry
+ 
+ */
+
 // First, we call the 'record' on every test to check the image created is the one we want to use in the future to compare it every time we run the tests. And then, we use the 'assert' to compare it with the previous snapshot saved
 
 /*
@@ -62,7 +75,6 @@ class FeedSnapshotTests: XCTestCase {
         assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "FEED_WITH_LOAD_MORE_ERROR_light")
         assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "FEED_WITH_LOAD_MORE_ERROR_dark")
         assert(snapshot: sut.snapshot(for: .iPhone(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_LOAD_MORE_ERROR_extraExtraExtraLarge")
-
     }
     
     // MARK: - Helpers

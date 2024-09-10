@@ -14,7 +14,7 @@ public class LoadMoreCell: UITableViewCell {
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 40).isActive = true
+        contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
         return spinner
     }()
     
