@@ -101,7 +101,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     // AnyPublisher -> produces an array of FeedImage or an error
-    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
+    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
         // There are many Publishers we can create, one of them is 'Future'. It starts with a completionBlock, and once the work is done, is returns some result
 
         // The signature of the completion `load` expects is the same one of the ÁnyPublisher returned
@@ -118,6 +118,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .caching(to: localFeedLoader)   //  [     caching     ]
             // When fallback, the `load` of the localFeedLoader is called
             .fallback(to: localFeedLoader.loadPublisher)
+            .map {
+                Paginated(items: $0)
+            }
+            .eraseToAnyPublisher()
     }
 }
 

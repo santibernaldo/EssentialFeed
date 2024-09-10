@@ -26,15 +26,15 @@ final class FeedViewAdapter: ResourceView {
         self.selection = selection
     }
     
-    func display(_ viewModel: FeedViewModel) {
+    func display(_ viewModel: Paginated<FeedImage>) {
         // the object passed onto the display method as parameter is the data expected by the controller
         let feedImageCellControllers = getImageCellControllers(viewModel: viewModel, imageLoader: imageLoader)
         
         controller?.display(feedImageCellControllers)
     }
     
-    func getImageCellControllers(viewModel: FeedViewModel, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> [CellController] {
-        viewModel.feed.map { model in
+    func getImageCellControllers(viewModel: Paginated<FeedImage>, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> [CellController] {
+        viewModel.items.map { model in
             let adapter = ImageDataPresentationAdapter(loader: { [imageLoader] in
                 imageLoader(model.url)
             })
