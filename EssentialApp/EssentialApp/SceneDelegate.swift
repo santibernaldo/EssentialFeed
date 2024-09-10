@@ -34,17 +34,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LocalFeedLoader(store: store, currentDate: Date.init)
     }()
     
-    private lazy var remoteFeedLoader = RemoteFeedLoader(client: httpClient, url: remoteURL)
+    private lazy var remoteFeedLoader = httpClient.getPublisher(url: remoteURLFeed)
 
-    private lazy var remoteImageLoader = {
-        RemoteFeedImageDataLoader(client: httpClient)
-    }()
-    
     private lazy var localImageLoader = {
         LocalFeedImageDataLoader(store: store)
     }()
     
-    private lazy var remoteURL: URL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5db4155a4fbade21d17ecd28/1572083034355/essential_app_feed.json")!
+    private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+    
+    private lazy var navigationController = UINavigationController(
+        rootViewController: FeedUIComposer.feedComposedWith(
+            feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+            imageLoader: makeLocalImageLoaderWithRemoteFallback,
+            selection: showComments))
+    
+    private lazy var remoteURLFeed: URL = FeedEndpoint.get.url(baseURL: baseURL)
 
     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
         self.init()
@@ -60,11 +64,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func configureWindow() {
-        window?.rootViewController = UINavigationController(
-            rootViewController: FeedUIComposer.feedComposedWith(
-                feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-                imageLoader: makeLocalImageLoaderWithRemoteFallback))
-        
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
     
@@ -72,19 +72,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         localFeedLoader.validateCache { _ in }
     }
     
+    private func showComments(for image: FeedImage) {
+        let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
+        let comments = CommentsUIComposer.commentsComposedWith(commentsLoader: makeRemoteCommentsLoader(url: url))
+        navigationController.pushViewController(comments, animated: true)
+    }
+    
+    private func makeRemoteCommentsLoader(url: URL) -> () -> AnyPublisher<[ImageComment], Error> {
+        return { [httpClient] in
+            return httpClient
+                .getPublisher(url: url)
+                .tryMap(ImageCommentsMapper.map)
+                .eraseToAnyPublisher()
+        }
+    }
+    
     private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+        let localImageLoader = LocalFeedImageDataLoader(store: store)
         
         return localImageLoader
             .loadImageDataPublisher(from: url)
-            .fallback(to: {
-                self.remoteImageLoader
-                    .loadImageDataPublisher(from: url)
-                    .caching(to: self.localImageLoader, using: url)
+            .fallback(to: { [httpClient] in
+                httpClient
+                    .getPublisher(url: url)
+                    .tryMap(FeedImageDataMapper.map)
+                    .caching(to: localImageLoader, using: url)
             })
     }
     
     // AnyPublisher -> produces an array of FeedImage or an error
-    private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
+    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
         // There are many Publishers we can create, one of them is 'Future'. It starts with a completionBlock, and once the work is done, is returns some result
 
         // The signature of the completion `load` expects is the same one of the ÁnyPublisher returned
@@ -92,9 +109,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Future fires would fire the request every time we call 'makeRemoteFeedLoaderWithLocallFallback', not when someone subscribes to it
         
         // So we defers the execution of it
-        return remoteFeedLoader
-            .loadPublisher()
-            .caching(to: localFeedLoader)
+        
+        //         [  side-effect  ]
+        //         -pure function-
+        //         [  side-effect  ]
+        return remoteFeedLoader             //  [ network request ]
+            .tryMap(FeedItemsMapper.map)    //  -     mapping     -
+            .caching(to: localFeedLoader)   //  [     caching     ]
             // When fallback, the `load` of the localFeedLoader is called
             .fallback(to: localFeedLoader.loadPublisher)
     }

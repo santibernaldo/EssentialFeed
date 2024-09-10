@@ -70,49 +70,51 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         }
     }
     
-    private func getFeedImageDataResult(file: StaticString = #file, line: UInt = #line) -> FeedImageDataLoader.Result? {
-            let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed/73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")!
-            let loader = RemoteFeedImageDataLoader(client: ephemeralClient())
-            
-            trackForMemoryLeaks(loader, file: file, line: line)
+    private func getFeedImageDataResult(file: StaticString = #filePath, line: UInt = #line) -> FeedImageDataLoader.Result? {
+        let client = ephemeralClient()
+       let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed/73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")!
 
-            let exp = expectation(description: "Wait for load completion")
-
-            var receivedResult: FeedImageDataLoader.Result?
-            _ = loader.loadImageData(from: testServerURL) { result in
-                receivedResult = result
-                exp.fulfill()
+        let exp = expectation(description: "Wait for load completion")
+        
+        var receivedResult: FeedImageDataLoader.Result?
+        client.get(from: testServerURL) { result in
+            receivedResult = result.flatMap { (data, response) in
+                do {
+                    return .success(try FeedImageDataMapper.map(data, from: response))
+                } catch {
+                    return .failure(error)
+                }
             }
-            wait(for: [exp], timeout: 5.0)
-
-            return receivedResult
-        }
-    
-    func getFeedResult(file: StaticString = #filePath,
-                       line: UInt = #line) -> FeedLoader.Result? {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        
-        // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
-        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-        let loader = RemoteFeedLoader(client: ephemeralClient(), url: testServerURL)
-        
-        trackForMemoryLeaks(client, file: file, line: line)
-    
-        trackForMemoryLeaks(loader, file: file, line: line)
-        
-        let exp = expectation(description: "wait for load description")
-        
-        var receivedResult: FeedLoader.Result?
-        
-        loader.load { result in
-            receivedResult = result
             exp.fulfill()
         }
-        
         wait(for: [exp], timeout: 5.0)
         
         return receivedResult
     }
+    
+    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> Swift.Result<[FeedImage], Error>? {
+        let client = ephemeralClient()
+        let exp = expectation(description: "Wait for load completion")
+        
+        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        
+        var receivedResult: Swift.Result<[FeedImage], Error>?
+        client.get(from: testServerURL) { result in
+            receivedResult = result.flatMap { (data, response) in
+                do {
+                    return .success(try FeedItemsMapper.map(data, from: response))
+                } catch {
+                    return .failure(error)
+                }
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 5.0)
+        
+        return receivedResult
+    }
+    
+    
     
     // MARK: - Helpers
     
@@ -124,7 +126,8 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
             url: url(at: index))
     }
     
-    private func ephemeralClient(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
+    // Without .emepheral we would be leaving state on the disk of the saved data. We use the in-disk cache.
+    private func ephemeralClient(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         trackForMemoryLeaks(client, file: file, line: line)
         return client
