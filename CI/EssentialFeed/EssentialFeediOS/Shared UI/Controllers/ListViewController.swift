@@ -17,6 +17,9 @@ import EssentialFeed
 // old view, preload and cancelLoad, shared a common interface between UIKit, that's why we moved onto UIKit specific protocols
 // STAR: dataSource is not optional as is Mandatory its use
 
+// STAR: Feature Agnostic/Independent Generic List View Controller
+
+// STAR: We coud inject new functionality (Like pagination), without modifying existing code. Proving the Open/Close principle (open for extension and closed for modification)
 public final class ListViewController: UITableViewController, UITableViewDataSourcePrefetching, ResourceLoadingView, ResourceErrorView {
     
     private(set) public var errorView = ErrorView()
