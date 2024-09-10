@@ -14,34 +14,40 @@ public final class FeedUIComposer {
     
     private init() {}
     
-    public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
+    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
+
+    public static func feedComposedWith(
+        feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>,
+        imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
+        selection: @escaping (FeedImage) -> Void = { _ in }) -> ListViewController {
         
-        let presentationAdapter = FeedLoaderPresentationAdapter(
-            feedLoader: { feedLoader().dispatchOnMainQueue() })
+        let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
         
-        let feedController = FeedViewController.makeWith(
+        let feedController = ListViewController.makeWith(
             title: FeedPresenter.title)
         
-        let refreshController = feedController.refreshController!
-        refreshController.delegate = presentationAdapter
+        // When 'loadResource' is Called, it triggers the 'onRefresh'
+        feedController.onRefresh = presentationAdapter.loadResource
         
-        presentationAdapter.presenter = FeedPresenter(
-            feedView: FeedViewAdapter(
+        presentationAdapter.presenter = LoadResourcePresenter(
+            resourceView: FeedViewAdapter(
                 controller: feedController,
-                imageLoader: { imageLoader($0).dispatchOnMainQueue() }),
+                imageLoader: imageLoader,
+            selection: selection),
+            loadingView: WeakRefVirtualProxy(feedController),
             errorView: WeakRefVirtualProxy(feedController),
-            loadingView: WeakRefVirtualProxy(refreshController))
+            mapper: FeedPresenter.map)
         
         return feedController
     }
 
 }
 
-private extension FeedViewController {
-    static func makeWith(title: String) -> FeedViewController {
-        let bundle = Bundle(for: FeedViewController.self)
+private extension ListViewController {
+    static func makeWith(title: String) -> ListViewController {
+        let bundle = Bundle(for: ListViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-        let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
+        let feedController = storyboard.instantiateInitialViewController() as! ListViewController
         feedController.title = title
         return feedController
     }

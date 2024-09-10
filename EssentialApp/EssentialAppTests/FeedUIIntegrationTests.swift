@@ -29,14 +29,34 @@ import Combine
      [✅] Preload when image view is near visible
  */
 
-final class FeedUIIntegrationTests: XCTestCase {
+class FeedUIIntegrationTests: XCTestCase {
     
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
         
         sut.loadViewIfNeeded()
         
-        XCTAssertEqual(sut.title, localized("FEED_TITLE_VALUE"))
+        XCTAssertEqual(sut.title, feedTitle)
+    }
+    
+    func test_imageSelection_notifiesHandler() {
+        let image0 = makeImage(description: "description 0", location: "location 0")
+        let image1 = makeImage(description: nil, location: "location 1")
+        var selectedImages = [FeedImage]()
+        // We append the selected image to the array
+        let (sut, loader) = makeSUT(selection: { selectedImages.append($0)})
+               
+        sut.simulateAppearance()
+        
+        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
+        
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
+        
+        sut.simulateTapOnFeedImage(at: 0)
+        XCTAssertEqual(selectedImages, [image0])
+        
+        sut.simulateTapOnFeedImage(at: 1)
+        XCTAssertEqual(selectedImages, [image0, image1])
     }
 
     // We make all the assertions of the loadCallCount due to the TEMPORAL COUPLING on one place. The order of the methods called rely on the View Cycle, something that's out of our control. So better to centralize this on one test, where more of one assertion on the test is recommended
@@ -49,20 +69,20 @@ final class FeedUIIntegrationTests: XCTestCase {
     func test_loadFeedActions_requestFeedFromLoader() {
         let (sut, loader) = makeSUT()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 0, "Expected no loading requests before view is loaded")
+        XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
         
         sut.simulateAppearance()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 1, "Expected first loading requests before view is loaded")
+        XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected first loading requests before view is loaded")
         
         // When valueChanged action of refreshControl is called, we perform load
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 2, "Expected second loading requests before view is loaded")
+        XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected second loading requests before view is loaded")
         
         sut.refreshControl?.simulatePullToRefresh()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 3, "Expected third loading requests before view is loaded")
+        XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected third loading requests before view is loaded")
     }
     
     func test_viewDidLoad_loadsFeed() {
@@ -70,7 +90,7 @@ final class FeedUIIntegrationTests: XCTestCase {
                 
         sut.simulateAppearance()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 1)
+        XCTAssertEqual(loader.loadFeedCallCount, 1)
     }
     
     func test_userInitiatedFeedReload_loadsFeed() {
@@ -79,21 +99,21 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateAppearance()
         
         // When valueChanged action of refreshControl is called, we perform load
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 2)
+        XCTAssertEqual(loader.loadFeedCallCount, 2)
         
         sut.refreshControl?.simulatePullToRefresh()
         
-        XCTAssertEqual(loader.loadFeedRequestCallCount, 3)
+        XCTAssertEqual(loader.loadFeedCallCount, 3)
     }
     
     func test_loadingFeedIndicator_isVisibleWhileLoadingTheFeed() {
         let (sut, loader) = makeSUT()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator(), false)
-
-
+        
+        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")
@@ -101,16 +121,42 @@ final class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertEqual(sut.isShowingLoadingIndicator(), true, "Expected showing loading indicator")
         
         loader.completeFeedLoading(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         loader.completeFeedLoadingWithError(at: 2)
         XCTAssertFalse(sut.isShowingLoadingIndicator(), "Expected not showing loading indicator")
+    }
+    
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateAppearance()
+        XCTAssertEqual(sut.errorMessage, nil)
+        
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, loadError)
+        
+        sut.simulateUserInitiatedReload()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+    
+    func test_tapOnErrorView_hidesErrorMessage() {
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateAppearance()
+        XCTAssertEqual(sut.errorMessage, nil)
+        
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, loadError)
+        
+        sut.simulateErrorViewTap()
+        XCTAssertEqual(sut.errorMessage, nil)
     }
     
     func test_loadFeedCompletion_rendersSuccesfullyLoadedFeed() {
@@ -128,15 +174,15 @@ final class FeedUIIntegrationTests: XCTestCase {
         // 0 CASE
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
         
-        loader.completeFeedLoading(at: 0, with: [image0])
+        loader.completeFeedLoading(with: [image0], at: 0)
         
         // ONE ELEMENT CASE
         assertThat(sut, isRendering: [image0])
     
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
         let arrayManyCase = [image0, image1, image2, image3]
-        loader.completeFeedLoading(at: 1, with: arrayManyCase)
+        loader.completeFeedLoading(with: arrayManyCase, at: 1)
         
         // MANY ELEMENT CASE
         assertThat(sut, isRendering: arrayManyCase)
@@ -149,10 +195,10 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         sut.simulateAppearance()
         
-        loader.completeFeedLoading(at: 0, with: [image0])
+        loader.completeFeedLoading(with: [image0], at: 0)
         assertThat(sut, isRendering: [image0])
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
     }
@@ -362,6 +408,9 @@ final class FeedUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    /*
+     Hello Mihai, great questions! ## 1. Why these last two tests have no assertions? The last two tests don't have an assertion because we're simulating the conditions of a scenario where we expect no output. We already tested the rendering behavior when the loader completes. So, we just want to make sure it "doesn't crash" when the loader completes in a background thread. In this case, we rely on the Main Thread Checker and the Swift Runtime to suspend the execution of the program when there's a call to UIKit APIs outside of the main thread. ## 2. I wonder if there would be any way to improve these 2 tests in order that they should fail if we remove the production code that dispatches to the main thread. By removing or commenting out the code, as you did, you do get a test failure: a crash! Any interruption to the app's building or execution phases should be considered a red state (from the red/green/refactor TDD steps). Thus, a crash during a test execution is viewed as a test failure. In short, a test will either pass or fail. Crashing is failing. So here are some conditions that prevent a test from passing (failure): • Assertion failure • Compile-time errors • Runtime errors Regardless of the failure condition, the test needs to be short, concise, fast, and reliable. So, when one of the conditions above occurs, you know precisely the reason why and you can replicate it until it's fixed. For instance, when you comment out the main thread dispatch, you can precisely identify the issue by looking at the test name and scope. --- Now, if you're a testing an API where you cannot rely on the Main Thread Checker, there are other approaches. For example, in case you were testing a FeedLoader implementation (or any other asynchronous API), and you wanted to make sure it delivers results in the main thread, you could create the following assertion in your test:
+     */
     func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
         
@@ -373,10 +422,36 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
+          
             loader.completeImageLoading(with: self.anyImageData(), at: 0)
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    /*
+     Capture cell reference and load/reload cell resources on willDisplayCell as a fix for iOS 15 cell prefetching behavior change.
+
+     Background: On iOS 15+, for performance reasons, the table view data source may not recreate a cell using the cellForRow method if there's a cached cell for the given IndexPath. In this case, it'll just call willDisplayCell. However, we release a reference of the cell and cancel requests on didEndDisplayingCell.
+
+     So, since cellForRow may not be called anymore, we need to implement willDisplayCell to know when the cached cell is becoming visible again to recapture a reference of the cell and load/reload any resource needed for the cell.
+     */
+    func test_feedImageView_reloadsImageURLWhenBecomingVisibleAgain() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        
+        loader.completeFeedLoading(with: [image0, image1])
+
+        sut.simulateFeedImageBecomingVisibleAgain(at: 0)
+
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image0.url], "Expected two image URL request after first view becomes visible again")
+
+        sut.simulateFeedImageBecomingVisibleAgain(at: 1)
+
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image0.url, image1.url, image1.url], "Expected two new image URL request after second view becomes visible again")
     }
     
     /*
@@ -395,12 +470,12 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         sut.simulateAppearance()
         
-        loader.completeFeedLoading(at: 0, with: [image0, image1])
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
         assertThat(sut, isRendering: [image0, image1])
         
-        sut.simulateUserInitiatedFeedReload()
+        sut.simulateUserInitiatedReload()
         
-        loader.completeFeedLoading(at: 1, with: [])
+        loader.completeFeedLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
     }
     
@@ -412,9 +487,15 @@ final class FeedUIIntegrationTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+    private func makeSUT(
+        selection: @escaping (FeedImage) -> Void = { _ in },
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (sut: ListViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+        let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, 
+                                                  imageLoader: loader.loadImageDataPublisher,
+                                                  selection: selection)
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)
