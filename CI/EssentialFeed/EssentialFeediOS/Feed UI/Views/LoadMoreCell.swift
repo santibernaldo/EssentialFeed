@@ -5,6 +5,8 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 10/9/24.
 //
 
+import UIKit
+
 public class LoadMoreCell: UITableViewCell {
     private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .medium)
