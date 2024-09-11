@@ -124,6 +124,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .eraseToAnyPublisher()
     }
     
+    // TODO: Refactor Extract Logic into helper methods (video Keyset pagination and commit)
     private func makeRemoteLoadMoreLoader(items: [FeedImage], last: FeedImage?) -> (() -> AnyPublisher<Paginated<FeedImage>, Error>)? {
         // STAR: if we have more than one item, we will have more items
         last.map { lastItem in
@@ -138,7 +139,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         let allItems = items + newItems
                         // STAR: Used recursion here
                         return Paginated(items: allItems, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: allItems, last: newItems.last))
-                    }.eraseToAnyPublisher()
+                    }.delay(for: 2, scheduler: DispatchQueue.main)
+                    .eraseToAnyPublisher()
             }
         }
     }
