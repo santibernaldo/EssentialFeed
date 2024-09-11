@@ -5,6 +5,7 @@ public final class CoreDataFeedStore {
     private static let modelName = "FeedStore"
     private static let model = NSManagedObjectModel.with(name: modelName, in: Bundle(for: CoreDataFeedStore.self))
     
+    // STAR: Critical components/dependencies for the CoreDataStore to work
     private let container: NSPersistentContainer
     private let context: NSManagedObjectContext
 

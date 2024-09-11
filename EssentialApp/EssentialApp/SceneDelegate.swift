@@ -24,10 +24,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
     
     private lazy var store: FeedStore & FeedImageDataStore = {
-        try! CoreDataFeedStore(
-            storeURL: NSPersistentContainer
-                .defaultDirectoryURL()
-                .appendingPathComponent("feed-store.sqlite"))
+        do {
+            return try CoreDataFeedStore(
+                storeURL: NSPersistentContainer
+                    .defaultDirectoryURL()
+                    .appendingPathComponent("feed-store.sqlite"))
+        } catch {
+            // STAR: Returns a NullStore will prevent the app to be in a WEIRD STATE. 
+            return NullStore()
+        }
     }()
     
     private lazy var localFeedLoader: LocalFeedLoader = {
