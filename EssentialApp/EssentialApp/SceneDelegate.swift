@@ -48,7 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             imageLoader: makeLocalImageLoaderWithRemoteFallback,
             selection: showComments))
     
-    private lazy var remoteURLFeed: URL = FeedEndpoint.get.url(baseURL: baseURL)
+    private lazy var remoteURLFeed: URL = FeedEndpoint.get().url(baseURL: baseURL)
 
     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
         self.init()
