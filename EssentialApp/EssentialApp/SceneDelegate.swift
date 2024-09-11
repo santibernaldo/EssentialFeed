@@ -5,6 +5,7 @@
 //  Created by Santiago Ochoa Bernaldo de Quiros on 3/7/24.
 //
 
+import os
 import UIKit
 import CoreData
 import EssentialFeed
@@ -34,9 +35,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Maybe the feedstore can't be created, because there's not enough space in disk for example, or some bug arise from the model of the feedstore
             // STAR: assertionFailure only will crash on Debug
             assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+            logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
             return NullStore()
         }
     }()
+    
+    private lazy var logger = Logger(subsystem: "com.essentialdeveloper.EssentialAppCaseStudy", category: "main")
     
     private lazy var localFeedLoader: LocalFeedLoader = {
         LocalFeedLoader(store: store, currentDate: Date.init)
