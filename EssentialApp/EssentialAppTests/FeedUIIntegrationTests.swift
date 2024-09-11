@@ -232,7 +232,7 @@ class FeedUIIntegrationTests: XCTestCase {
     }
     
     // Load More Inbox
-    // [ ] Show error message on failure
+    // [✅] Show error message on failure
     func test_loadMoreCompletion_rendersErrorMessageOnError() {
         let (sut, loader) = makeSUT()
         sut.simulateAppearance()
@@ -246,6 +246,25 @@ class FeedUIIntegrationTests: XCTestCase {
         
         sut.simulateLoadMoreFeedAction()
         XCTAssertEqual(sut.loadMoreFeedErrorMessage, nil)
+    }
+    
+    // Load More Inbox
+    // [✅] Show error message on failure
+    func test_tapOnLoadMoreErrorView_loadsMore() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading()
+        
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertEqual(loader.loadMoreCallCount, 1)
+        
+        // Still 1 because didn't fail yet
+        sut.simulateTapOnLoadMoreFeedError()
+        XCTAssertEqual(loader.loadMoreCallCount, 1)
+        
+        loader.completeLoadMoreWithError()
+        sut.simulateTapOnLoadMoreFeedError()
+        XCTAssertEqual(loader.loadMoreCallCount, 2)
     }
     
     func test_loadFeedCompletion_rendersSuccesfullyLoadedFeed() {
