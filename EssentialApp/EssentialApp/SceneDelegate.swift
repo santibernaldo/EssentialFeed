@@ -32,6 +32,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } catch {
             // STAR: Returns a NullStore will prevent the app to be in a WEIRD STATE.
             // Maybe the feedstore can't be created, because there's not enough space in disk for example, or some bug arise from the model of the feedstore
+            // STAR: assertionFailure only will crash on Debug
+            assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
             return NullStore()
         }
     }()
