@@ -34,7 +34,9 @@ extension ListViewController {
         return loadMoreFeedCell()?.isLoading == true
     }
     
-    
+    var canLoadMoreFeed: Bool {
+        loadMoreFeedCell() != nil
+    }
     
     func simulateTapOnLoadMoreFeedError() {
         let delegate = tableView.delegate
