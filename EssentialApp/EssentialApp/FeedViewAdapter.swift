@@ -20,9 +20,9 @@ final class FeedViewAdapter: ResourceView {
     
     private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
     // STAR: The view type (FeedViewAdapter) cause its loading a Feed
-    // ASK Program
-    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+    // ASK Program:     
     // STAR: The view type (FeedViewAdapter) cause its loading a Feed
+    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
     
     init(controller: ListViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, selection: @escaping (FeedImage) -> Void) {
         self.controller = controller

@@ -11,7 +11,28 @@ import Foundation
 import Combine
 import EssentialFeed
 
+// STAR: Bridging Layer for Combine
 public extension Paginated {
+    // STAR: Way of converting Publishers into closures
+    init(items: [Item], loadMorePublisher: (() -> AnyPublisher<Self, Error>)?) {
+        // STAR: the loadMore completion is fetching on the return mapped on the publisher
+        self.init(items: items, loadMore: loadMorePublisher.map { publisher in
+            // STAR: Every time this closure is invoked through the completionBlock, we can subscribe
+            return { completion in
+                // STAR: Subscribers sink used, instead using .sing, this way Combine will use the lifecycle WITHOUT the cancellable, that's what we don't cancel
+                publisher().subscribe(Subscribers.Sink(receiveCompletion: { result in
+                    if case let .failure(error) = result {
+                        completion(.failure(error))
+                    }
+                }, receiveValue: { result in
+                    completion(.success(result))
+                }))
+            }
+        })
+    }
+    
+    
+    // STAR: Way of converting closures to Publishers
     var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
         guard let loadMore = loadMore else { return nil }
         
