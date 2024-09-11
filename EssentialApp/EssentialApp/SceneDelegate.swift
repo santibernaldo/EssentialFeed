@@ -135,7 +135,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .map { newItems in
                 (items + newItems, newItems.last)
             }.map(makePage)
-            .delay(for: 2, scheduler: DispatchQueue.main)
             .caching(to: localFeedLoader)
     }
     
