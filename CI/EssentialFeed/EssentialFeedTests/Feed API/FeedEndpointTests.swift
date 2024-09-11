@@ -21,6 +21,7 @@ final class FeedEndpointTests: XCTestCase {
         XCTAssertEqual(received.query, "limit=10", "query")
     }
     
+    // API
     func test_feed_endpointURLAfterGivenImage() {
         let image = uniqueImage()
         let baseURL = URL(string: "http://base-url.com")!
