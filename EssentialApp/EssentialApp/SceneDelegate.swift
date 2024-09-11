@@ -87,62 +87,87 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-        let localImageLoader = LocalFeedImageDataLoader(store: store)
-        
-        return localImageLoader
-            .loadImageDataPublisher(from: url)
-            .fallback(to: { [httpClient] in
-                httpClient
-                    .getPublisher(url: url)
-                    .tryMap(FeedImageDataMapper.map)
-                    .caching(to: localImageLoader, using: url)
-            })
-    }
-    
     // AnyPublisher -> produces an array of FeedImage or an error
-    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
-        // There are many Publishers we can create, one of them is 'Future'. It starts with a completionBlock, and once the work is done, is returns some result
-
-        // The signature of the completion `load` expects is the same one of the ÁnyPublisher returned
-        
-        // Future fires would fire the request every time we call 'makeRemoteFeedLoaderWithLocallFallback', not when someone subscribes to it
-        
-        // So we defers the execution of it
-        
-        //         [  side-effect  ]
-        //         -pure function-
-        //         [  side-effect  ]
-        return remoteFeedLoader             //  [ network request ]
-            .tryMap(FeedItemsMapper.map)    //  -     mapping     -
-            .caching(to: localFeedLoader)   //  [     caching     ]
-        // When fallback, the `load` of the localFeedLoader is called
-            .fallback(to: localFeedLoader.loadPublisher)
-            .map { items in
-                Paginated(items: items, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: items, last: items.last))
-            }
-            .eraseToAnyPublisher()
-    }
+//    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
+//        // There are many Publishers we can create, one of them is 'Future'. It starts with a completionBlock, and once the work is done, is returns some result
+//
+//        // The signature of the completion `load` expects is the same one of the ÁnyPublisher returned
+//        return remoteFeedLoader
+//            .caching(to: localFeedLoader)
+//            .fallback(to: localFeedLoader.loadPublisher)
+//            .map(makeFirstPage)
+//            .eraseToAnyPublisher()
+//    }
+    
+//    private func makeRemoteFeedLoader(after: FeedImage? = nil) -> AnyPublisher<[FeedImage], Error> {
+//        let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
+//        
+//        // Future fires would fire the request every time we call 'makeRemoteFeedLoaderWithLocallFallback', not when someone subscribes to it
+//        
+//        // So we defers the execution of it
+//        
+//        //         [  side-effect  ]
+//        //         -pure function-
+//        //         [  side-effect  ]
+//        return remoteFeedLoader             //  [ network request ]
+//            .tryMap(FeedItemsMapper.map)    //  -     mapping     -
+//            .caching(to: localFeedLoader)   //  [     caching     ]
+//        // When fallback, the `load` of the localFeedLoader is called
+//            .fallback(to: localFeedLoader.loadPublisher)
+//            .map { items in
+//                Paginated(items: items, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: items, last: items.last))
+//            }
+//            .eraseToAnyPublisher()
+//    }
     
     // TODO: Refactor Extract Logic into helper methods (video Keyset pagination and commit)
-    private func makeRemoteLoadMoreLoader(items: [FeedImage], last: FeedImage?) -> (() -> AnyPublisher<Paginated<FeedImage>, Error>)? {
-        // STAR: if we have more than one item, we will have more items
-        last.map { lastItem in
-            let url = FeedEndpoint.get(after: lastItem).url(baseURL: baseURL)
-            
-            return { [httpClient] in
-                httpClient
-                    .getPublisher(url: url)
-                    .tryMap(FeedItemsMapper.map)
-                    .map { newItems in
-                        // STAR: We keep appending the new elements, until newItems is Empty
-                        let allItems = items + newItems
-                        // STAR: Used recursion here
-                        return Paginated(items: allItems, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: allItems, last: newItems.last))
-                    }.eraseToAnyPublisher()
-                    
-            }
-        }
-    }
+    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
+           makeRemoteFeedLoader()
+               .caching(to: localFeedLoader)
+               .fallback(to: localFeedLoader.loadPublisher)
+               .map(makeFirstPage)
+               .eraseToAnyPublisher()
+       }
+           
+       private func makeRemoteLoadMoreLoader(items: [FeedImage], last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
+           makeRemoteFeedLoader(after: last)
+               .map { newItems in
+                   (items + newItems, newItems.last)
+               }.map(makePage)
+               .caching(to: localFeedLoader)
+       }
+       
+       private func makeRemoteFeedLoader(after: FeedImage? = nil) -> AnyPublisher<[FeedImage], Error> {
+           let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
+           
+           return httpClient
+               .getPublisher(url: url)
+               .tryMap(FeedItemsMapper.map)
+               .eraseToAnyPublisher()
+       }
+       
+       private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {
+           makePage(items: items, last: items.last)
+       }
+       
+       private func makePage(items: [FeedImage], last: FeedImage?) -> Paginated<FeedImage> {
+           Paginated(items: items, loadMorePublisher: last.map { last in
+               { self.makeRemoteLoadMoreLoader(items: items, last: last) }
+           })
+       }
+       
+       private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+           let localImageLoader = LocalFeedImageDataLoader(store: store)
+
+           return localImageLoader
+               .loadImageDataPublisher(from: url)
+               .fallback(to: { [httpClient] in
+                   httpClient
+                       .getPublisher(url: url)
+                       .tryMap(FeedImageDataMapper.map)
+                       .caching(to: localImageLoader, using: url)
+               })
+       }
+    
 }
 
