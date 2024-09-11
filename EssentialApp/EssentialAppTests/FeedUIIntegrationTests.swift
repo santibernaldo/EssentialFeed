@@ -27,6 +27,17 @@ import Combine
      [✅] Renders image loaded from URL
      [✅] Option to retry on image download error
      [✅] Preload when image view is near visible
+ 
+ UX Load More Inbox
+ UI/UX Goals
+
+ [ ] Infinity Scroll Experience
+     [✅] Trigger "Load more" action on scroll to bottom
+         [✅] Only if there are more items to load
+         [✅] Only if not already loading
+     [✅] Show loading indicator while loading
+     [ ] Show error message on failure
+         [ ] Tap on error to retry
  */
 
 class FeedUIIntegrationTests: XCTestCase {
@@ -85,6 +96,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected third loading requests before view is loaded")
     }
     
+    // [✅] Trigger "Load more" action on scroll to bottom
     func test_loadMoreActions_requestMoreFromLoader() {
         let (sut, loader) = makeSUT()
         
@@ -121,6 +133,30 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadMoreCallCount, 3, "Expected no request after loading all pages")
     }
     
+    // Load More Inbox
+    // [✅] Show loading indicator while loading
+    func test_loadingMoreIndicator_isVisibleWhileLoadingMore() {
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateAppearance()
+        XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once view is loaded")
+        
+        loader.completeFeedLoading(at: 0)
+        XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once loading completes successfully")
+        
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on load more action")
+        
+        loader.completeLoadMore(at: 0)
+        XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes successfully")
+        
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on second load more action")
+        
+        loader.completeLoadMoreWithError(at: 1)
+        XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes with error")
+    }
+        
     func test_viewDidLoad_loadsFeed() {
         let (sut, loader) = makeSUT()
                 
@@ -205,37 +241,43 @@ class FeedUIIntegrationTests: XCTestCase {
         
         sut.simulateAppearance()
         
+        
         // Test-specific DSL Methods decouple the test from implementation details such as UITableView, this way wou can freely and safely refactor production code, such as switching to a UICollectionView in the future without breaking the tests. The goal is to test behaviour, not implementation
         
         // 0 CASE
-        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
+        assertThat(sut, isRendering: [])
         
-        loader.completeFeedLoading(with: [image0], at: 0)
-        
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
         // ONE ELEMENT CASE
-        assertThat(sut, isRendering: [image0])
+        assertThat(sut, isRendering: [image0, image1])
+        
+        sut.simulateLoadMoreFeedAction()
+        loader.completeLoadMore(with: [image0, image1, image2, image3], at: 0)
+        assertThat(sut, isRendering: [image0, image1, image2, image3])
     
         sut.simulateUserInitiatedReload()
         
-        let arrayManyCase = [image0, image1, image2, image3]
-        loader.completeFeedLoading(with: arrayManyCase, at: 1)
+       
+        loader.completeFeedLoading(with: [image0, image1], at: 1)
         
         // MANY ELEMENT CASE
-        assertThat(sut, isRendering: arrayManyCase)
+        assertThat(sut, isRendering: [image0, image1])
     }
     
     func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
-        let image0 = makeImage(description: "description 0", location: "location 0")
-        
+        let image0 = makeImage()
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
-        
         loader.completeFeedLoading(with: [image0], at: 0)
         assertThat(sut, isRendering: [image0])
         
         sut.simulateUserInitiatedReload()
         loader.completeFeedLoadingWithError(at: 1)
+        assertThat(sut, isRendering: [image0])
+        
+        sut.simulateLoadMoreFeedAction()
+        loader.completeLoadMoreWithError(at: 0)
         assertThat(sut, isRendering: [image0])
     }
     
@@ -505,15 +547,33 @@ class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
+        loader.completeFeedLoading(with: [image0], at: 0)
+        assertThat(sut, isRendering: [image0])
         
-        loader.completeFeedLoading(with: [image0, image1], at: 0)
+        sut.simulateLoadMoreFeedAction()
+        loader.completeLoadMore(with: [image0, image1], at: 0)
         assertThat(sut, isRendering: [image0, image1])
         
         sut.simulateUserInitiatedReload()
-        
         loader.completeFeedLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
     }
+    
+    func test_loadMoreCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        
+        loader.completeFeedLoading(at: 0)
+        sut.simulateLoadMoreFeedAction()
+        
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeLoadMore()
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     
     private func anyImageData() -> Data {
         return UIImage.make(withColor: .red).pngData()!
