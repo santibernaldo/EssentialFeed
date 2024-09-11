@@ -139,8 +139,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         let allItems = items + newItems
                         // STAR: Used recursion here
                         return Paginated(items: allItems, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: allItems, last: newItems.last))
-                    }.delay(for: 2, scheduler: DispatchQueue.main)
-                    .eraseToAnyPublisher()
+                    }.eraseToAnyPublisher()
+                    
             }
         }
     }
