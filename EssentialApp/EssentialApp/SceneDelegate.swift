@@ -116,12 +116,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return remoteFeedLoader             //  [ network request ]
             .tryMap(FeedItemsMapper.map)    //  -     mapping     -
             .caching(to: localFeedLoader)   //  [     caching     ]
-            // When fallback, the `load` of the localFeedLoader is called
+        // When fallback, the `load` of the localFeedLoader is called
             .fallback(to: localFeedLoader.loadPublisher)
-            .map {
-                Paginated(items: $0)
+            .map { items in
+                Paginated(items: items, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: items, last: items.last))
             }
             .eraseToAnyPublisher()
+    }
+    
+    private func makeRemoteLoadMoreLoader(items: [FeedImage], last: FeedImage?) -> (() -> AnyPublisher<Paginated<FeedImage>, Error>)? {
+        // STAR: if we have more than one item, we will have more items
+        last.map { lastItem in
+            let url = FeedEndpoint.get(after: lastItem).url(baseURL: baseURL)
+            
+            return { [httpClient] in
+                httpClient
+                    .getPublisher(url: url)
+                    .tryMap(FeedItemsMapper.map)
+                    .map { newItems in
+                        // STAR: We keep appending the new elements, until newItems is Empty
+                        let allItems = items + newItems
+                        // STAR: Used recursion here
+                        return Paginated(items: allItems, loadMorePublisher: self.makeRemoteLoadMoreLoader(items: allItems, last: newItems.last))
+                    }.eraseToAnyPublisher()
+            }
+        }
     }
 }
 
