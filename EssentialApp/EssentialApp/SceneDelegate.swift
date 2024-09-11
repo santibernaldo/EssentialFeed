@@ -30,7 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     .defaultDirectoryURL()
                     .appendingPathComponent("feed-store.sqlite"))
         } catch {
-            // STAR: Returns a NullStore will prevent the app to be in a WEIRD STATE. 
+            // STAR: Returns a NullStore will prevent the app to be in a WEIRD STATE.
+            // Maybe the feedstore can't be created, because there's not enough space in disk for example, or some bug arise from the model of the feedstore
             return NullStore()
         }
     }()
