@@ -19,6 +19,10 @@ final class FeedViewAdapter: ResourceView {
     private let selection: (FeedImage) -> Void
     
     private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
+    // STAR: The view type (FeedViewAdapter) cause its loading a Feed
+    // ASK Program
+    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+    // STAR: The view type (FeedViewAdapter) cause its loading a Feed
     
     init(controller: ListViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, selection: @escaping (FeedImage) -> Void) {
         self.controller = controller
@@ -30,10 +34,25 @@ final class FeedViewAdapter: ResourceView {
         // the object passed onto the display method as parameter is the data expected by the controller
         let feed = getImageCellControllers(viewModel: viewModel, imageLoader: imageLoader)
         
-        // STAR: Every time there's a new callback (willdisplay is triggered), it will call loadMore.
-        let loadMore = LoadMoreCellController {
-            viewModel.loadMore?{ _ in }
+        guard let loadMorePublisher = viewModel.loadMorePublisher else {
+            controller?.display(feed)
+            return
         }
+        
+        // STAR: The load resource in the adaptr is the one where we call the 'loadMorePublisher'
+        let loadMoreAdapter = LoadMorePresentationAdapter(loader: loadMorePublisher)
+        
+        // STAR: Every time there's a new callback (willdisplay is triggered), it will call loadMore.
+        let loadMore = LoadMoreCellController(callback: loadMoreAdapter.loadResource)
+        
+        // STAR: All the State transitions handled on the Presenter
+        // STAR: With the Presentation adapter, we get all the behaviour a ResourceLoading for free, we just reuse all that logic here. We just compose it with a new CellController
+        loadMoreAdapter.presenter = LoadResourcePresenter(
+            resourceView: self,
+            loadingView: WeakRefVirtualProxy(loadMore),
+            errorView: WeakRefVirtualProxy(loadMore),
+            // ASK Program (1: 20 video keyset pagination)
+            mapper: { $0 } )
         
         let loadMoreSection = [CellController(id: UUID(), loadMore)]
         
