@@ -232,6 +232,7 @@ private class HTTPClientProfilingDecorator: HTTPClient {
 }
 
 extension Publisher {
+    // STAR: Logging is a CROSS-CUTTING concern (it applies everywhere), so with a good design, we can apply Logging WITHOUT POLUTING our modules
     func logCacheMisses(url: URL, logger: Logger) -> AnyPublisher<Output, Failure> {
         return handleEvents(
             receiveCompletion: { result in
