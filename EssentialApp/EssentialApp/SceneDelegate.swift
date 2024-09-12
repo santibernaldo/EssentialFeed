@@ -184,6 +184,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                })
        }
     
+    // STAR: Injecting the logging into the chain with handleEvents
+    private func makeLocalImageLoaderWithCombineLoggerRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+        let localImageLoader = LocalFeedImageDataLoader(store: store)
+
+        return localImageLoader
+            .loadImageDataPublisher(from: url)
+            .fallback(to: { [httpClient, logger] in
+                let startTime = CACurrentMediaTime()
+                return httpClient
+                    .getPublisher(url: url)
+                    .logErrors(url: url, logger: logger)
+                    .logElapsedTime(url: url, logger: logger)
+                    .tryMap(FeedImageDataMapper.map)
+                    .caching(to: localImageLoader, using: url)
+            })
+    }
+    
 }
 
 // We decorate the HTTPClient to print the requests
@@ -213,6 +230,28 @@ private class HTTPClientProfilingDecorator: HTTPClient {
             completion(result)
         }
     }
+}
+
+extension Publisher {
+    func logErrors(url: URL, logger: Logger) -> AnyPublisher<Output, Failure> {
+        return handleEvents(
+            receiveCompletion: { result in
+                if case let .failure(error) = result {
+                    logger.trace("failed to load url: \(url) with error: \(error.localizedDescription)")
+                }
+            }).eraseToAnyPublisher()
+    }
     
-    
+    func logElapsedTime(url: URL, logger: Logger) -> AnyPublisher<Output, Failure> {
+        let startTime = CACurrentMediaTime()
+        return handleEvents(
+            receiveSubscription: { _ in
+                // Starts the request
+                logger.trace("Starting loading url: \(url)")
+            },
+            receiveCompletion: { result in
+                let elapsed = CACurrentMediaTime() - startTime
+                logger.trace("Finished loading url: \(url) in \(elapsed) seconds")
+            }).eraseToAnyPublisher()
+    }
 }
