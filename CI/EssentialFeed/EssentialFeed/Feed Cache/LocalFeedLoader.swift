@@ -45,6 +45,7 @@ extension LocalFeedLoader {
     }
 }
 
+// STAR: Performance improvements on our SERVICES CLASSES, like this. We would pollute the class. This kind of improvements are better done on the INFRASTRUCTURE side.
 extension LocalFeedLoader: FeedCache {
 
     public typealias SaveResult = FeedCache.Result

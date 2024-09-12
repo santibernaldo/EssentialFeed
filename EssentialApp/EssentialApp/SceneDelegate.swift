@@ -190,8 +190,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         return localImageLoader
             .loadImageDataPublisher(from: url)
+            .logCacheMisses(url: url, logger: logger)
             .fallback(to: { [httpClient, logger] in
-                let startTime = CACurrentMediaTime()
                 return httpClient
                     .getPublisher(url: url)
                     .logErrors(url: url, logger: logger)
@@ -205,7 +205,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 // We decorate the HTTPClient to print the requests
 private class HTTPClientProfilingDecorator: HTTPClient {
-    
     private let decoratee: HTTPClient
     private let logger: Logger
     
@@ -233,6 +232,15 @@ private class HTTPClientProfilingDecorator: HTTPClient {
 }
 
 extension Publisher {
+    func logCacheMisses(url: URL, logger: Logger) -> AnyPublisher<Output, Failure> {
+        return handleEvents(
+            receiveCompletion: { result in
+                if case let .failure(error) = result {
+                    logger.trace("Cache miss for url: \(url)")
+                }
+            }).eraseToAnyPublisher()
+    }
+    
     func logErrors(url: URL, logger: Logger) -> AnyPublisher<Output, Failure> {
         return handleEvents(
             receiveCompletion: { result in
