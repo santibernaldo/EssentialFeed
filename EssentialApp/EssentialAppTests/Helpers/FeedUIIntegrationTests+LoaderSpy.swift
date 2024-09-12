@@ -41,6 +41,9 @@ extension FeedUIIntegrationTests {
                 self?.loadMoreRequests.append(publisher)
                 return publisher.eraseToAnyPublisher()
             }))
+            // STAR: We only sent values to it. We can send multiple values
+            // to a Publisher, until it completes, so we complete
+            feedRequests[index].send(completion: .finished)
         }
         
         func completeFeedLoadingWithError(at index: Int = 0) {

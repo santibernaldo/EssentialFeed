@@ -49,6 +49,7 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
         cell?.onReuse = { [weak self] in
             self?.releaseCellForReuse()
         }
+        // STAR: We need to prevent COLLISIONS calling didRequestImage on multiple places
         delegate.didRequestImage()
         return cell!
     }

@@ -79,21 +79,21 @@ class FeedUIIntegrationTests: XCTestCase {
     // It can help to avoid mistakes to have all the assertions for temporal coupling in one test
     func test_loadFeedActions_requestFeedFromLoader() {
         let (sut, loader) = makeSUT()
-        
         XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
         
         sut.simulateAppearance()
+        XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected a loading request once view is loaded")
         
-        XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected first loading requests before view is loaded")
-        
-        // When valueChanged action of refreshControl is called, we perform load
         sut.simulateUserInitiatedReload()
+        XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected no request until previous completes")
         
-        XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected second loading requests before view is loaded")
+        loader.completeFeedLoading(at: 0)
+        sut.simulateUserInitiatedReload()
+        XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected another loading request once user initiates a reload")
         
-        sut.refreshControl?.simulatePullToRefresh()
-        
-        XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected third loading requests before view is loaded")
+        loader.completeFeedLoading(at: 1)
+        sut.simulateUserInitiatedReload()
+        XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected yet another loading request once user initiates another reload")
     }
     
     // [✅] Trigger "Load more" action on scroll to bottom
@@ -165,20 +165,22 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadFeedCallCount, 1)
     }
     
-    func test_userInitiatedFeedReload_loadsFeed() {
-        let (sut, loader) = makeSUT()
-                
-        sut.simulateAppearance()
-        
-        // When valueChanged action of refreshControl is called, we perform load
-        sut.simulateUserInitiatedReload()
-        
-        XCTAssertEqual(loader.loadFeedCallCount, 2)
-        
-        sut.refreshControl?.simulatePullToRefresh()
-        
-        XCTAssertEqual(loader.loadFeedCallCount, 3)
-    }
+//    func test_userInitiatedFeedReload_loadsFeed() {
+//        let (sut, loader) = makeSUT()
+//                
+//        sut.simulateAppearance()
+//        
+//        // When valueChanged action of refreshControl is called, we perform load
+//        sut.simulateUserInitiatedReload()
+//        
+//        loader.completeFeedLoading(at: 0)
+//        
+//        XCTAssertEqual(loader.loadFeedCallCount, 2)
+//        
+//        sut.refreshControl?.simulatePullToRefresh()
+//        
+//        XCTAssertEqual(loader.loadFeedCallCount, 3)
+//    }
     
     func test_loadingFeedIndicator_isVisibleWhileLoadingTheFeed() {
         let (sut, loader) = makeSUT()
@@ -495,6 +497,28 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
     }
     
+    // STAR: Avoid letting the app consuming too much data
+    func test_feedImageView_doesNotLoadImageAgainUntilPreviousRequestCompletes() {
+        let image = makeImage(url: URL(string: "http://url-0.com")!)
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [image])
+        
+        sut.simulateFeedImageViewNearVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url], "Expected first request when near visible")
+        
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url], "Expected no request until previous completes")
+        
+        loader.completeImageLoading(at: 0)
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url, image.url], "Expected second request when visible after previous complete")
+        
+        sut.simulateFeedImageViewNotVisible(at: 0)
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url, image.url, image.url], "Expected third request when visible after canceling previous complete")
+    }
+    
     // We make sure the image is not rendered when the cell is off-screen
     func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
         let (sut, loader) = makeSUT()
@@ -609,6 +633,7 @@ class FeedUIIntegrationTests: XCTestCase {
         }
         wait(for: [exp], timeout: 1.0)
     }
+    
     
     
     private func anyImageData() -> Data {
