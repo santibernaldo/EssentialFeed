@@ -20,9 +20,13 @@ extension ManagedCache {
         return try context.fetch(request).first
     }
     
+    static func deleteCache(in context: NSManagedObjectContext) throws {
+        try find(in: context).map(context.delete).map(context.save)
+    }
+    
     static func newUniqueInstance(in context: NSManagedObjectContext) throws -> ManagedCache {
         // Delete previous instance
-        try find(in: context).map(context.delete)
+        try deleteCache(in: context)
         return ManagedCache(context: context)
     }
     

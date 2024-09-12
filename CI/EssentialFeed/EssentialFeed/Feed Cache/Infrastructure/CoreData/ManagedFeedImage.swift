@@ -47,6 +47,7 @@ extension ManagedFeedImage {
         })
         
         // STAR: We remove the userInfo objects, so we don't keep in memory thousands of images
+        // STAR: We don't want to hold hundreds/thousands of images
         context.userInfo.removeAllObjects()
         
         return images
@@ -57,6 +58,7 @@ extension ManagedFeedImage {
     }
     
     // STAR: Every time we delete the FeedImage, this method is invoked
+    // STAR: Performed optimization on the Infrastructure
     override func prepareForDeletion() {
         super.prepareForDeletion()
         

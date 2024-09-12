@@ -52,7 +52,7 @@ extension CoreDataFeedStore: FeedStore {
         perform { context in
             do {
                 // We try to find the cache, if found we delete it, and then we save the operation
-                try ManagedCache.find(in: context).map(context.delete).map(context.save)
+                try ManagedCache.deleteCache(in: context)
                 completion(.success(()))
             } catch {
                 // We do a rollback on the context every time the deleteError throws

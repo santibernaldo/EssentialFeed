@@ -57,7 +57,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
             feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-            imageLoader: makeLocalImageLoaderWithRemoteFallback,
+            imageLoader: makeLocalImageLoaderWithCombineLoggerRemoteFallback,
             selection: showComments))
     
     private lazy var remoteURLFeed: URL = FeedEndpoint.get().url(baseURL: baseURL)
