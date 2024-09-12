@@ -517,6 +517,15 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateFeedImageViewNotVisible(at: 0)
         sut.simulateFeedImageViewVisible(at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [image.url, image.url, image.url], "Expected third request when visible after canceling previous complete")
+        
+        sut.simulateLoadMoreFeedAction()
+        // We got the image initially loaded, and we append a new one
+        
+        // If the previous 'image' that hasn't been completed yet, there's no completeFeedLoading before simulateLoadMoreFeedAction.
+        // We try to load it again, we will recreate through the FeedViewAdapter all the controllers, with the images append, so we call the images requests again
+        loader.completeLoadMore(with: [image, makeImage()])
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image.url, image.url, image.url], "Expected no request until previous completes")
     }
     
     // We make sure the image is not rendered when the cell is off-screen
