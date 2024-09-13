@@ -13,6 +13,7 @@ import EssentialFeed
 //https://vjeko.com/2023/12/09/testing-in-isolation/
 final class FeedItemsMapperTests: XCTestCase {
     
+    // STAR: Input/Output Tests, no asynchrony. Much simpler
     func test_map_throwsErrorOnNon200HTTPResponse() throws {
         let json = makeItemsJSON([])
         let samples = [199, 201, 300, 400, 500]
