@@ -542,6 +542,29 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertNil(view?.renderedImage, "Expected no rendered image when an image load finishes after the view is not visible anymore")
     }
     
+    // While the system after iOS 14.5, tries to prefetch and cellFor row at the same time, we prevent a race condition on the image data request. Cause every time we call cellForRow or prefetch, we request the image
+    func test_feedImageView_configuresViewCorrectlyWhenTransitioningFromNearVisibleToVisibleWhileStillPreloadingImage() {
+            let (sut, loader) = makeSUT()
+
+            sut.simulateAppearance()
+        
+            loader.completeFeedLoading(with: [makeImage()])
+
+            sut.simulateFeedImageViewNearVisible(at: 0)
+            let view0 = sut.simulateFeedImageViewVisible(at: 0)
+
+            XCTAssertEqual(view0?.renderedImage, nil, "Expected no rendered image when view becomes visible while still preloading image")
+            XCTAssertEqual(view0?.isShowingRetryAction, false, "Expected no retry action when view becomes visible while still preloading image")
+            XCTAssertEqual(view0?.isShowingImageLoadingIndicator, true, "Expected loading indicator when view becomes visible while still preloading image")
+
+            let imageData = UIImage.make(withColor: .red).pngData()!
+            loader.completeImageLoading(with: imageData, at: 0)
+
+            XCTAssertEqual(view0?.renderedImage, imageData, "Expected rendered image after image preloads successfully")
+            XCTAssertEqual(view0?.isShowingRetryAction, false, "Expected no retry action after image preloads successfully")
+            XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator after image preloads successfully")
+        }
+    
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
         

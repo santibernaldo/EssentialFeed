@@ -49,6 +49,10 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
         cell?.onReuse = { [weak self] in
             self?.releaseCellForReuse()
         }
+        
+        cell?.feedImageContainer.isShimmering = true
+        cell?.feedImageRetryButton.isHidden = true
+        
         // STAR: We need to prevent COLLISIONS calling didRequestImage on multiple places
         delegate.didRequestImage()
         return cell!
