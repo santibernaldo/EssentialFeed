@@ -4,9 +4,6 @@
 //
 //  Created by Santiago Ochoa Bernaldo de Quiros on 10/7/24.
 //
-//
-//  Copyright © 2019 Essential Developer. All rights reserved.
-//
 
 import Foundation
 
@@ -26,10 +23,12 @@ extension LocalFeedImageDataLoader: FeedImageDataCache {
     }
 
     public func save(_ data: Data, for url: URL, completion: @escaping (SaveResult) -> Void) {
-        store.insert(data, for: url) { [weak self] result in
-            guard self != nil else { return }
-            completion(result.mapError { _ in SaveError.failed })
-        }
+        // CODE: Question SaveResult {}
+        let saveResult: SaveResult = SaveResult {
+            try store.insert(data, for: url)
+        }.mapError { _ in SaveError.failed }
+        
+        completion(saveResult)
     }
 }
 
