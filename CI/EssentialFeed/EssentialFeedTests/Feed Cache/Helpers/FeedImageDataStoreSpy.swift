@@ -14,26 +14,28 @@ class FeedImageDataStoreSpy: FeedImageDataStore {
         case retrieve(dataFor: URL)
     }
     
+    // STAR: Capturing receivedMessages, its still a SPY
     private(set) var receivedMessages = [Message]()
-    private var retrievalCompletions = [(FeedImageDataStore.RetrievalResult) -> Void]()
+    // STAR: But we stub the results
+    private var retrievalResult: Result<Data?, Error>?
     private var insertionResult: Result<Void, Error>?
 
     func insert(_ data: Data, for url: URL) throws {
         receivedMessages.append(.insert(data: data, for: url))
         try insertionResult?.get()
     }
-      
-    public func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
+    
+    func retrieve(dataForURL url: URL) throws -> Data? {
         receivedMessages.append(.retrieve(dataFor: url))
-        retrievalCompletions.append(completion)
+        return try retrievalResult?.get()
     }
     
     func completeRetrieval(with error: Error, at index: Int = 0) {
-        retrievalCompletions[index](.failure(error))
+        retrievalResult = .failure(error)
     }
     
     func completeRetrieval(with data: Data?, at index: Int = 0) {
-        retrievalCompletions[index](.success(data))
+        retrievalResult = .success(data)
     }
     
     // STAR: We STUB the result before invoking the method. The order of the behaviour changed, after moving to a SYNC API
