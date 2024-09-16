@@ -29,6 +29,7 @@ public final class CoreDataFeedStore {
 
     func performAsync(_ action: @escaping (NSManagedObjectContext) -> Void) {
         let context = self.context
+        // STAR: Perform or performAndWait is Thread-Safe in CoreData, so it can be CONCURRENT. If it's not Thread-Safe, the queue should be Serial
         context.perform { action(context) }
     }
     

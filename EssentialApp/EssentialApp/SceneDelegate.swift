@@ -20,6 +20,15 @@ import Combine
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
+    // CODE: Ask
+    // STAR: If our components are not thread safe, we must implement always the operations in a serial Scheduler (Serial: Executes only one task at a time)
+    // It can be passed on the subscribe(on: Scheduler) on Combine
+    // We use .concurrent, because CoreData using the perform API we created, is Thread-Safe
+    private lazy var scheduler = DispatchQueue(
+        label: "com.essentialdeveloper.infra.queue",
+        qos: .userInitiated,
+        attributes: .concurrent)
+    
     private lazy var httpClient: HTTPClient = {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }()
@@ -171,21 +180,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
        }
        
        private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-           let client = HTTPClientProfilingDecorator(decoratee: httpClient, logger: logger)
+           
            let localImageLoader = LocalFeedImageDataLoader(store: store)
 
            return localImageLoader
                .loadImageDataPublisher(from: url)
-               .fallback(to: {
-                   client
+               .fallback(to: { [httpClient, scheduler] in
+                  httpClient
                        .getPublisher(url: url)
                        .tryMap(FeedImageDataMapper.map)
                        .caching(to: localImageLoader, using: url)
+                       // STAR: We perform on a Serial Queue from the Composition Root our components, in this case, the cahing.
+                       // We don't need to make our components Thread Safe, if we control Threading as a Cross-Cutting concern from the Composition Root
+                       .subscribe(on: scheduler)
+                       .eraseToAnyPublisher()
                })
+                // DispatchQueue.global implements the Scheduler protocol. We avoid dispatching on the MainThread
+                // The global dispatch queue is a concurrent queue
+               .subscribe(on: scheduler)
+                // We erase to AnyPublisher, because the return type is a AnyPublisher
+               .eraseToAnyPublisher()
        }
     
     // STAR: Injecting the logging into the chain with handleEvents
     private func makeLocalImageLoaderWithCombineLoggerRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+        let httpClient = HTTPClientProfilingDecorator(decoratee: httpClient, logger: logger)
         let localImageLoader = LocalFeedImageDataLoader(store: store)
 
         return localImageLoader
@@ -199,6 +218,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     .tryMap(FeedImageDataMapper.map)
                     .caching(to: localImageLoader, using: url)
             })
+            // DispatchQueue.global implements the Scheduler protocol. We avoid dispatching on the MainThread
+            // The global dispatch queue is a concurrent queue
+            .subscribe(on: scheduler)
+            // We erase to AnyPublisher, because the return type is a AnyPublisher
+            .eraseToAnyPublisher()
     }
     
 }
