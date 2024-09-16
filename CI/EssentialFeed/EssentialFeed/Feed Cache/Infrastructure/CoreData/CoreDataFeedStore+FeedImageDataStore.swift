@@ -1,3 +1,9 @@
+//
+//  CoreDataFeedStore+FeedImageDataStore.swift
+//  EssentialFeed
+//
+//  Created by Santiago Ochoa Bernaldo de Quiros on 16/9/24.
+//
 
 import Foundation
 
@@ -23,3 +29,4 @@ extension CoreDataFeedStore: FeedImageDataStore {
     }
     
 }
+
