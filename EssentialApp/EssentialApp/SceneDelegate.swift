@@ -24,10 +24,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // STAR: If our components are not thread safe, we must implement always the operations in a serial Scheduler (Serial: Executes only one task at a time)
     // It can be passed on the subscribe(on: Scheduler) on Combine
     // We use .concurrent, because CoreData using the perform API we created, is Thread-Safe
-    private lazy var scheduler = DispatchQueue(
-        label: "com.essentialdeveloper.infra.queue",
-        qos: .userInitiated,
-        attributes: .concurrent)
+    private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
+            label: "com.essentialdeveloper.infra.queue",
+            qos: .userInitiated,
+            attributes: .concurrent
+        ).eraseToAnyScheduler()
     
     private lazy var httpClient: HTTPClient = {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
@@ -71,10 +72,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     //
     private lazy var remoteURLFeed: URL = FeedEndpoint.get().url(baseURL: baseURL)
 
-    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler) {
         self.init()
         self.httpClient = httpClient
         self.store = store
+        self.scheduler = scheduler
     }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
