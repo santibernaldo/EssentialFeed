@@ -39,9 +39,9 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
     func test_validateCache_deletesCacheOnRetrievalError() {
         let (store, sut) = makeSUT()
         
-        sut.validateCache()
-        
         store.completeRetrieval(with: anyNSError())
+        
+        sut.validateCache { _ in }
         
         XCTAssertEqual(store.receivedMessages, [.retrieveCache, .deleteCacheFeed])
     }
@@ -76,10 +76,10 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let expirationTimestamp = fixedCurrentDate.minusFeedCacheMaxAge()
         
         let (store, sut) = makeSUT (currentDate: { fixedCurrentDate })
-
-        sut.validateCache()
         
         store.completeRetrieval(with: feed.local, timestamp: expirationTimestamp)
+
+        sut.validateCache()
         
         XCTAssertEqual(store.receivedMessages, [.retrieveCache, .deleteCacheFeed])
     }
@@ -89,37 +89,24 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let fixedCurrentDate = Date()
         let expiredTimestamp = fixedCurrentDate.minusFeedCacheMaxAge().adding(seconds: -1)
         
+        // CODE: fixedCurrendDate
         let (store, sut) = makeSUT (currentDate: { fixedCurrentDate })
-
-        sut.validateCache()
         
         store.completeRetrieval(with: feed.local, timestamp: expiredTimestamp)
+
+        sut.validateCache()
         
         XCTAssertEqual(store.receivedMessages, [.retrieveCache, .deleteCacheFeed])
     }
     
-    func test_validateCache_doesNotDeleteInvalidCacheAfterSUTInstanceHasBeenDeallocated() {
-        let store = FeedStoreSpy()
-        var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        
-        sut?.validateCache()
-        
-        sut = nil
-        
-        // The scenerario that would trigger a Cache deletion
-        store.completeRetrieval(with: anyNSError())
-
-        XCTAssertEqual(store.receivedMessages, [.retrieveCache])
-    }
-
     func test_validateCache_failsOnDeletionErrorOfFailedRetrieval() {
         let (store, sut) = makeSUT()
         let deletionError = anyNSError()
         
         expect(sut, toCompleteWith: .failure(deletionError), when: {
-            store.completeRetrieval(with: anyNSError())
-            store.completeDeletion(with: deletionError)
-        })
+                    store.completeRetrieval(with: anyNSError())
+                    store.completeDeletion(with: deletionError)
+                })
     }
     
     func test_validateCache_succeedsOnSuccessfulDeletionOfFailedRetrieval() {
@@ -189,23 +176,23 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
     
     private func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: LocalFeedLoader.ValidationResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load completion")
-
+        action()
+        
         sut.validateCache { receivedResult in
             switch (receivedResult, expectedResult) {
             case (.success, .success):
                 break
-
+                
             case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
                 XCTAssertEqual(receivedError, expectedError, file: file, line: line)
-
+                
             default:
                 XCTFail("Expected result \(expectedResult), got \(receivedResult) instead", file: file, line: line)
             }
-
+            
             exp.fulfill()
         }
-
-        action()
+        
         wait(for: [exp], timeout: 1.0)
     }
     
@@ -222,29 +209,5 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
         return (feed, localFeed)
     }
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
 
