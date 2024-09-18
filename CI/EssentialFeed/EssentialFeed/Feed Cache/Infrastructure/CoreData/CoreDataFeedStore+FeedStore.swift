@@ -10,14 +10,13 @@ import CoreData
 
 extension CoreDataFeedStore: FeedStore {
     
-    public func retrieve(completion: @escaping RetrievalCompletion) {
-        performAsync { context in
-            // An optional can be mapped as a .some or .none value if none is found
-            completion(Result {
+    public func retrieve() throws -> CachedFeed? {
+        try performSync { context in
+            Result {
                 try ManagedCache.find(in: context).map {
                     CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
                 }
-            })
+            }
         }
         // WAS THIS PREVIOUS CODE
         //            do {
@@ -31,35 +30,32 @@ extension CoreDataFeedStore: FeedStore {
         //            }
     }
     
-    public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-        performAsync { context in
-            do {
-                let managedCache = try ManagedCache.newUniqueInstance(in: context)
-                managedCache.timestamp = timestamp
-                managedCache.feed = ManagedFeedImage.images(from: feed, in: context)
-                
-                try context.save()
-                completion(.success(()))
-            } catch {
-                // when there's a failure, we need to revert the changes
-                context.rollback()
-                completion(.failure(error))
+    public func insert(_ feed: [LocalFeedImage], timestamp: Date) throws {
+        try performSync { context in
+            Result {
+                do {
+                    let managedCache = try ManagedCache.newUniqueInstance(in: context)
+                    managedCache.timestamp = timestamp
+                    managedCache.feed = ManagedFeedImage.images(from: feed, in: context)
+                    try context.save()
+                } catch {
+                    // STAR: when there's a failure, we need to revert the changes
+                    context.rollback()
+                }
             }
         }
     }
     
-    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        performAsync { context in
-            do {
-                // We try to find the cache, if found we delete it, and then we save the operation
-                try ManagedCache.deleteCache(in: context)
-                completion(.success(()))
-            } catch {
-                // We do a rollback on the context every time the deleteError throws
-                context.rollback()
-                completion(.failure(error))
+    public func deleteCachedFeed() throws {
+        try performSync { context in
+            Result {
+                do {
+                    try ManagedCache.deleteCache(in: context)
+                } catch {
+                    // We do a rollback on the context every time the deleteError throws
+                    context.rollback()
+                }
             }
         }
     }
-    
 }

@@ -27,12 +27,6 @@ public final class CoreDataFeedStore {
         }
     }
 
-    func performAsync(_ action: @escaping (NSManagedObjectContext) -> Void) {
-        let context = self.context
-        // STAR: Perform or performAndWait is Thread-Safe in CoreData, so it can be CONCURRENT. If it's not Thread-Safe, the queue should be Serial
-        context.perform { action(context) }
-    }
-    
     // STAR: Sync APIs doesn't need to be @escaping, because doesn't escape.
     func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {
         let context = self.context

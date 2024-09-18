@@ -57,7 +57,7 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
                 
-        assertThatRetrievehasNoSideEffectsOnEmptyCache(on: sut)
+        assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
     // We insert, then we retrieve twice and we check that we get the same result back
@@ -137,12 +137,12 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
         assertThatDeleteHasNoSideEffectsOnDeletionError(on: sut)
     }
     
-    // Orders matters, so that's what we measure here. The order of being executed these operations, one after another
-    func test_storeSideEffects_runSerially() {
-        let sut = makeSUT()
-        
-        assertThatSideEffectsRunSerially(on: sut)
-    }
+//    // Orders matters, so that's what we measure here. The order of being executed these operations, one after another
+//    func test_storeSideEffects_runSerially() {
+//        let sut = makeSUT()
+//        
+//        assertThatSideEffectsRunSerially(on: sut)
+//    }
                                        
     // - MARK: Helpers
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) -> FeedStore {
