@@ -149,18 +149,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                .caching(to: localFeedLoader)
                .fallback(to: localFeedLoader.loadPublisher)
                .map(makeFirstPage)
+               .subscribe(on: scheduler)
                .eraseToAnyPublisher()
        }
            
-       private func makeRemoteLoadMoreLoader(last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
-           makeRemoteFeedLoader(after: last)
-                // STAR: COMBINE Zip operator combines two results into a tuple
-               .zip(localFeedLoader.loadPublisher())
-               .map { (newItems, cachedItems) in
-                   (cachedItems + newItems, newItems.last)
-               }.map(makePage)
-               .caching(to: localFeedLoader)
-       }
+    private func makeRemoteLoadMoreLoader(last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
+        makeRemoteFeedLoader(after: last)
+        // STAR: COMBINE Zip operator combines two results into a tuple
+            .zip(makeRemoteFeedLoader(after: last))
+            .map { (cachedItems, newItems) in
+                (cachedItems + newItems, newItems.last)
+            }
+            .map(makePage)
+            .caching(to: localFeedLoader)
+            .subscribe(on: scheduler)
+            .eraseToAnyPublisher()
+    }
        
        private func makeRemoteFeedLoader(after: FeedImage? = nil) -> AnyPublisher<[FeedImage], Error> {
            let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
