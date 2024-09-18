@@ -41,14 +41,12 @@ extension LocalFeedLoader {
 
 // STAR: Performance improvements on our SERVICES CLASSES, like this. We would pollute the class. This kind of improvements are better done on the INFRASTRUCTURE side.
 extension LocalFeedLoader: FeedCache {
-
+    
     public typealias SaveResult = FeedCache.Result
-
-    public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> ()) {
-        completion(SaveResult {
-            try store.deleteCachedFeed()
-            try store.insert(feed.toLocal(), timestamp: currentDate())
-        })
+    
+    public func save(_ feed: [FeedImage]) throws {
+        try store.deleteCachedFeed()
+        try store.insert(feed.toLocal(), timestamp: currentDate())
     }
 }
 
