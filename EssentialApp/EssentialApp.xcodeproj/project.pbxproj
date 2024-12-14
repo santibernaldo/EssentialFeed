@@ -116,6 +116,7 @@
 		1CAFCE592C86018500D490D1 /* CommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		1CAFCE5B2C8602F100D490D1 /* CommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIComposer.swift; sourceTree = "<group>"; };
 		1CAFCE5D2C86042F00D490D1 /* CommentsUIIntegrationTests+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentsUIIntegrationTests+Localization.swift"; sourceTree = "<group>"; };
+		1CD14D322D0D8CA80072CC0C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1CDB05062C5E5E5500AB1937 /* FeedImageLoaderCacheDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageLoaderCacheDecoratorTests.swift; sourceTree = "<group>"; };
 		1CDB050A2C5E629F00AB1937 /* XCTestCase-FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase-FeedImageDataLoader.swift"; sourceTree = "<group>"; };
 		1CDB050E2C5E6B8400AB1937 /* FeedImageDataLoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderSpy.swift; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 		1C6CDE0F2C35914300ED004B = {
 			isa = PBXGroup;
 			children = (
+				1CD14D322D0D8CA80072CC0C /* README.md */,
 				1C6CDE1A2C35914300ED004B /* EssentialApp */,
 				1C6B999B2C57C872002D5458 /* EssentialAppTests */,
 				1C6CDE192C35914300ED004B /* Products */,
@@ -580,7 +582,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quirosdeveloper.essentialapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -607,7 +609,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quirosdeveloper.essentialapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
